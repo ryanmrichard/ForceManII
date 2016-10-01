@@ -49,10 +49,15 @@ namespace FManII {
  *  \f$y\f$ is then:
  *  \f[
       \frac{\partial^2 E(q)}{\partial x\partial y}=
- *       \frac{\partial^2 f(q)}{\partial q^2}\frac{\partial q}{\partial x}
- *       \frac{\partial q}{\partial y}+
- *       \frac{\partial f(q)}{\partial q}\frac{\partial q^2}{\partial x\partial y}
+        \frac{\partial^2 f(q)}{\partial q^2}\frac{\partial q}{\partial x}
+        \frac{\partial q}{\partial y}+
+        \frac{\partial f(q)}{\partial q}
+        \frac{\partial q^2}{\partial x\partial y}
     \f]
+ *  
+ *  This class is responsible for handeling these derivative manipulations in a
+ *  generic way.  
+ * 
  */
 template <typename Model_t, typename Coord_t>
 class FFTerm {
