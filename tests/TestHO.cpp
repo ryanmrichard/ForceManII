@@ -17,10 +17,29 @@
  * MA 02110-1301  USA
  */
 #include <ForceManII/HarmonicOscillator.hpp>
+#include "TestMacros.hpp"
+#include "ubiquitin.hpp"
 #include <iostream>
+#include <cmath>
 
 int main(int argc, char** argv){
     std::cout<<"Testing Harmonic Oscillator force-field term"<<std::endl;
+    FManII::HarmonicOscillator HO;
+    
+#ifndef NDEBUG
+//Test debug checks
+    try{
+        std::vector<double> a(3,0.0),b(2,0.0),c;
+        c=HO.deriv(a,b);
+        throw std::runtime_error("Check that bond.size()==ks.size() failed");
+    }
+    catch (const std::runtime_error& error){}
+#endif
+    
+    //Energy check
+    std::vector<double> Energy=HO.deriv(ubiquitin_bonds,ubiquitin_ks);
+    test_value(Energy[0],ubiquitinbond_e,1e-5,"Bond Energy");
+    
     
     return 0;
 } //End main
