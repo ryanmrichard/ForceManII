@@ -56,7 +56,14 @@ namespace FManII {
     \f]
  *  
  *  This class is responsible for handeling these derivative manipulations in a
- *  generic way.  
+ *  generic way.  Eventually I probably will want to expand this to include
+ *  higher-order terms like those in the MM4 series which involve cross-terms
+ *  between parameters.  In those cases the chain rule seen here needs
+ *  generalized to multiple \f$q\f$ and I anticipate there being an additional
+ *  template type parameter.
+ * 
+ *  \param[in] Model_t The class type of our functional form
+ *  \param[in] Coord_t The class type of the coordinate this term depends on
  * 
  */
 template <typename Model_t, typename Coord_t>

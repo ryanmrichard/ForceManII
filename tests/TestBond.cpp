@@ -16,37 +16,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-#include <ForceManII/HarmonicOscillator.hpp>
+#include <ForceManII/Distance.hpp>
 #include "TestMacros.hpp"
 #include "ubiquitin.hpp"
-#include <iostream>
-#include <cmath>
 
 int main(int argc, char** argv){
-    std::cout<<"Testing Harmonic Oscillator force-field term"<<std::endl;
-    FManII::HarmonicOscillator HO;
+    std::cout<<"Testing Distance class"<<std::endl;
+ 
+    FManII::CoordArray Bonds=FManII::GetCoords(ubiquitin,ubiquitin_conns);
     
-#ifndef NDEBUG
-//Test debug checks
-    bool threw=false;
-    try{
-        std::vector<double> a(3,0.0),b(2,0.0),c;
-        c=HO.deriv(a,b);
-    }
-    catch (const std::runtime_error& error){}
-    if(!threw)throw std::runtime_error("Check that bond.size()==ks.size() failed");
-#endif
-     FManII::CoordArray coords=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
-            ubiquitin_FF_params,ubiquitin_conns);
-     const std::vector<double>& bonds=coords[FManII::Bond]->values();
-     const std::vector<double>& bond_k=coords[FManII::Bond]->params(FManII::K);
-    
-     
-    //Energy check
-    std::vector<double> Energy=HO.deriv(bonds,bond_k);
-    test_value(Energy[0],ubiquitinbond_e,1e-5,"Bond Energy");
-    
+    const std::vector<double>& BondLength=
+        Bonds[FManII::IntCoord_t::Bond].values();
     
     return 0;
-} //End main
+}
 

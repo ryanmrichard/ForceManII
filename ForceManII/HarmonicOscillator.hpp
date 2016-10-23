@@ -34,34 +34,13 @@
 ///Namespace for all code associated with ForceManII
 namespace FManII {
 
-/** Implements the harmonic oscillator model potential
+/** \brief Implements the harmonic oscillator model potential
  *
- *  The harmonic oscillator (HO) is one of the most common approximate
- *  potentials in all of physics.  The energy of a \f$N\f$-dimensional 
- *  harmonic oscillator is given by:
- * 
- *  \f[
- *      E(\mathbf{q};\mathbf{k})=\frac{1}{2}\mathbf{k}\dot 
- *            \left(\mathbf{q}\circ\mathbf{q}\right),
- *  \f]
- *  where \f$\mathbf{q}\f$ is a vector of \f$N\f$ coordinates and 
- *  \f$\mathbf{k}\f$ is a vector of
- *  \f$N\f$ force constants such that the \f$q_i\f$ has force constant 
- *  \f$k_i\f$.  \f$\circ\f$ denotes the Hadamard product (element-wise
- *  multiplication), i.e. \f$\left[\mathbf{q}\circ\mathbf{q}\right]_{i}=q_i^2\f$.
- * 
- *  The derivative w.r.t. to \f$\mathbf{q}\f$ is:
- *  \f[
- *      \frac{\partial E(\mathbf{q};\mathbf{k})}{\partial \mathbf q}=
- *       \mathbf{k}\dot \mathbf{q},
- *  \f]
- *  the Hessian is just \f$\mathbf{k}\f$ down the diagonal.  All higher
- *  derivatives are 0.  Doesn't get much easier than that.
- * 
+ * See [Harmonic Oscillator](@ref HO) for details regarding conventions etc.
+ *  
  */
-
 struct HarmonicOscillator {
-    /** Computes the geometric derivative of the energy of a Harmonic Oscillator
+    /** Computes the derivative of the energy of a Harmonic Oscillator
      * 
      *  \note This function expects all quantities to be in atomic units
      * 

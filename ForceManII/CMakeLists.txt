@@ -1,4 +1,6 @@
-set(FMANII_SRC HarmonicOscillator.cpp
+set(FMANII_SRC Distance.cpp
+               FManII.cpp
+               HarmonicOscillator.cpp
 )
 
 add_library(fmanii ${FMANII_SRC})

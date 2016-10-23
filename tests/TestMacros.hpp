@@ -49,5 +49,13 @@ inline void test_value(double actual,double theory,
     }
 }
 
+inline void compare_vectors(const std::vector<double>& actual,
+                            const std::vector<double>& theory,
+                            double tol,const std::string& msg){
+    if(actual.size()!=theory.size())throw std::runtime_error("sizes do not match");
+    for(size_t i=0;i<actual.size();++i)test_value(actual[i],theory[i],tol,msg);    
+}
+        
+
 #endif /* End header guard */
 

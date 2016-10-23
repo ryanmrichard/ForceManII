@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-/** \file Common.hpp
+/** \file Distance.hpp
  * 
  * \version 0.1
- * \date October 1, 2016 at 1:23 PM (EST)
+ * \date October 9, 2016 at 12:51 PM (EST)
  *  
  * Original Author: \author Ryan M. Richard (ryanmrichard1<at>gmail.com)
  * 
@@ -27,33 +27,22 @@
  *
  */
 
-#ifndef FMANII_COMMON_HPP
-#define FMANII_COMMON_HPP
-#include <stdexcept>
-#include <memory>
+#ifndef FMANII_DISTANCE_HPP
+#define FMANII_DISTANCE_HPP
+#include "ForceManII/InternalCoordinates.hpp"
 
 ///Namespace for all code associated with ForceManII
 namespace FManII {
 
-///Once C++14 is accepted we can use std::make_unique, till then we have this
-template<typename T,typename...Args>
-std::unique_ptr<T> make_unique(Args&&...args){
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-}
-
-//Function that checks if a condition is true and throws if it isn't
-inline void CHECK(bool cond,const std::string& msg){
-    if(!cond)throw std::runtime_error(msg);
-}
-
-//Only calls check if compiled with debug flags
-#ifdef NDEBUG
-#define DEBUG_CHECK(cond,msg)
-#else
-#define DEBUG_CHECK(cond,msg)do{CHECK(cond,msg);}while(0)
-#endif /* End ndebug*/
-
-
+///Implements derivatives for distance between points.  
+///See [Distance Class](@ref distance) for more detail.
+class Distance: public IntCoords {
+public:
+    Distance(std::shared_ptr<const VDouble> Carts):
+        IntCoords(2,Carts){}
+protected:
+    VDouble compute_value(size_t deriv_i,Atoms_t coord_i)const;
+};
 
 
 } //End namespace FManII

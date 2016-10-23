@@ -2,6 +2,14 @@
 <configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
+      <df name=".ipynb_checkpoints">
+      </df>
+      <df name="bin">
+        <df name="__pycache__">
+        </df>
+        <in>Tinker2FManIIFxns.py</in>
+        <in>water.hpp</in>
+      </df>
       <df name="build">
         <df name="CMakeFiles">
           <df name="3.5.1">
@@ -82,6 +90,8 @@
             </df>
             <df name="testHO.dir">
             </df>
+            <df name="TestParse.dir">
+            </df>
           </df>
           <df name="Testing">
             <df name="Temporary">
@@ -97,14 +107,29 @@
         <df name="latex">
         </df>
       </df>
+      <df name="dox">
+        <in>distance.md</in>
+        <in>dox.doxcfg</in>
+        <in>harmonicoscillator.md</in>
+      </df>
       <df name="ForceManII">
         <in>Common.hpp</in>
+        <in>Distance.cpp</in>
+        <in>Distance.hpp</in>
         <in>FFTerm.hpp</in>
+        <in>FManII.cpp</in>
+        <in>FManII.hpp</in>
         <in>HarmonicOscillator.cpp</in>
         <in>HarmonicOscillator.hpp</in>
+        <in>InternalCoordinates.hpp</in>
       </df>
       <df name="tests">
+        <in>TestBond.cpp</in>
         <in>TestHO.cpp</in>
+        <in>TestMacros.hpp</in>
+        <in>TestParse.cc</in>
+        <in>TestParse.cpp</in>
+        <in>ubiquitin.hpp</in>
       </df>
     </df>
   </logicalFolder>

@@ -16,37 +16,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-#include <ForceManII/HarmonicOscillator.hpp>
-#include "TestMacros.hpp"
+
 #include "ubiquitin.hpp"
+#include <ForceManII/InternalCoordinates.hpp>
 #include <iostream>
-#include <cmath>
+#include "TestMacros.hpp"
+
 
 int main(int argc, char** argv){
-    std::cout<<"Testing Harmonic Oscillator force-field term"<<std::endl;
-    FManII::HarmonicOscillator HO;
-    
-#ifndef NDEBUG
-//Test debug checks
+    std::cout<<"Testing Input Parsing"<<std::endl;
+ 
+    std::vector<double> FakeCarts({1.0});
     bool threw=false;
     try{
-        std::vector<double> a(3,0.0),b(2,0.0),c;
-        c=HO.deriv(a,b);
+        FManII::CoordArray fakecoords=FManII::get_coords(FakeCarts,ubiquitin_FF_types,
+                ubiquitin_FF_params,ubiquitin_conns);   
     }
-    catch (const std::runtime_error& error){}
-    if(!threw)throw std::runtime_error("Check that bond.size()==ks.size() failed");
-#endif
-     FManII::CoordArray coords=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
-            ubiquitin_FF_params,ubiquitin_conns);
-     const std::vector<double>& bonds=coords[FManII::Bond]->values();
-     const std::vector<double>& bond_k=coords[FManII::Bond]->params(FManII::K);
+    catch(...) {threw=true;}
+    if(!threw)throw std::runtime_error("FManII internal check failed");
+
     
-     
-    //Energy check
-    std::vector<double> Energy=HO.deriv(bonds,bond_k);
-    test_value(Energy[0],ubiquitinbond_e,1e-5,"Bond Energy");
+    FManII::CoordArray coords=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
+            ubiquitin_FF_params,ubiquitin_conns);
+    
+    const std::vector<double> &bonds=coords[FManII::Bond]->values();
+    compare_vectors(bonds,ubiquitin_bonds,0.001,"generated bonds are not correct");
+    
+    const std::vector<double> &bondk=coords[FManII::Bond]->params(FManII::K);
+    const std::vector<double> &bondr0=coords[FManII::Bond]->params(FManII::r0);
+    
+    compare_vectors(bondk,ubiquitin_K,0.001,"assigned Ks are not correct");
+    compare_vectors(bondr0,ubiquitin_r0,0.001,"assigned r0s are not correct");
     
     
     return 0;
-} //End main
+}
 

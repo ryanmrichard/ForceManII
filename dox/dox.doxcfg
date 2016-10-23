@@ -1,0 +1,2 @@
+INPUT+=  dox/mainpage.dox \
+         dox/distance.md
