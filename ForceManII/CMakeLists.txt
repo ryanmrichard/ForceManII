@@ -1,6 +1,9 @@
-set(FMANII_SRC Distance.cpp
+set(FMANII_SRC Angle.cpp
+               Distance.cpp
                FManII.cpp
+               FourierSeries.cpp
                HarmonicOscillator.cpp
+               Torsion.cpp
 )
 
 add_library(fmanii ${FMANII_SRC})

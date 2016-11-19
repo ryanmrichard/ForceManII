@@ -6,16 +6,21 @@
 Welcome to the ForceManII user/developer manual.  This is a work in progress.
 
 \section main_sec Contents
+- Conventions
+  - [Terminology](@ref terminology)
 - Coordinate Types
   - [Distance](@ref distance)
+  - [Angle](@ref angle)
+  - [Torsion](@ref torsion)
 - Force Field Terms
   - [Harmonic Oscillator](@ref HO)
-
+  - [Fourier Series](@ref fourier)
 
 
 \section Authors
 
 - Original author: Ryan M. Richard
+- Additional contributions by: No one yet (PR on GitHub to contribute).
 
 \section license_sec License
 

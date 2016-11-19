@@ -20,20 +20,24 @@
 #include "TestMacros.hpp"
 #include "ubiquitin.hpp"
 
+
 int main(int argc, char** argv){
-    test_header("Testing Distance class");
- 
-    FManII::CoordArray Bonds=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
+    test_header("Testing Improper Torsion Angle class");
+    
+    FManII::CoordArray Coords=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
             ubiquitin_FF_params,ubiquitin_conns);
     
-    const std::vector<double>& BondLength=
-        Bonds[FManII::IntCoord_t::BOND]->values();
-    const std::vector<double>& bond_k=Bonds[FManII::BOND]->params(FManII::K);
+    const std::vector<double>& Angles=
+        Coords[FManII::IntCoord_t::IMPTORSION]->values();
+    const std::vector<double>& angle_v=Coords[FManII::IMPTORSION]->params(FManII::amp);
+
+    compare_vectors(Angles,ubiquitin_imptorsion,1e-4,"Imp Torsion Angles");
     
-    compare_vectors(BondLength,ubiquitin_bonds,1e-4,"Bond displacements");
-    compare_vectors(bond_k,ubiquitin_K,1e-4,"Bond parameters");
+    compare_vectors(angle_v,ubiquitin_imptorsion_v,1e-6,"Imp Torsion parameters");
     
     test_footer();
     return 0;
 }
+
+
 

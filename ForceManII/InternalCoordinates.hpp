@@ -53,9 +53,6 @@ namespace FManII {
  *  Bonds.add_coord({1,2},Param_t::K,value_of_K);
  *  \endcode
  *  and similarly for other coordinates.
- * 
- *  
- *  
  */
 class IntCoords {   
 protected:

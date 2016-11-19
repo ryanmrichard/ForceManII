@@ -18,6 +18,8 @@
  */
 /** \file Common.hpp
  * 
+ * File containing common helper functions
+ * 
  * \version 0.1
  * \date October 1, 2016 at 1:23 PM (EST)
  *  

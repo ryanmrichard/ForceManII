@@ -4,7 +4,7 @@
 #attempt to generate the correct answers too
 #
 import Tinker2FManIIFxns as Fxns
-
+import math
 #Get files that were passed to the script and run analyze (if applicable)
 xyz_file,ff_file,corr_answers,mol_name = Fxns.setup()
 
@@ -16,6 +16,15 @@ atom2tink,parms=Fxns.read_ff(ff_file)
 #Compute internal coordinates
 bonds,bond_k,bond_r0=Fxns.compute_bonds(carts,atom2tink,connect,param_num,parms)
 angles,angle_k,angle_r0=Fxns.compute_angles(carts,atom2tink,connect,param_num,parms)
+torsions,torsion_v=Fxns.compute_torsions(carts,atom2tink,connect,param_num,parms)
+imptorsion,imp_v=Fxns.compute_imp_torsions(carts,atom2tink,connect,param_num,parms)
+
+egy=0.0
+for i,angle in enumerate(torsions):
+    egyi=torsion_v[i]*(1+math.cos(angle))
+    print(egyi)
+    egy+=egyi
+print(egy)
 
 #Print .hpp file
 f=open(mol_name+".hpp","w")
@@ -29,11 +38,15 @@ Fxns.print_types(f,mol_name,param_num,atom2tink)
 Fxns.print_conns(f,mol_name,connect)
 Fxns.print_coord(f,mol_name,bonds,"bonds")
 Fxns.print_coord(f,mol_name,angles,"angles")
+Fxns.print_coord(f,mol_name,torsions,"torsions")
+Fxns.print_coord(f,mol_name,imptorsion,"imptorsion")
 Fxns.print_parms(f,mol_name,parms)
 Fxns.print_sys_parms(f,mol_name,"K",bond_k)
 Fxns.print_sys_parms(f,mol_name,"r0",bond_r0)
 Fxns.print_sys_parms(f,mol_name,"angle_K",angle_k)
 Fxns.print_sys_parms(f,mol_name,"angle_r0",angle_r0)
+Fxns.print_sys_parms(f,mol_name,"torsion_v",torsion_v)
+Fxns.print_sys_parms(f,mol_name,"imptorsion_v",imp_v)
 
 
 #Prints energy components

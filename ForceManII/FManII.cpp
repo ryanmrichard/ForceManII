@@ -17,8 +17,12 @@
  * MA 02110-1301  USA
  */
 #include "ForceManII/Distance.hpp"
+#include "ForceManII/Angle.hpp"
+#include "ForceManII/Torsion.hpp"
 #include "ForceManII/Common.hpp"
+#include "ForceManII/Util.hpp"
 #include <iostream>
+#include <algorithm>
 
 namespace FManII {
 using DVector=std::vector<double>;
@@ -28,6 +32,24 @@ using shared_DVector=std::shared_ptr<const DVector>;
 using std::max;
 using std::min;
 
+/* These end up being giant messy blocks of indirection that disguises what's
+   actually going on so we introduce some functions to hide it and make it
+   prettier to read*/
+inline void add_bond(const IVector& Atoms,const AtomTypes& Types,
+                     const ParamTypes& Params,CoordArray& FoundCoords);
+
+inline void add_angle(const IVector& Atoms,
+               const AtomTypes& Types,const ParamTypes& Params,
+               CoordArray& FoundCoords);
+
+inline void add_torsion(const IVector& Atoms,
+        const AtomTypes& Types,const ParamTypes& Params,
+        CoordArray& FoundCoords);
+
+inline void add_imp(const IVector& Atoms,
+        const AtomTypes& Types,const ParamTypes& Params,
+        CoordArray& FoundCoords,const DVector& carts);
+
 CoordArray get_coords(const DVector& Carts,const AtomTypes& Types,
                      const ParamTypes& Params,const ConnData& Conns){
     const size_t NAtoms=Carts.size()/3;
@@ -35,25 +57,139 @@ CoordArray get_coords(const DVector& Carts,const AtomTypes& Types,
     shared_DVector Sys=std::make_shared<DVector>(Carts);
     
     CoordArray FoundCoords;
-    FoundCoords.emplace(Bond,std::move(make_unique<Distance>(Sys)));
+    FoundCoords.emplace(BOND,std::move(make_unique<Distance>(Sys)));
+    FoundCoords.emplace(ANGLE,std::move(make_unique<Angle>(Sys)));
+    FoundCoords.emplace(TORSION,std::move(make_unique<Torsion>(Sys)));
+    FoundCoords.emplace(IMPTORSION,std::move(make_unique<Torsion>(Sys)));
     
     for(size_t AtomI=0;AtomI<NAtoms;++AtomI){
         for(size_t AtomJ : Conns[AtomI]){
             DEBUG_CHECK(AtomI!=AtomJ,"AtomI is bonded to itself. What??");
-            if(AtomJ<AtomI)continue;
-            const IVector pair({AtomI,AtomJ});
-            const IArray<2> ts={Types[AtomI][0],Types[AtomJ][0]};
-            const IArray<2> sorted_types={min(ts[0],ts[1]),max(ts[0],ts[1])};
-            const IVector ff_types({sorted_types[0],sorted_types[1]});
-            const double K_in=Params.at(Bond).at(K).at(ff_types);
-            const double r0_in=Params.at(Bond).at(r0).at(ff_types);
-            FoundCoords[Bond]->add_coord(pair,Param_t::K,K_in,Param_t::r0,r0_in);
-        }
-        
-    }
+            for(size_t AtomK: Conns[AtomJ]){
+                DEBUG_CHECK(AtomK!=AtomJ,"Atom J is bonded to itself. What??");
+                if(AtomK==AtomI)continue;//Went backwards in the graph
+                for(size_t AtomL : Conns[AtomK]){
+                    DEBUG_CHECK(AtomL!=AtomK,"Atom K is bonded to itself");
+                    if(AtomL==AtomJ)continue;//Went backwards
+                    if(AtomK<AtomJ)continue;
+                    add_torsion({AtomI,AtomJ,AtomK,AtomL},Types,Params,FoundCoords);        
+                }//Close AtomL
+                if(AtomK<AtomI)continue;//Avoid 2x counting angle
+                add_angle({AtomI,AtomJ,AtomK},Types,Params,FoundCoords);
+                if(Conns[AtomJ].size()==3){
+                    for(size_t AtomL: Conns[AtomJ]){
+                        if(AtomL==AtomK||AtomL==AtomI||AtomL<AtomK)continue;
+                        add_imp({AtomI,AtomJ,AtomK,AtomL},Types,
+                                Params,FoundCoords,Carts);    
+                    }//Close AtomL imptorsion
+                }//Close if imptorsion
+            }//Close Atom K
+            if(AtomJ<AtomI)continue; //Avoid 2x counting bond
+            add_bond({AtomI,AtomJ},Types,Params,FoundCoords);
+        }//Close Atom J     
+    }//Close AtomI
     return FoundCoords;
 }
 
+/* Begin indirection galore*/
+
+void add_bond(const IVector& Atoms,const AtomTypes& Types,
+              const ParamTypes& Params,CoordArray& FoundCoords){
+    const IArray<2> ts={Types[Atoms[0]][0],Types[Atoms[1]][0]};
+    const IVector ff_types={min(ts[0],ts[1]),max(ts[0],ts[1])};
+    const double K_in=Params.at(BOND).at(K).at(ff_types);
+    const double r0_in=Params.at(BOND).at(r0).at(ff_types);
+    FoundCoords[BOND]->add_coord(Atoms,Param_t::K,K_in,Param_t::r0,r0_in);
+}
+
+void add_angle(const IVector& Atoms,
+               const AtomTypes& Types,const ParamTypes& Params,
+               CoordArray& FoundCoords){
+    const IArray<3> ts={Types[Atoms[0]][0],Types[Atoms[1]][0],
+                        Types[Atoms[2]][0]};
+    const IVector ff_types={min(ts[0],ts[2]),ts[1],max(ts[0],ts[2])};
+    const double K_in=Params.at(ANGLE).at(K).at(ff_types);
+    const double r0_in=Params.at(ANGLE).at(r0).at(ff_types);
+    FoundCoords[ANGLE]->add_coord(Atoms,K,K_in,r0,r0_in);
+}
+
+void add_torsion(const IVector& Atoms,
+                 const AtomTypes& Types,const ParamTypes& Params,
+                 CoordArray& FoundCoords){
+    const IArray<4> ts={Types[Atoms[0]][0],Types[Atoms[1]][0],
+                        Types[Atoms[2]][0],Types[Atoms[3]][0]};
+    const bool already_ordered=ts[1]<ts[2]||((ts[1]==ts[2])&&ts[0]<ts[3]);
+    const IVector ff_types=(already_ordered?IVector({ts[0],ts[1],ts[2],ts[3]}):
+                                            IVector({ts[3],ts[2],ts[1],ts[0]}));
+    double V_in=Params.at(TORSION).at(amp).at(ff_types);
+    double n_in=Params.at(TORSION).at(n).at(ff_types);
+    double phi_in=Params.at(TORSION).at(phi).at(ff_types);
+    FoundCoords[TORSION]->add_coord(Atoms,amp,V_in,n,n_in,phi,phi_in);
+    if(Params.at(TORSION).at(amp2).count(ff_types)){
+        V_in=Params.at(TORSION).at(amp2).at(ff_types);
+        n_in=Params.at(TORSION).at(n2).at(ff_types);
+        phi_in=Params.at(TORSION).at(phi2).at(ff_types);
+        FoundCoords[TORSION]->add_coord(Atoms,amp,V_in,n,n_in,phi,phi_in);
+    }
+    if(Params.at(TORSION).at(amp3).count(ff_types)){
+        V_in=Params.at(TORSION).at(amp3).at(ff_types);
+        n_in=Params.at(TORSION).at(n3).at(ff_types);
+        phi_in=Params.at(TORSION).at(phi3).at(ff_types);
+        FoundCoords[TORSION]->add_coord(Atoms,amp,V_in,n,n_in,phi,phi_in);
+    }
+}
+
+//Code factorization for ordering the atoms in the improper torsions
+template<typename T,typename T2,typename T3>
+IArray<3> order_imp(size_t common,size_t v1,
+           size_t v2,const T& spokes, const T2& mags, const T3& ts){
+        const double angle1=std::acos(
+            dot(spokes[common],spokes[v1])/(mags[common]*mags[v1]));
+        const double angle2=std::acos(
+            dot(spokes[common],spokes[v2])/(mags[common]*mags[v2]));
+        const IArray<2> deg=angle1<angle2? IArray<2>({v1,v2}):IArray<2>({v2,v1});
+        return ts[common]>ts[v1]? 
+                 IArray<3>({deg[0],deg[1],common}):IArray<3>({common,deg[0],deg[1]});
+}
+
+using DArray=std::array<double,3>;
+
+void add_imp(const IVector& Atoms,const AtomTypes& Types,
+             const ParamTypes& Params,CoordArray& FoundCoords,const DVector& carts){
+    const int tj=Types[Atoms[1]][0];//The type of the central atom
+    //Eventually we need these sorted, but doing so destroys the map to the atoms
+    IArray<3> ts={Types[Atoms[0]][0],Types[Atoms[2]][0],Types[Atoms[3]][0]};
+
+    const std::array<DArray,3> spokes={//Distance from each atom to center
+        diff(&carts[Atoms[1]*3],&carts[Atoms[0]*3]),
+        diff(&carts[Atoms[1]*3],&carts[Atoms[2]*3]),
+        diff(&carts[Atoms[1]*3],&carts[Atoms[3]*3])};
+    const DArray mags={mag(spokes[0]),mag(spokes[1]),mag(spokes[2])};
+    
+    //Sort the atoms according to criteria described in manual
+    IArray<3> final_order={0,1,2};//This will be the order of the periphereal atoms
+    
+    //Worry about cases where one atom type is degenerate
+    if(ts[0]==ts[1])final_order=order_imp(2,0,1,spokes,mags,ts);
+    else if(ts[0]==ts[2])final_order=order_imp(1,0,2,spokes,mags,ts);
+    else if(ts[1]==ts[2])final_order=order_imp(0,1,2,spokes,mags,ts);
+    else //Case where all unique (all same hits condition 1) 
+        std::sort(final_order.begin(),final_order.end(),[&](size_t i, size_t j){
+            return ts[i]<ts[j];}//End lambda
+        );
+    //Parameters are always looked up sorted
+    std::sort(ts.begin(),ts.end());
+    const IVector ff_types={ts[0],tj,ts[1],ts[2]};
+    
+    //Indices in final_order are only for periphereal atoms
+    const IVector TempAtoms={Atoms[0],Atoms[2],Atoms[3]};
+    const IVector FinalAtoms={TempAtoms[final_order[0]],Atoms[1],
+                              TempAtoms[final_order[1]],TempAtoms[final_order[2]]};
+    const double V_in=Params.at(IMPTORSION).at(amp).at(ff_types),
+                 n_in=Params.at(IMPTORSION).at(n).at(ff_types),
+               phi_in=Params.at(IMPTORSION).at(phi).at(ff_types);
+    FoundCoords[IMPTORSION]->add_coord(FinalAtoms,amp,V_in,n,n_in,phi,phi_in);
+}
 
 } //End namespace FManII
 

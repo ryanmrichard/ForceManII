@@ -16,24 +16,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-#include <ForceManII/FManII.hpp>
-#include "TestMacros.hpp"
-#include "ubiquitin.hpp"
+/** \file Angle.hpp
+ * 
+ * \version 0.1
+ * \date October 29, 2016 at 12:55 PM (EST)
+ *  
+ * Original Author: \author Ryan M. Richard (ryanmrichard1<at>gmail.com)
+ * 
+ * Additional contributions by:
+ *
+ */
 
-int main(int argc, char** argv){
-    test_header("Testing Distance class");
- 
-    FManII::CoordArray Bonds=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
-            ubiquitin_FF_params,ubiquitin_conns);
-    
-    const std::vector<double>& BondLength=
-        Bonds[FManII::IntCoord_t::BOND]->values();
-    const std::vector<double>& bond_k=Bonds[FManII::BOND]->params(FManII::K);
-    
-    compare_vectors(BondLength,ubiquitin_bonds,1e-4,"Bond displacements");
-    compare_vectors(bond_k,ubiquitin_K,1e-4,"Bond parameters");
-    
-    test_footer();
-    return 0;
-}
+#ifndef FMANII_ANGLE_HPP
+#define FMANII_ANGLE_HPP
+
+#include "ForceManII/InternalCoordinates.hpp"
+
+///Namespace for all code associated with ForceManII
+namespace FManII {
+
+///Implements derivatives for angle among three points.  
+///See [Angle Class](@ref angle) for more detail.
+class Angle: public IntCoords {
+public:
+    Angle(std::shared_ptr<const VDouble> Carts):
+        IntCoords(3,Carts){}
+protected:
+    VDouble compute_value(size_t deriv_i,Atoms_t coord_i)const;
+};
+
+} //End namespace FManII
+
+#endif /* End header guard */
 

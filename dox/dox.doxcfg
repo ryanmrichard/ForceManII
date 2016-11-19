@@ -1,2 +1,7 @@
 INPUT+=  dox/mainpage.dox \
-         dox/distance.md
+         dox/angle.md \
+         dox/distance.md \
+         dox/fourierseries.md \
+         dox/harmonicoscillator.md \
+         dox/torsion.md \
+         dox/terminology.md \

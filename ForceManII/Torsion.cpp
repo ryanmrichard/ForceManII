@@ -16,22 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-#include "ForceManII/Distance.hpp"
-#include "ForceManII/Common.hpp"
+#include "ForceManII/Torsion.hpp"
 #include "ForceManII/Util.hpp"
+#include "ForceManII/Common.hpp"
 
+using DArray=std::array<double,3>;
+using Deriv_t=std::vector<double>;
 namespace FManII {
 
-inline std::vector<double> dist(const double* q1, const double* q2,double off){
-    return {mag(diff(q1,q2))-off};
+inline Deriv_t torsion(const double* q1, const double* q2,
+        const double* q3, const double* q4, double n, double gamma){
+    const DArray r21=diff(q1,q2),r32=diff(q2,q3),r34=diff(q4,q3);
+    const DArray n1=cross(r21,r32),n2=cross(r34,r32);
+    return Deriv_t(1,n*angle(n1,n2,r32)-gamma);
 }
 
-Distance::VDouble Distance::compute_value(size_t deriv_i,Atoms_t coord_i)const{
+Deriv_t Torsion::compute_value(size_t deriv_i,Atoms_t coord_i)const{
     CHECK(deriv_i<1,"Higher order derivatives are not yet implemented!!!");
-    const size_t atomi=coord_i[0],atomj=coord_i[1];
-    const double* q1=&((*carts_)[atomi*3]), *q2=&((*carts_)[atomj*3]);
-    if(deriv_i==0) return dist(q1,q2,params_.at(r0).back());
+    const size_t atomi=coord_i[0],atomj=coord_i[1],
+                 atomk=coord_i[2],atoml=coord_i[3];
+    const double *q1=&((*carts_)[atomi*3]), *q2=&((*carts_)[atomj*3]),
+                 *q3=&((*carts_)[atomk*3]), *q4=&((*carts_)[atoml*3]);
+    if(deriv_i==0) return torsion(q1,q2,q3,q4,params_.at(n).back(),
+                                  params_.at(phi).back());
 }
+
 
 } //End namespace FManII
 

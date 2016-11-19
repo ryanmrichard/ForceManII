@@ -16,21 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-#include "ForceManII/Distance.hpp"
+
+#include "ForceManII/Angle.hpp"
 #include "ForceManII/Common.hpp"
 #include "ForceManII/Util.hpp"
+#include <iostream>
+
+using VDouble=std::vector<double>;
 
 namespace FManII {
 
-inline std::vector<double> dist(const double* q1, const double* q2,double off){
-    return {mag(diff(q1,q2))-off};
+inline VDouble angle(const double* r1, const double* r2, 
+                           const double* r3, double off){
+   const std::array<double,3> r12=diff(r1,r2),r32=diff(r3,r2);
+   return {angle(r12,r32,cross(r12,r32))-off};
 }
 
-Distance::VDouble Distance::compute_value(size_t deriv_i,Atoms_t coord_i)const{
+
+VDouble Angle::compute_value(size_t deriv_i,Atoms_t coord_i)const{
     CHECK(deriv_i<1,"Higher order derivatives are not yet implemented!!!");
-    const size_t atomi=coord_i[0],atomj=coord_i[1];
-    const double* q1=&((*carts_)[atomi*3]), *q2=&((*carts_)[atomj*3]);
-    if(deriv_i==0) return dist(q1,q2,params_.at(r0).back());
+    const size_t atomi=coord_i[0],atomj=coord_i[1],atomk=coord_i[2];
+    const double *q1=&((*carts_)[atomi*3]), 
+                 *q2=&((*carts_)[atomj*3]),
+                 *q3=&((*carts_)[atomk*3]);
+    if(deriv_i==0) return angle(q1,q2,q3,params_.at(r0).back());    
 }
 
 } //End namespace FManII

@@ -40,8 +40,7 @@
 
 ///Namespace for all code associated with ForceManII
 namespace FManII {
-
-class IntCoords;
+class IntCoords;//Avoids cyclic inclusion problem
 
 ///These are the recognized types of parameters
 enum Param_t {
@@ -49,17 +48,23 @@ enum Param_t {
     r0,///<The equilibrium value
     amp,///<The amplitude for Fourier series
     phi,///<The phase shift for Fourier series
-    n///<The periodicity for Fourier series
+    n,///<The periodicity for Fourier series
+    amp2,///<The amplitude for a two-part Fourier series
+    phi2,///<The phase shift for a two-part Fourier series
+    n2,///<The periodicity for a two-part Fourier series
+    amp3,///<The amplitude for a three-part Fourier series
+    phi3,///<The phase shift for a three-part Fourier series
+    n3///<The periodicity for a three-part Fourier series
 };
 
 ///These are the recognized types of IntCoords
 enum IntCoord_t {
-    Bond,///<A bond
-    UBPair,///<A 1,3 pair
-    Pair,///<A pair that is not a bond or a 1,3 pair
-    Angle,///<An angle
-    Torsion,///<A torsion
-    ImpTorsion,///<An improper torsion angle
+    BOND,///<A bond
+    UBPAIR,///<A 1,3 pair
+    PAIR,///<A pair that is not a bond or a 1,3 pair
+    ANGLE,///<An angle
+    TORSION,///<A torsion
+    IMPTORSION,///<An improper torsion angle
 };
 
 ///An array of internal coordinates arranged by type
@@ -105,6 +110,10 @@ CoordArray get_coords(const std::vector<double>& Carts,
                      const ParamTypes& Params,
                      const ConnData& Conns);
 } //End namespace FManII
+
+//Must come last b/c it uses this header
+#include "ForceManII/InternalCoordinates.hpp"
+
 
 #endif /* End header guard */
 

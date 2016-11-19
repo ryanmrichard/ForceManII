@@ -31,6 +31,30 @@
 #define FMANII_TESTMACROS_HPP
 #include <sstream>
 #include <cmath>
+#include <iostream>
+
+inline void test_header(const std::string& Msg){
+    const std::string stars(80,'*');
+    std::cout<<stars<<std::endl;
+    size_t padding=(size_t)std::floor((80-4-Msg.size())/2.0);
+    std::string lpad(padding,' '),rpad(padding+Msg.size()%2,' ');
+    std::cout<<"* "<<lpad<<Msg<<rpad<<" *"<<std::endl;
+    std::cout<<stars<<std::endl;
+}
+
+inline void test_footer(){
+    const std::string stars(80,'*'),Msg("All Tests Passed!!!!!!!");
+    std::cout<<stars<<std::endl;
+    size_t padding=(size_t)std::floor((80-4-Msg.size())/2.0);
+    std::string lpad(padding,' '),rpad(padding+Msg.size()%2,' ');
+    std::cout<<"* "<<lpad<<Msg<<rpad<<" *"<<std::endl;
+    std::cout<<stars<<std::endl;
+}
+
+#define TEST_THROW(fxn,msg)\
+do{bool threw=false;try{fxn;}catch(const std::runtime_error& error){threw=true;}\
+if(!threw)throw std::runtime_error(msg);}while(0)
+
 
 /** Function for testing if two doubles are equivalent
  *  
@@ -40,20 +64,23 @@
  *  \param[in] Msg    A brief description of the check you are performing
  */
 inline void test_value(double actual,double theory,
-                       double tol,const std::string& Msg ){
+                       double tol,const std::string& Msg ,bool print=true){
     if(std::fabs(actual-theory)>tol){
         std::stringstream m;
         m<<Msg<<": "<<actual<<" does not match "<<theory<<" to within "
          <<tol<<std::endl;
         throw std::runtime_error(m.str());
     }
+    if(print)std::cout<<Msg<<": passed"<<std::endl;
+    
 }
 
 inline void compare_vectors(const std::vector<double>& actual,
                             const std::vector<double>& theory,
                             double tol,const std::string& msg){
     if(actual.size()!=theory.size())throw std::runtime_error("sizes do not match");
-    for(size_t i=0;i<actual.size();++i)test_value(actual[i],theory[i],tol,msg);    
+    for(size_t i=0;i<actual.size();++i)test_value(actual[i],theory[i],tol,msg,false);
+    std::cout<<msg<<": passed"<<std::endl;    
 }
         
 

@@ -18,35 +18,39 @@
  */
 
 #include <ForceManII/FFTerm.hpp>
-#include <ForceManII/HarmonicOscillator.hpp>
+#include <ForceManII/FourierSeries.hpp>
 #include "TestMacros.hpp"
 #include "ubiquitin.hpp"
 #include <cmath>
 
 int main(int argc, char** argv){
-    test_header("Testing Harmonic Oscillator force-field term");
-    FManII::HarmonicOscillator HO;
+    test_header("Testing FourierSeries force-field term");
+    FManII::FourierSeries FS;
     
 #ifndef NDEBUG
-std::vector<double> a(3,0.0),b(2,0.0),c;
-TEST_THROW(c=HO.deriv(a,b),"bond.size()==ks.size()");
+std::vector<double> a(3,0.0),b(2,0.0),c,d;
+TEST_THROW(d=FS.deriv(a,c,b),"Qs.size()!=Vs.size()");
+TEST_THROW(d=FS.deriv(a,b,c),"Qs.size()!=ns.size()");
 #endif
 
      FManII::CoordArray coords=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
             ubiquitin_FF_params,ubiquitin_conns);
-     const std::vector<double>& bonds=coords[FManII::BOND]->values();
-     const std::vector<double>& bond_k=coords[FManII::BOND]->params(FManII::K);
-     const std::vector<double>& angles=coords[FManII::ANGLE]->values();
-     const std::vector<double>& angle_k=coords[FManII::ANGLE]->params(FManII::K);
+     const std::vector<double>& torsions=coords[FManII::TORSION]->values(),
+        tor_v=coords[FManII::TORSION]->params(FManII::amp),
+        tor_n=coords[FManII::TORSION]->params(FManII::n),
+        imps=coords[FManII::IMPTORSION]->values(),
+        imp_v=coords[FManII::IMPTORSION]->params(FManII::amp),
+        imp_n=coords[FManII::IMPTORSION]->params(FManII::n);
      
     //Energy check
-    std::vector<double> Energy=HO.deriv(bonds,bond_k);
-    test_value(Energy[0],ubiquitinbond_e,1e-5,"Bond Energy");
+    std::vector<double> Energy=FS.deriv(torsions,tor_v,tor_n);
+    test_value(Energy[0],ubiquitintorsion_e,1e-5,"Torsion Energy");
     
-    Energy=HO.deriv(angles,angle_k);
-    test_value(Energy[0],ubiquitinangle_e,1e-5,"Angle Energy");
+    Energy=FS.deriv(imps,imp_v,imp_n);
+    test_value(Energy[0],ubiquitinimproper_e,1e-5,"Improper Torsion Energy");
     
     test_footer();
     return 0;
 } //End main
+
 
