@@ -18,13 +18,16 @@ bonds,bond_k,bond_r0=Fxns.compute_bonds(carts,atom2tink,connect,param_num,parms)
 angles,angle_k,angle_r0=Fxns.compute_angles(carts,atom2tink,connect,param_num,parms)
 torsions,torsion_v=Fxns.compute_torsions(carts,atom2tink,connect,param_num,parms)
 imptorsion,imp_v=Fxns.compute_imp_torsions(carts,atom2tink,connect,param_num,parms)
+pairs13,pairs14,pairs,chg14,chg=Fxns.compute_pairs(carts,atom2tink,connect,param_num,parms)
 
 egy=0.0
-for i,angle in enumerate(torsions):
-    egyi=torsion_v[i]*(1+math.cos(angle))
-    print(egyi)
-    egy+=egyi
-print(egy)
+for i,ri in enumerate(pairs14):
+    egy+=chg14[i]/ri
+print(egy*627.5096)
+for i,ri in enumerate(pairs):
+    egy+=chg[i]/ri
+print(egy*627.5096)
+    
 
 #Print .hpp file
 f=open(mol_name+".hpp","w")

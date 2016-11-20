@@ -3,6 +3,7 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
       <df name="bin">
+        <in>Test.py</in>
         <in>Tinker2FManIIFxns.py</in>
       </df>
       <df name="dox">
@@ -12,6 +13,7 @@
         <in>fourierseries.md</in>
         <in>harmonicoscillator.md</in>
         <in>terminology.md</in>
+        <in>tinkerformat.md</in>
         <in>torsion.md</in>
       </df>
       <df name="ForceManII">
@@ -112,6 +114,8 @@
       </item>
       <item path="ForceManII/Util.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="bin/Test.py" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="bin/Tinker2FManIIFxns.py" ex="false" tool="3" flavor2="0">
       </item>
       <item path="dox/angle.md" ex="false" tool="3" flavor2="0">
@@ -125,6 +129,8 @@
       <item path="dox/harmonicoscillator.md" ex="false" tool="3" flavor2="0">
       </item>
       <item path="dox/terminology.md" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dox/tinkerformat.md" ex="false" tool="3" flavor2="0">
       </item>
       <item path="dox/torsion.md" ex="false" tool="3" flavor2="0">
       </item>

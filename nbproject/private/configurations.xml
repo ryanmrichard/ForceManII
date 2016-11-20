@@ -7,10 +7,11 @@
       <df name="bin">
         <df name="__pycache__">
         </df>
+        <in>Test.py</in>
         <in>Tinker2FManIIFxns.py</in>
         <in>ub1.hpp</in>
         <in>ub2.hpp</in>
-        <in>water.hpp</in>
+        <in>ubiquitin.hpp</in>
       </df>
       <df name="build">
         <df name="CMakeFiles">
@@ -128,6 +129,7 @@
         <in>fourierseries.md</in>
         <in>harmonicoscillator.md</in>
         <in>terminology.md</in>
+        <in>tinkerformat.md</in>
         <in>torsion.md</in>
       </df>
       <df name="ForceManII">

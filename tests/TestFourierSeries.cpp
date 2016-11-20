@@ -47,7 +47,9 @@ TEST_THROW(d=FS.deriv(a,b,c),"Qs.size()!=ns.size()");
     test_value(Energy[0],ubiquitintorsion_e,1e-5,"Torsion Energy");
     
     Energy=FS.deriv(imps,imp_v,imp_n);
-    test_value(Energy[0],ubiquitinimproper_e,1e-5,"Improper Torsion Energy");
+    
+    //Lower convergence than other terms b/c of ambiguity in imp
+    test_value(Energy[0],ubiquitinimproper_e,1e-4,"Improper Torsion Energy");
     
     test_footer();
     return 0;

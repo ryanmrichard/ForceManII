@@ -54,7 +54,10 @@ enum Param_t {
     n2,///<The periodicity for a two-part Fourier series
     amp3,///<The amplitude for a three-part Fourier series
     phi3,///<The phase shift for a three-part Fourier series
-    n3///<The periodicity for a three-part Fourier series
+    n3,///<The periodicity for a three-part Fourier series
+    q,///<The charge, in a.u., for point-charge, point-charge
+    sigma,///<The radius of a 6-12 potential
+    epsilon,///<The well depth of a 6-12 potential
 };
 
 ///These are the recognized types of IntCoords
@@ -65,6 +68,8 @@ enum IntCoord_t {
     ANGLE,///<An angle
     TORSION,///<A torsion
     IMPTORSION,///<An improper torsion angle
+    ELECTROSTATICS,///<A charge-charge interaction
+    LENNARD_JONES,///<A 6-12 Lennard-Jones potential
 };
 
 ///An array of internal coordinates arranged by type

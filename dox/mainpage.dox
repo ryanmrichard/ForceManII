@@ -8,6 +8,7 @@ Welcome to the ForceManII user/developer manual.  This is a work in progress.
 \section main_sec Contents
 - Conventions
   - [Terminology](@ref terminology)
+  - [Tinker Force Field Format](@ref tinkerformat)
 - Coordinate Types
   - [Distance](@ref distance)
   - [Angle](@ref angle)
