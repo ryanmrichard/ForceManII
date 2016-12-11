@@ -1,0 +1,4 @@
+#ifndef LENNARDJONES_HPP
+#define LENNARDJONES_HPP
+
+#endif // LENNARDJONES_HPP

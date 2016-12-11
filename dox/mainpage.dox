@@ -6,6 +6,7 @@
 Welcome to the ForceManII user/developer manual.  This is a work in progress.
 
 \section main_sec Contents
+- [History of the Project](@ref history) Coming Soon!!!!
 - Conventions
   - [Terminology](@ref terminology)
   - [Tinker Force Field Format](@ref tinkerformat)
@@ -15,7 +16,9 @@ Welcome to the ForceManII user/developer manual.  This is a work in progress.
   - [Torsion](@ref torsion)
 - Force Field Terms
   - [Harmonic Oscillator](@ref HO)
+  - [Polynomial](@ref polynomial)
   - [Fourier Series](@ref fourier)
+  - [Lennard-Jones 6-12](@ref LJ)
 
 
 \section Authors

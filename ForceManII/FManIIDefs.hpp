@@ -1,0 +1,4 @@
+#ifndef FMANIIDEFS_HPP
+#define FMANIIDEFS_HPP
+
+#endif // FMANIIDEFS_HPP
