@@ -1,6 +1,8 @@
 # ForceManII: An MM code for QM people
 
-TODO: Add statuses (code coverage, build testing, etc.)
+TODO: CI integration
+
+User and Developer manual is available [here](https://ryanmrichard.github.io/ForceManII/).
 
 ## History
 ForceManII was originally a code written to replace Q-Chem's original MM code, 
