@@ -1,0 +1,98 @@
+\hypertarget{FManII_8hpp}{}\section{F\+Man\+I\+I.\+hpp File Reference}
+\label{FManII_8hpp}\index{F\+Man\+I\+I.\+hpp@{F\+Man\+I\+I.\+hpp}}
+
+
+This header is meant to be the main A\+PI to Force\+Man\+II. Anything users need to interface with Force\+Man\+II goes here.  
+
+
+{\ttfamily \#include $<$map$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$array$>$}\\*
+{\ttfamily \#include $<$memory$>$}\\*
+{\ttfamily \#include \char`\"{}Force\+Man\+I\+I/\+Internal\+Coordinates.\+hpp\char`\"{}}\\*
+Include dependency graph for F\+Man\+I\+I.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{FManII_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=318pt]{FManII_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespaceFManII}{F\+Man\+II}
+\begin{DoxyCompactList}\small\item\em Namespace for all code associated with Force\+Man\+II. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \hyperlink{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{F\+Man\+I\+I\+::\+Coord\+Array} = std\+::map$<$ Int\+Coord\+\_\+t, std\+::unique\+\_\+ptr$<$ Int\+Coords $>$$>$\hypertarget{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{}\label{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}
+
+\begin{DoxyCompactList}\small\item\em An array of internal coordinates arranged by type. \end{DoxyCompactList}\item 
+using \hyperlink{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{F\+Man\+I\+I\+::\+Atom\+Types} = std\+::vector$<$ std\+::array$<$ size\+\_\+t, 2 $>$$>$\hypertarget{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{}\label{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}
+
+\begin{DoxyCompactList}\small\item\em Array where element i respectively is the atom type and V\+DW type of atom i. \end{DoxyCompactList}\item 
+using \hyperlink{namespaceFManII_a7c18a61f01fcc0604c39cbfae43665df}{F\+Man\+I\+I\+::\+Conn\+Data} = std\+::vector$<$ std\+::vector$<$ size\+\_\+t $>$$>$\hypertarget{namespaceFManII_a7c18a61f01fcc0604c39cbfae43665df}{}\label{namespaceFManII_a7c18a61f01fcc0604c39cbfae43665df}
+
+\begin{DoxyCompactList}\small\item\em Array such that element i is a vector of the atoms bonded to atom i. \end{DoxyCompactList}\item 
+using \hyperlink{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{F\+Man\+I\+I\+::\+Param\+Types} = std\+::map$<$ Int\+Coord\+\_\+t, std\+::map$<$ Param\+\_\+t, std\+::map$<$ std\+::vector$<$ size\+\_\+t $>$, double $>$$>$$>$
+\begin{DoxyCompactList}\small\item\em An object to hold the parameters of a force field. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363}{F\+Man\+I\+I\+::\+Param\+\_\+t} \{ \\*
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363acce4c4e3a7008d8a210e0950f0ae6646}{F\+Man\+I\+I\+::K}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363adbd624e837d07235c15569341fa0c052}{F\+Man\+I\+I\+::r0}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a807f5303050e210f41b43189457ee216}{F\+Man\+I\+I\+::amp}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a3a18cc339dcc327297994fd5de406000}{F\+Man\+I\+I\+::phi}, 
+\\*
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a351f38f2149aa0e3be56f7c5aa16eae9}{F\+Man\+I\+I\+::n}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a6168b053bb4d250bc56878c3c5329606}{F\+Man\+I\+I\+::amp2}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363ac923a156e5d6c899b0691bcf05dbfe08}{F\+Man\+I\+I\+::phi2}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a79574f7c7d028868bba201ab99eeb319}{F\+Man\+I\+I\+::n2}, 
+\\*
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a8ea674fa14845cb499bba588e8e6b72d}{F\+Man\+I\+I\+::amp3}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a48029f18757fa6d2a3d72517001cc0d1}{F\+Man\+I\+I\+::phi3}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363ac582c34207ea213912ced08cebca1a34}{F\+Man\+I\+I\+::n3}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363afec764e5c20f480b9b706861106356de}{F\+Man\+I\+I\+::q}, 
+\\*
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a0cdd92becbae953906c5305392e29836}{F\+Man\+I\+I\+::sigma}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a59874bb4d679327306f2c7405286afa9}{F\+Man\+I\+I\+::epsilon}
+ \}\begin{DoxyCompactList}\small\item\em These are the recognized types of parameters. \end{DoxyCompactList}
+\item 
+enum \hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059}{F\+Man\+I\+I\+::\+Int\+Coord\+\_\+t} \{ \\*
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a0ad48919334546233ad86a2699918852}{F\+Man\+I\+I\+::\+B\+O\+ND}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ae3fda21c728a90c9974bb2a2404efcc7}{F\+Man\+I\+I\+::\+U\+B\+P\+A\+IR}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ad387432e20772e11fb6520606b93faa6}{F\+Man\+I\+I\+::\+P\+A\+IR}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ad67623636070f3be7ae6e7700a5bd9f6}{F\+Man\+I\+I\+::\+A\+N\+G\+LE}, 
+\\*
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a4f481d454dea70e1a1c7ef63d99d3402}{F\+Man\+I\+I\+::\+T\+O\+R\+S\+I\+ON}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a650ab62f01654d8aae5b3a9c9919dbed}{F\+Man\+I\+I\+::\+I\+M\+P\+T\+O\+R\+S\+I\+ON}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059af32be9c7ba6cd66722cc93629dbb5fbe}{F\+Man\+I\+I\+::\+E\+L\+E\+C\+T\+R\+O\+S\+T\+A\+T\+I\+CS}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a97b415b3364dd5c1da0fd17a551ce037}{F\+Man\+I\+I\+::\+L\+E\+N\+N\+A\+R\+D\+\_\+\+J\+O\+N\+ES}
+ \}\begin{DoxyCompactList}\small\item\em These are the recognized types of Int\+Coords. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Coord\+Array \hyperlink{namespaceFManII_a962553cf7a05889bf0f90071a59d963c}{F\+Man\+I\+I\+::get\+\_\+coords} (const std\+::vector$<$ double $>$ \&Carts, const Atom\+Types \&Types, const Param\+Types \&Params, const Conn\+Data \&Conns, double chg14scale=1.\+0)
+\begin{DoxyCompactList}\small\item\em A function that processes the input and returns a set of objects set up for use in \hyperlink{namespaceFManII}{F\+Man\+II}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+October 14, 2016 at 10\+:17 PM (E\+ST)
+\end{DoxyDate}
+Original Author\+: \begin{DoxyAuthor}{Author}
+Ryan M. Richard (ryanmrichard1$<$at$>$gmail.\+com)
+\end{DoxyAuthor}
+Additional contributions by\+: 

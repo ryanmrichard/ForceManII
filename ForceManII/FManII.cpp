@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+#include "ForceManII/FManII.hpp"
 #include "ForceManII/Distance.hpp"
 #include "ForceManII/Angle.hpp"
 #include "ForceManII/Torsion.hpp"
@@ -50,8 +51,14 @@ inline void add_imp(const IVector& Atoms,
         const AtomTypes& Types,const ParamTypes& Params,
         CoordArray& FoundCoords,const DVector& carts);
 
+inline void add_els(const IVector& Atoms,const AtomTypes& Types,
+        const ParamTypes& Params,CoordArray& FoundCoords,double scale);
+inline void add_lj(const IVector& Atoms,const AtomTypes& Types,
+        const ParamTypes& Params,CoordArray& FoundCoords,double scale);
+
 CoordArray get_coords(const DVector& Carts,const AtomTypes& Types,
-                     const ParamTypes& Params,const ConnData& Conns){
+                     const ParamTypes& Params,const ConnData& Conns,
+                     double chg14scale,double vdw14scale){
     const size_t NAtoms=Carts.size()/3;
     DEBUG_CHECK(NAtoms==Conns.size(),"Number of atoms differs among inputs");
     shared_DVector Sys=std::make_shared<DVector>(Carts);
@@ -61,7 +68,9 @@ CoordArray get_coords(const DVector& Carts,const AtomTypes& Types,
     FoundCoords.emplace(ANGLE,std::move(make_unique<Angle>(Sys)));
     FoundCoords.emplace(TORSION,std::move(make_unique<Torsion>(Sys)));
     FoundCoords.emplace(IMPTORSION,std::move(make_unique<Torsion>(Sys)));
-    
+    FoundCoords.emplace(ELECTROSTATICS,std::move(make_unique<Distance>(Sys)));
+    FoundCoords.emplace(LENNARD_JONES,std::move(make_unique<Distance>(Sys)));
+    std::set<std::pair<size_t,size_t>> pair14,pair13,pair12;
     for(size_t AtomI=0;AtomI<NAtoms;++AtomI){
         for(size_t AtomJ : Conns[AtomI]){
             DEBUG_CHECK(AtomI!=AtomJ,"AtomI is bonded to itself. What??");
@@ -71,10 +80,14 @@ CoordArray get_coords(const DVector& Carts,const AtomTypes& Types,
                 for(size_t AtomL : Conns[AtomK]){
                     DEBUG_CHECK(AtomL!=AtomK,"Atom K is bonded to itself");
                     if(AtomL==AtomJ)continue;//Went backwards
+                    if(AtomL>AtomI){
+                        pair14.insert(std::make_pair(AtomI,AtomL));
+                    }
                     if(AtomK<AtomJ)continue;
                     add_torsion({AtomI,AtomJ,AtomK,AtomL},Types,Params,FoundCoords);        
                 }//Close AtomL
                 if(AtomK<AtomI)continue;//Avoid 2x counting angle
+                pair13.insert(std::make_pair(AtomI,AtomK));
                 add_angle({AtomI,AtomJ,AtomK},Types,Params,FoundCoords);
                 if(Conns[AtomJ].size()==3){
                     for(size_t AtomL: Conns[AtomJ]){
@@ -85,10 +98,41 @@ CoordArray get_coords(const DVector& Carts,const AtomTypes& Types,
                 }//Close if imptorsion
             }//Close Atom K
             if(AtomJ<AtomI)continue; //Avoid 2x counting bond
+            pair12.insert(std::make_pair(AtomI,AtomJ));
             add_bond({AtomI,AtomJ},Types,Params,FoundCoords);
         }//Close Atom J     
     }//Close AtomI
+    for(size_t AtomI=0;AtomI<NAtoms;++AtomI){
+        for(size_t AtomJ=AtomI+1;AtomJ<NAtoms;++AtomJ){
+            auto pair=std::make_pair(AtomI,AtomJ);
+            bool is12=pair12.count(pair),is13=pair13.count(pair),
+                 is14=pair14.count(pair);
+            if(is12||is13)continue;
+            add_els({AtomI,AtomJ},Types,Params,FoundCoords,is14?chg14scale:1.0);
+            add_lj({AtomI,AtomJ},Types,Params,FoundCoords,is14?vdw14scale:1.0);
+        }
+    }
     return FoundCoords;
+}
+
+void add_lj(const IVector& Atoms,const AtomTypes& Types,
+             const ParamTypes& Params,CoordArray& FoundCoords,double scale){
+    const IArray<2> ts={Types[Atoms[0]][0],Types[Atoms[1]][0]};
+    const double sigmai=Params.at(LENNARD_JONES).at(sigma).at({ts[0]}),
+          sigmaj=Params.at(LENNARD_JONES).at(sigma).at({ts[1]}),
+          epsiloni=Params.at(LENNARD_JONES).at(epsilon).at({ts[0]}),
+          epsilonj=Params.at(LENNARD_JONES).at(epsilon).at({ts[1]});
+    const double avgsigma=sigmai+sigmaj,avgepsilon=sqrt(epsiloni*epsilonj);
+    FoundCoords[LENNARD_JONES]->add_coord(Atoms,sigma,avgsigma,epsilon,avgepsilon*scale);
+}
+
+void add_els(const IVector& Atoms,const AtomTypes& Types,
+             const ParamTypes& Params,CoordArray& FoundCoords,double scale){
+    const IArray<2> ts={Types[Atoms[0]][1],Types[Atoms[1]][1]};
+    const double qi=Params.at(ELECTROSTATICS).at(q).at({ts[0]}),
+          qj=Params.at(ELECTROSTATICS).at(q).at({ts[1]});
+    
+    FoundCoords[ELECTROSTATICS]->add_coord(Atoms,Param_t::q,qi*qj*scale);
 }
 
 /* Begin indirection galore*/

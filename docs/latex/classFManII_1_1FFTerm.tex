@@ -1,0 +1,30 @@
+\hypertarget{classFManII_1_1FFTerm}{}\section{F\+Man\+II\+:\+:F\+F\+Term$<$ Model\+\_\+t, Coord\+\_\+t $>$ Class Template Reference}
+\label{classFManII_1_1FFTerm}\index{F\+Man\+I\+I\+::\+F\+F\+Term$<$ Model\+\_\+t, Coord\+\_\+t $>$@{F\+Man\+I\+I\+::\+F\+F\+Term$<$ Model\+\_\+t, Coord\+\_\+t $>$}}
+
+
+{\ttfamily \#include $<$F\+F\+Term.\+hpp$>$}
+
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Model\+\_\+t, typename Coord\+\_\+t$>$\\*
+class F\+Man\+I\+I\+::\+F\+F\+Term$<$ Model\+\_\+t, Coord\+\_\+t $>$}
+
+The class responsible for computing derivatives of a force field term
+
+All energetic terms in a forcefield depend on some generic coordinate $q$, which itself depends on the standard Cartesian coordinates of the system. Consequentially, the first derivative of the energy with respect to one of these coordinates, say $x$ is\+: \[ \frac{\partial E(q)}{\partial x}=\frac{\partial f(q)}{\partial q} \frac{\partial q}{\partial x}, \] where $f(q)$ is the functional form of the term (harmonic oscillator, Fourier series, etc). The second derivative with respect to $x$ and $y$ is then\+: \[ \frac{\partial^2 E(q)}{\partial x\partial y}= \frac{\partial^2 f(q)}{\partial q^2}\frac{\partial q}{\partial x} \frac{\partial q}{\partial y}+ \frac{\partial f(q)}{\partial q} \frac{\partial q^2}{\partial x\partial y} \]
+
+This class is responsible for handeling these derivative manipulations in a generic way. Eventually I probably will want to expand this to include higher-\/order terms like those in the M\+M4 series which involve cross-\/terms between parameters. In those cases the chain rule seen here needs generalized to multiple $q$ and I anticipate there being an additional template type parameter.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Model\+\_\+t} & The class type of our functional form \\
+\hline
+\mbox{\tt in}  & {\em Coord\+\_\+t} & The class type of the coordinate this term depends on \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{FFTerm_8hpp}{F\+F\+Term.\+hpp}\end{DoxyCompactItemize}

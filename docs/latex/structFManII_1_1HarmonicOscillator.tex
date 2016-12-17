@@ -1,0 +1,54 @@
+\hypertarget{structFManII_1_1HarmonicOscillator}{}\section{F\+Man\+II\+:\+:Harmonic\+Oscillator Struct Reference}
+\label{structFManII_1_1HarmonicOscillator}\index{F\+Man\+I\+I\+::\+Harmonic\+Oscillator@{F\+Man\+I\+I\+::\+Harmonic\+Oscillator}}
+
+
+Implements the harmonic oscillator model potential.  
+
+
+
+
+{\ttfamily \#include $<$Harmonic\+Oscillator.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ double $>$ \hyperlink{structFManII_1_1HarmonicOscillator_a3d363faf1dee2c2d5d26993f8235fc57}{deriv} (const std\+::vector$<$ double $>$ \&Qs, const std\+::vector$<$ double $>$ \&Ks, unsigned int Order=0) const 
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+See \hyperlink{HO}{Harmonic Oscillator} for details regarding conventions etc. 
+
+\subsection{Member Function Documentation}
+\index{F\+Man\+I\+I\+::\+Harmonic\+Oscillator@{F\+Man\+I\+I\+::\+Harmonic\+Oscillator}!deriv@{deriv}}
+\index{deriv@{deriv}!F\+Man\+I\+I\+::\+Harmonic\+Oscillator@{F\+Man\+I\+I\+::\+Harmonic\+Oscillator}}
+\subsubsection[{\texorpdfstring{deriv(const std\+::vector$<$ double $>$ \&\+Qs, const std\+::vector$<$ double $>$ \&\+Ks, unsigned int Order=0) const }{deriv(const std::vector< double > &Qs, const std::vector< double > &Ks, unsigned int Order=0) const }}]{\setlength{\rightskip}{0pt plus 5cm}Return\+\_\+t F\+Man\+I\+I\+::\+Harmonic\+Oscillator\+::deriv (
+\begin{DoxyParamCaption}
+\item[{const std\+::vector$<$ double $>$ \&}]{Qs, }
+\item[{const std\+::vector$<$ double $>$ \&}]{Ks, }
+\item[{unsigned int}]{Order = {\ttfamily 0}}
+\end{DoxyParamCaption}
+) const}\hypertarget{structFManII_1_1HarmonicOscillator_a3d363faf1dee2c2d5d26993f8235fc57}{}\label{structFManII_1_1HarmonicOscillator_a3d363faf1dee2c2d5d26993f8235fc57}
+Computes the derivative of the energy of a Harmonic Oscillator
+
+\begin{DoxyNote}{Note}
+This function expects all quantities to be in atomic units
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Qs} & An N element vector such that the i-\/th element is the value of the i-\/th coordinate (bond-\/length, angle, etc.) \\
+\hline
+\mbox{\tt in}  & {\em Ks} & An N element vector such that the i-\/th element is the value of the i-\/th coordinate\textquotesingle{}s force constant \\
+\hline
+\mbox{\tt in}  & {\em Order} & What order derivative are we returning? \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The derivative in atomic units. 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{HarmonicOscillator_8hpp}{Harmonic\+Oscillator.\+hpp}\item 
+Harmonic\+Oscillator.\+cpp\end{DoxyCompactItemize}

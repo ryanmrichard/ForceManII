@@ -26,7 +26,7 @@
 
 #ifndef INTERNALCOORDINATES_HPP
 #define INTERNALCOORDINATES_HPP
-#include "ForceManII/FManII.hpp"
+#include "ForceManII/FManIIDefs.hpp"
 
 namespace FManII {
 

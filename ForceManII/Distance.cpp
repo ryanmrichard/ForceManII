@@ -30,7 +30,8 @@ Distance::VDouble Distance::compute_value(size_t deriv_i,Atoms_t coord_i)const{
     CHECK(deriv_i<1,"Higher order derivatives are not yet implemented!!!");
     const size_t atomi=coord_i[0],atomj=coord_i[1];
     const double* q1=&((*carts_)[atomi*3]), *q2=&((*carts_)[atomj*3]);
-    if(deriv_i==0) return dist(q1,q2,params_.at(r0).back());
+    const double off=params_.count(r0) ? params_.at(r0).back() : 0.0;
+    if(deriv_i==0) return dist(q1,q2,off);
 }
 
 } //End namespace FManII

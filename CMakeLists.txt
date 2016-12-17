@@ -8,3 +8,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 add_subdirectory(ForceManII)
 add_subdirectory(tests)
 
+#This file will allow us to run ctest in the top-level build dir
+#Basically it just defers to the actual top-level CTestTestfile.cmake in the
+#build directory for this project
+file(WRITE ${CMAKE_BINARY_DIR}/CTestTestfile.cmake "subdirs(tests)")
+
+

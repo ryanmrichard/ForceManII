@@ -1,0 +1,261 @@
+\hypertarget{namespaceFManII}{}\section{F\+Man\+II Namespace Reference}
+\label{namespaceFManII}\index{F\+Man\+II@{F\+Man\+II}}
+
+
+Namespace for all code associated with Force\+Man\+II.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classFManII_1_1Angle}{Angle}
+\item 
+class \hyperlink{classFManII_1_1Distance}{Distance}
+\item 
+class \hyperlink{classFManII_1_1FFTerm}{F\+F\+Term}
+\item 
+struct \hyperlink{structFManII_1_1FourierSeries}{Fourier\+Series}
+\begin{DoxyCompactList}\small\item\em Implements a Fourier Series model potential. \end{DoxyCompactList}\item 
+struct \hyperlink{structFManII_1_1HarmonicOscillator}{Harmonic\+Oscillator}
+\begin{DoxyCompactList}\small\item\em Implements the harmonic oscillator model potential. \end{DoxyCompactList}\item 
+class \hyperlink{classFManII_1_1IntCoords}{Int\+Coords}
+\begin{DoxyCompactList}\small\item\em A base class designed to provide basic functionality to things like bonds, angles, etc. \end{DoxyCompactList}\item 
+class \hyperlink{classFManII_1_1Torsion}{Torsion}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using {\bfseries D\+Vector} = std\+::vector$<$ double $>$\hypertarget{namespaceFManII_a7f89f8915272399dda44b281ae39a94a}{}\label{namespaceFManII_a7f89f8915272399dda44b281ae39a94a}
+
+\item 
+using {\bfseries I\+Vector} = std\+::vector$<$ size\+\_\+t $>$\hypertarget{namespaceFManII_a314ed8350c41700525e12966212980e9}{}\label{namespaceFManII_a314ed8350c41700525e12966212980e9}
+
+\item 
+{\footnotesize template$<$size\+\_\+t n$>$ }\\using {\bfseries I\+Array} = std\+::array$<$ size\+\_\+t, \hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a351f38f2149aa0e3be56f7c5aa16eae9}{n} $>$\hypertarget{namespaceFManII_a8360f8defc13d25e7131179fcd33ffd2}{}\label{namespaceFManII_a8360f8defc13d25e7131179fcd33ffd2}
+
+\item 
+using {\bfseries shared\+\_\+\+D\+Vector} = std\+::shared\+\_\+ptr$<$ const D\+Vector $>$\hypertarget{namespaceFManII_ab3ad101443820b6b8a263fdccb2aaae3}{}\label{namespaceFManII_ab3ad101443820b6b8a263fdccb2aaae3}
+
+\item 
+using {\bfseries D\+Array} = std\+::array$<$ double, 3 $>$\hypertarget{namespaceFManII_af7bb56e0807edff7d188ff037a09d35f}{}\label{namespaceFManII_af7bb56e0807edff7d188ff037a09d35f}
+
+\item 
+using \hyperlink{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{Coord\+Array} = std\+::map$<$ \hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059}{Int\+Coord\+\_\+t}, std\+::unique\+\_\+ptr$<$ \hyperlink{classFManII_1_1IntCoords}{Int\+Coords} $>$$>$\hypertarget{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{}\label{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}
+
+\begin{DoxyCompactList}\small\item\em An array of internal coordinates arranged by type. \end{DoxyCompactList}\item 
+using \hyperlink{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{Atom\+Types} = std\+::vector$<$ std\+::array$<$ size\+\_\+t, 2 $>$$>$\hypertarget{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{}\label{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}
+
+\begin{DoxyCompactList}\small\item\em Array where element i respectively is the atom type and V\+DW type of atom i. \end{DoxyCompactList}\item 
+using \hyperlink{namespaceFManII_a7c18a61f01fcc0604c39cbfae43665df}{Conn\+Data} = std\+::vector$<$ std\+::vector$<$ size\+\_\+t $>$$>$\hypertarget{namespaceFManII_a7c18a61f01fcc0604c39cbfae43665df}{}\label{namespaceFManII_a7c18a61f01fcc0604c39cbfae43665df}
+
+\begin{DoxyCompactList}\small\item\em Array such that element i is a vector of the atoms bonded to atom i. \end{DoxyCompactList}\item 
+using \hyperlink{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{Param\+Types} = std\+::map$<$ \hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059}{Int\+Coord\+\_\+t}, std\+::map$<$ \hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363}{Param\+\_\+t}, std\+::map$<$ std\+::vector$<$ size\+\_\+t $>$, double $>$$>$$>$
+\begin{DoxyCompactList}\small\item\em An object to hold the parameters of a force field. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363}{Param\+\_\+t} \{ \\*
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363acce4c4e3a7008d8a210e0950f0ae6646}{K}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363adbd624e837d07235c15569341fa0c052}{r0}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a807f5303050e210f41b43189457ee216}{amp}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a3a18cc339dcc327297994fd5de406000}{phi}, 
+\\*
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a351f38f2149aa0e3be56f7c5aa16eae9}{n}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a6168b053bb4d250bc56878c3c5329606}{amp2}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363ac923a156e5d6c899b0691bcf05dbfe08}{phi2}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a79574f7c7d028868bba201ab99eeb319}{n2}, 
+\\*
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a8ea674fa14845cb499bba588e8e6b72d}{amp3}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a48029f18757fa6d2a3d72517001cc0d1}{phi3}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363ac582c34207ea213912ced08cebca1a34}{n3}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363afec764e5c20f480b9b706861106356de}{q}, 
+\\*
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a0cdd92becbae953906c5305392e29836}{sigma}, 
+\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a59874bb4d679327306f2c7405286afa9}{epsilon}
+ \}\begin{DoxyCompactList}\small\item\em These are the recognized types of parameters. \end{DoxyCompactList}
+\item 
+enum \hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059}{Int\+Coord\+\_\+t} \{ \\*
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a0ad48919334546233ad86a2699918852}{B\+O\+ND}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ae3fda21c728a90c9974bb2a2404efcc7}{U\+B\+P\+A\+IR}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ad387432e20772e11fb6520606b93faa6}{P\+A\+IR}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ad67623636070f3be7ae6e7700a5bd9f6}{A\+N\+G\+LE}, 
+\\*
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a4f481d454dea70e1a1c7ef63d99d3402}{T\+O\+R\+S\+I\+ON}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a650ab62f01654d8aae5b3a9c9919dbed}{I\+M\+P\+T\+O\+R\+S\+I\+ON}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059af32be9c7ba6cd66722cc93629dbb5fbe}{E\+L\+E\+C\+T\+R\+O\+S\+T\+A\+T\+I\+CS}, 
+\hyperlink{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a97b415b3364dd5c1da0fd17a551ce037}{L\+E\+N\+N\+A\+R\+D\+\_\+\+J\+O\+N\+ES}
+ \}\begin{DoxyCompactList}\small\item\em These are the recognized types of Int\+Coords. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+V\+Double {\bfseries angle} (const double $\ast$r1, const double $\ast$r2, const double $\ast$r3, double off)\hypertarget{namespaceFManII_ac145eebe2971f15a0053dbd0926c7b9a}{}\label{namespaceFManII_ac145eebe2971f15a0053dbd0926c7b9a}
+
+\item 
+{\footnotesize template$<$typename T , typename... Args$>$ }\\std\+::unique\+\_\+ptr$<$ T $>$ \hyperlink{namespaceFManII_a57e9a715666f24e78bd0025020e2c08e}{make\+\_\+unique} (Args \&\&...args)\hypertarget{namespaceFManII_a57e9a715666f24e78bd0025020e2c08e}{}\label{namespaceFManII_a57e9a715666f24e78bd0025020e2c08e}
+
+\begin{DoxyCompactList}\small\item\em Once C++14 is accepted we can use std\+::make\+\_\+unique, till then we have this. \end{DoxyCompactList}\item 
+void {\bfseries C\+H\+E\+CK} (bool cond, const std\+::string \&msg)\hypertarget{namespaceFManII_a70d1cfbb2f83f24521e0f0a31df25fd4}{}\label{namespaceFManII_a70d1cfbb2f83f24521e0f0a31df25fd4}
+
+\item 
+std\+::vector$<$ double $>$ {\bfseries dist} (const double $\ast$q1, const double $\ast$q2, double off)\hypertarget{namespaceFManII_a7570392168766203fc6452d09cad01cf}{}\label{namespaceFManII_a7570392168766203fc6452d09cad01cf}
+
+\item 
+void {\bfseries add\+\_\+bond} (const I\+Vector \&Atoms, const \hyperlink{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{Atom\+Types} \&Types, const \hyperlink{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{Param\+Types} \&Params, \hyperlink{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{Coord\+Array} \&Found\+Coords)\hypertarget{namespaceFManII_a3218348ba8f97811883d92317dcfea94}{}\label{namespaceFManII_a3218348ba8f97811883d92317dcfea94}
+
+\item 
+void {\bfseries add\+\_\+angle} (const I\+Vector \&Atoms, const \hyperlink{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{Atom\+Types} \&Types, const \hyperlink{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{Param\+Types} \&Params, \hyperlink{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{Coord\+Array} \&Found\+Coords)\hypertarget{namespaceFManII_a2d03d3143239d96b6ab10e2d1c56af66}{}\label{namespaceFManII_a2d03d3143239d96b6ab10e2d1c56af66}
+
+\item 
+void {\bfseries add\+\_\+torsion} (const I\+Vector \&Atoms, const \hyperlink{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{Atom\+Types} \&Types, const \hyperlink{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{Param\+Types} \&Params, \hyperlink{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{Coord\+Array} \&Found\+Coords)\hypertarget{namespaceFManII_a881ebfcaac60e0da1409cc566861ab52}{}\label{namespaceFManII_a881ebfcaac60e0da1409cc566861ab52}
+
+\item 
+void {\bfseries add\+\_\+imp} (const I\+Vector \&Atoms, const \hyperlink{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{Atom\+Types} \&Types, const \hyperlink{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{Param\+Types} \&Params, \hyperlink{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{Coord\+Array} \&Found\+Coords, const D\+Vector \&carts)\hypertarget{namespaceFManII_a3ebe80f5c7bbe67ecd94fd2512858045}{}\label{namespaceFManII_a3ebe80f5c7bbe67ecd94fd2512858045}
+
+\item 
+void {\bfseries add\+\_\+electrostatics} (const I\+Vector \&Atoms, const \hyperlink{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{Atom\+Types} \&Types, const \hyperlink{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{Param\+Types} \&Params, \hyperlink{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{Coord\+Array} \&Found\+Coords, const D\+Vector \&carts)\hypertarget{namespaceFManII_a8e4be217fb18b91403f97d99b3b4c8ac}{}\label{namespaceFManII_a8e4be217fb18b91403f97d99b3b4c8ac}
+
+\item 
+\hyperlink{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{Coord\+Array} \hyperlink{namespaceFManII_a962553cf7a05889bf0f90071a59d963c}{get\+\_\+coords} (const std\+::vector$<$ double $>$ \&Carts, const \hyperlink{namespaceFManII_add1cccdf9425a71de6835b2631b84db8}{Atom\+Types} \&Types, const \hyperlink{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{Param\+Types} \&Params, const \hyperlink{namespaceFManII_a7c18a61f01fcc0604c39cbfae43665df}{Conn\+Data} \&Conns, double chg14scale=1.\+0)
+\begin{DoxyCompactList}\small\item\em A function that processes the input and returns a set of objects set up for use in \hyperlink{namespaceFManII}{F\+Man\+II}. \end{DoxyCompactList}\item 
+void {\bfseries add\+\_\+eletrostatics} (const I\+Vector \&Atoms, const A\+Tom\+Types \&Types, \hyperlink{namespaceFManII_a988516dba14437f483faf9f3c6d40c25}{Coord\+Array} \&Found\+Coords, double scale)\hypertarget{namespaceFManII_a7cd24ffeba90b8bfc9e235e550021d75}{}\label{namespaceFManII_a7cd24ffeba90b8bfc9e235e550021d75}
+
+\item 
+{\footnotesize template$<$typename T , typename T2 , typename T3 $>$ }\\I\+Array$<$ 3 $>$ {\bfseries order\+\_\+imp} (size\+\_\+t common, size\+\_\+t v1, size\+\_\+t v2, const T \&spokes, const T2 \&mags, const T3 \&ts)\hypertarget{namespaceFManII_abbb76098dc0ce293eb77c39ea451ecec}{}\label{namespaceFManII_abbb76098dc0ce293eb77c39ea451ecec}
+
+\item 
+double {\bfseries odd\+\_\+deriv\+\_\+} (size\+\_\+t d, double Q, double V, double \hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a351f38f2149aa0e3be56f7c5aa16eae9}{n})\hypertarget{namespaceFManII_a4d1c3cdc99779ef25b59ec9bce04bc3f}{}\label{namespaceFManII_a4d1c3cdc99779ef25b59ec9bce04bc3f}
+
+\item 
+double {\bfseries even\+\_\+deriv\+\_\+} (size\+\_\+t d, double Q, double V, double \hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a351f38f2149aa0e3be56f7c5aa16eae9}{n})\hypertarget{namespaceFManII_a15ad94b985d81cac64aaca5c84f8d06e}{}\label{namespaceFManII_a15ad94b985d81cac64aaca5c84f8d06e}
+
+\item 
+Deriv\+\_\+t {\bfseries torsion} (const double $\ast$q1, const double $\ast$q2, const double $\ast$q3, const double $\ast$q4, double \hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a351f38f2149aa0e3be56f7c5aa16eae9}{n}, double gamma)\hypertarget{namespaceFManII_a4d60b97475fdf4736295110c685e1f8b}{}\label{namespaceFManII_a4d60b97475fdf4736295110c685e1f8b}
+
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::array$<$ double, 3 $>$ \hyperlink{namespaceFManII_ab6c3ba0221d1479590c328071add3a69}{cross} (const T \&v1, const T \&v2)\hypertarget{namespaceFManII_ab6c3ba0221d1479590c328071add3a69}{}\label{namespaceFManII_ab6c3ba0221d1479590c328071add3a69}
+
+\begin{DoxyCompactList}\small\item\em Returns the cross product of two vectors. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::array$<$ double, 3 $>$ \hyperlink{namespaceFManII_a67d2288b51cdc78b0569812bbbe7603c}{diff} (const T \&v1, const T \&v2)\hypertarget{namespaceFManII_a67d2288b51cdc78b0569812bbbe7603c}{}\label{namespaceFManII_a67d2288b51cdc78b0569812bbbe7603c}
+
+\begin{DoxyCompactList}\small\item\em Returns the difference between two vectors, v1-\/v2. \end{DoxyCompactList}\item 
+double \hyperlink{namespaceFManII_a804811720c4566ddd330e4abc8d2c65f}{dot} (const std\+::array$<$ double, 3 $>$ \&v1, const std\+::array$<$ double, 3 $>$ \&v2)\hypertarget{namespaceFManII_a804811720c4566ddd330e4abc8d2c65f}{}\label{namespaceFManII_a804811720c4566ddd330e4abc8d2c65f}
+
+\begin{DoxyCompactList}\small\item\em Returns the dot product of two vectors. \end{DoxyCompactList}\item 
+double \hyperlink{namespaceFManII_a88126c99fc2140b9a3c37d695337fd6a}{mag} (const std\+::array$<$ double, 3 $>$ \&v1)\hypertarget{namespaceFManII_a88126c99fc2140b9a3c37d695337fd6a}{}\label{namespaceFManII_a88126c99fc2140b9a3c37d695337fd6a}
+
+\begin{DoxyCompactList}\small\item\em Returns the magnitude of a vector. \end{DoxyCompactList}\item 
+double \hyperlink{namespaceFManII_a45ace6891d8e67f7e4b679300533e0ac}{angle} (const std\+::array$<$ double, 3 $>$ \&v1, const std\+::array$<$ double, 3 $>$ \&v2, const std\+::array$<$ double, 3 $>$ \&\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363a351f38f2149aa0e3be56f7c5aa16eae9}{n})
+\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\index{F\+Man\+II@{F\+Man\+II}!Param\+Types@{Param\+Types}}
+\index{Param\+Types@{Param\+Types}!F\+Man\+II@{F\+Man\+II}}
+\subsubsection[{\texorpdfstring{Param\+Types}{ParamTypes}}]{\setlength{\rightskip}{0pt plus 5cm}using {\bf F\+Man\+I\+I\+::\+Param\+Types} = typedef std\+::map$<${\bf Int\+Coord\+\_\+t},std\+::map$<${\bf Param\+\_\+t}, std\+::map$<$std\+::vector$<$size\+\_\+t$>$,double$>$$>$$>$}\hypertarget{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{}\label{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}
+If you like you can think of this as a rank 3 tensor. The first rank tells us which of the recognized internal coordinates the parameters are for. The second rank tells us which of the recognized types of parameters the set is and the third rank tells us the atom type. Putting that all together, the bond force constant between say atoms of type 3 and 4 is given by\+: 
+\begin{DoxyCode}
+\hyperlink{namespaceFManII_a16edca665b5dfcdf9b3995844ad01bb5}{ParamTypes} params;\textcolor{comment}{//Assume we already had this}
+\textcolor{keywordtype}{double} k=params[FManII::Bond][\hyperlink{namespaceFManII_ab331802fde4c5f2564443f1704c25363acce4c4e3a7008d8a210e0950f0ae6646}{FManII::K}][\{3,4\}];
+\end{DoxyCode}
+ 
+
+\subsection{Enumeration Type Documentation}
+\index{F\+Man\+II@{F\+Man\+II}!Int\+Coord\+\_\+t@{Int\+Coord\+\_\+t}}
+\index{Int\+Coord\+\_\+t@{Int\+Coord\+\_\+t}!F\+Man\+II@{F\+Man\+II}}
+\subsubsection[{\texorpdfstring{Int\+Coord\+\_\+t}{IntCoord_t}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf F\+Man\+I\+I\+::\+Int\+Coord\+\_\+t}}\hypertarget{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059}{}\label{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{B\+O\+ND@{B\+O\+ND}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!B\+O\+ND@{B\+O\+ND}}\item[{\em 
+B\+O\+ND\hypertarget{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a0ad48919334546233ad86a2699918852}{}\label{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a0ad48919334546233ad86a2699918852}
+}]A bond. \index{U\+B\+P\+A\+IR@{U\+B\+P\+A\+IR}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!U\+B\+P\+A\+IR@{U\+B\+P\+A\+IR}}\item[{\em 
+U\+B\+P\+A\+IR\hypertarget{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ae3fda21c728a90c9974bb2a2404efcc7}{}\label{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ae3fda21c728a90c9974bb2a2404efcc7}
+}]A 1,3 pair. \index{P\+A\+IR@{P\+A\+IR}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!P\+A\+IR@{P\+A\+IR}}\item[{\em 
+P\+A\+IR\hypertarget{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ad387432e20772e11fb6520606b93faa6}{}\label{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ad387432e20772e11fb6520606b93faa6}
+}]A pair that is not a bond or a 1,3 pair. \index{A\+N\+G\+LE@{A\+N\+G\+LE}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!A\+N\+G\+LE@{A\+N\+G\+LE}}\item[{\em 
+A\+N\+G\+LE\hypertarget{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ad67623636070f3be7ae6e7700a5bd9f6}{}\label{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059ad67623636070f3be7ae6e7700a5bd9f6}
+}]An angle. \index{T\+O\+R\+S\+I\+ON@{T\+O\+R\+S\+I\+ON}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!T\+O\+R\+S\+I\+ON@{T\+O\+R\+S\+I\+ON}}\item[{\em 
+T\+O\+R\+S\+I\+ON\hypertarget{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a4f481d454dea70e1a1c7ef63d99d3402}{}\label{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a4f481d454dea70e1a1c7ef63d99d3402}
+}]A torsion. \index{I\+M\+P\+T\+O\+R\+S\+I\+ON@{I\+M\+P\+T\+O\+R\+S\+I\+ON}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!I\+M\+P\+T\+O\+R\+S\+I\+ON@{I\+M\+P\+T\+O\+R\+S\+I\+ON}}\item[{\em 
+I\+M\+P\+T\+O\+R\+S\+I\+ON\hypertarget{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a650ab62f01654d8aae5b3a9c9919dbed}{}\label{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a650ab62f01654d8aae5b3a9c9919dbed}
+}]An improper torsion angle. \index{E\+L\+E\+C\+T\+R\+O\+S\+T\+A\+T\+I\+CS@{E\+L\+E\+C\+T\+R\+O\+S\+T\+A\+T\+I\+CS}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!E\+L\+E\+C\+T\+R\+O\+S\+T\+A\+T\+I\+CS@{E\+L\+E\+C\+T\+R\+O\+S\+T\+A\+T\+I\+CS}}\item[{\em 
+E\+L\+E\+C\+T\+R\+O\+S\+T\+A\+T\+I\+CS\hypertarget{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059af32be9c7ba6cd66722cc93629dbb5fbe}{}\label{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059af32be9c7ba6cd66722cc93629dbb5fbe}
+}]A charge-\/charge interaction. \index{L\+E\+N\+N\+A\+R\+D\+\_\+\+J\+O\+N\+ES@{L\+E\+N\+N\+A\+R\+D\+\_\+\+J\+O\+N\+ES}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!L\+E\+N\+N\+A\+R\+D\+\_\+\+J\+O\+N\+ES@{L\+E\+N\+N\+A\+R\+D\+\_\+\+J\+O\+N\+ES}}\item[{\em 
+L\+E\+N\+N\+A\+R\+D\+\_\+\+J\+O\+N\+ES\hypertarget{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a97b415b3364dd5c1da0fd17a551ce037}{}\label{namespaceFManII_aee2b0c5668a8970ffb58ac650994e059a97b415b3364dd5c1da0fd17a551ce037}
+}]A 6-\/12 Lennard-\/\+Jones potential. \end{description}
+\end{Desc}
+\index{F\+Man\+II@{F\+Man\+II}!Param\+\_\+t@{Param\+\_\+t}}
+\index{Param\+\_\+t@{Param\+\_\+t}!F\+Man\+II@{F\+Man\+II}}
+\subsubsection[{\texorpdfstring{Param\+\_\+t}{Param_t}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf F\+Man\+I\+I\+::\+Param\+\_\+t}}\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{K@{K}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!K@{K}}\item[{\em 
+K\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363acce4c4e3a7008d8a210e0950f0ae6646}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363acce4c4e3a7008d8a210e0950f0ae6646}
+}]A force constant. \index{r0@{r0}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!r0@{r0}}\item[{\em 
+r0\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363adbd624e837d07235c15569341fa0c052}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363adbd624e837d07235c15569341fa0c052}
+}]The equilibrium value. \index{amp@{amp}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!amp@{amp}}\item[{\em 
+amp\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363a807f5303050e210f41b43189457ee216}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363a807f5303050e210f41b43189457ee216}
+}]The amplitude for Fourier series. \index{phi@{phi}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!phi@{phi}}\item[{\em 
+phi\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363a3a18cc339dcc327297994fd5de406000}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363a3a18cc339dcc327297994fd5de406000}
+}]The phase shift for Fourier series. \index{n@{n}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!n@{n}}\item[{\em 
+n\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363a351f38f2149aa0e3be56f7c5aa16eae9}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363a351f38f2149aa0e3be56f7c5aa16eae9}
+}]The periodicity for Fourier series. \index{amp2@{amp2}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!amp2@{amp2}}\item[{\em 
+amp2\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363a6168b053bb4d250bc56878c3c5329606}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363a6168b053bb4d250bc56878c3c5329606}
+}]The amplitude for a two-\/part Fourier series. \index{phi2@{phi2}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!phi2@{phi2}}\item[{\em 
+phi2\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363ac923a156e5d6c899b0691bcf05dbfe08}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363ac923a156e5d6c899b0691bcf05dbfe08}
+}]The phase shift for a two-\/part Fourier series. \index{n2@{n2}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!n2@{n2}}\item[{\em 
+n2\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363a79574f7c7d028868bba201ab99eeb319}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363a79574f7c7d028868bba201ab99eeb319}
+}]The periodicity for a two-\/part Fourier series. \index{amp3@{amp3}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!amp3@{amp3}}\item[{\em 
+amp3\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363a8ea674fa14845cb499bba588e8e6b72d}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363a8ea674fa14845cb499bba588e8e6b72d}
+}]The amplitude for a three-\/part Fourier series. \index{phi3@{phi3}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!phi3@{phi3}}\item[{\em 
+phi3\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363a48029f18757fa6d2a3d72517001cc0d1}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363a48029f18757fa6d2a3d72517001cc0d1}
+}]The phase shift for a three-\/part Fourier series. \index{n3@{n3}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!n3@{n3}}\item[{\em 
+n3\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363ac582c34207ea213912ced08cebca1a34}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363ac582c34207ea213912ced08cebca1a34}
+}]The periodicity for a three-\/part Fourier series. \index{q@{q}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!q@{q}}\item[{\em 
+q\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363afec764e5c20f480b9b706861106356de}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363afec764e5c20f480b9b706861106356de}
+}]The charge, in a.\+u., for point-\/charge, point-\/charge. \index{sigma@{sigma}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!sigma@{sigma}}\item[{\em 
+sigma\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363a0cdd92becbae953906c5305392e29836}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363a0cdd92becbae953906c5305392e29836}
+}]The radius of a 6-\/12 potential. \index{epsilon@{epsilon}!F\+Man\+II@{F\+Man\+II}}\index{F\+Man\+II@{F\+Man\+II}!epsilon@{epsilon}}\item[{\em 
+epsilon\hypertarget{namespaceFManII_ab331802fde4c5f2564443f1704c25363a59874bb4d679327306f2c7405286afa9}{}\label{namespaceFManII_ab331802fde4c5f2564443f1704c25363a59874bb4d679327306f2c7405286afa9}
+}]The well depth of a 6-\/12 potential. \end{description}
+\end{Desc}
+
+
+\subsection{Function Documentation}
+\index{F\+Man\+II@{F\+Man\+II}!angle@{angle}}
+\index{angle@{angle}!F\+Man\+II@{F\+Man\+II}}
+\subsubsection[{\texorpdfstring{angle(const std\+::array$<$ double, 3 $>$ \&v1, const std\+::array$<$ double, 3 $>$ \&v2, const std\+::array$<$ double, 3 $>$ \&n)}{angle(const std::array< double, 3 > &v1, const std::array< double, 3 > &v2, const std::array< double, 3 > &n)}}]{\setlength{\rightskip}{0pt plus 5cm}double F\+Man\+I\+I\+::angle (
+\begin{DoxyParamCaption}
+\item[{const std\+::array$<$ double, 3 $>$ \&}]{v1, }
+\item[{const std\+::array$<$ double, 3 $>$ \&}]{v2, }
+\item[{const std\+::array$<$ double, 3 $>$ \&}]{n}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceFManII_a45ace6891d8e67f7e4b679300533e0ac}{}\label{namespaceFManII_a45ace6891d8e67f7e4b679300533e0ac}
+Returns the angle between two vectors given the vectors {\ttfamily v1}, {\ttfamily v2} and a normal to them {\ttfamily n} (vectors need not be units already) \index{F\+Man\+II@{F\+Man\+II}!get\+\_\+coords@{get\+\_\+coords}}
+\index{get\+\_\+coords@{get\+\_\+coords}!F\+Man\+II@{F\+Man\+II}}
+\subsubsection[{\texorpdfstring{get\+\_\+coords(const std\+::vector$<$ double $>$ \&\+Carts, const Atom\+Types \&\+Types, const Param\+Types \&\+Params, const Conn\+Data \&\+Conns, double chg14scale=1.\+0)}{get_coords(const std::vector< double > &Carts, const AtomTypes &Types, const ParamTypes &Params, const ConnData &Conns, double chg14scale=1.0)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Coord\+Array} F\+Man\+I\+I\+::get\+\_\+coords (
+\begin{DoxyParamCaption}
+\item[{const std\+::vector$<$ double $>$ \&}]{Carts, }
+\item[{const {\bf Atom\+Types} \&}]{Types, }
+\item[{const {\bf Param\+Types} \&}]{Params, }
+\item[{const {\bf Conn\+Data} \&}]{Conns, }
+\item[{double}]{chg14scale = {\ttfamily 1.0}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceFManII_a962553cf7a05889bf0f90071a59d963c}{}\label{namespaceFManII_a962553cf7a05889bf0f90071a59d963c}
+See the documentation for each type for information on how to set it up. Each type is actually just a typedef of S\+TL containers so no other resources of \hyperlink{namespaceFManII}{F\+Man\+II} are needed to run this function.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Carts} & The Cartesian coordinates in a.\+u. of each atom in the form $x,y,z$ of atom 1, then $x,y,z$ of atom 2, etc. \\
+\hline
+\mbox{\tt in}  & {\em Types} & An array of the atom types of each atom \\
+\hline
+\mbox{\tt in}  & {\em Params} & The parameters for the force field \\
+\hline
+\mbox{\tt in}  & {\em Conns} & The connectivity information \\
+\hline
+\mbox{\tt in}  & {\em chg14scale} & How much should 1-\/4 electrostatics be scaled by \\
+\hline
+\end{DoxyParams}

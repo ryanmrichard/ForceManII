@@ -1,0 +1,13 @@
+The Distance class is responsible for storing internal coordinates that only depend on the distance between two points in space. This includes\+:
+\begin{DoxyItemize}
+\item Bond terms
+\item Charge-\/charge electrostatic terms
+\item Dispersion terms
+\item Exchange terms
+\end{DoxyItemize}
+
+\subsection*{Mathematical Description}
+
+Given a pair of atoms, the distance $r_{12}$ between them is\+: \[ r_{12}=|\mathbf{r_1}-\mathbf{r_2}|= \sqrt{\sum_{i=1}^3\left(q_{1i}-q_{2i}\right)^2}, \] where $\mathbf{r_i}$ is the position of atom $i$ and $q_{ij}$ is the $j$-\/th Cartesian coordinate of that atom.
+
+The first derivative is\+: \[ \frac{\partial r_{12}}{\partial q_{ij}}=\frac{1}{2r_{12}} \frac{\partial \sum_{k=1}^3\left(q_{1k}-q_{2k}\right)^2}{\partial q_{ij}} =\frac{\pm \left(q_{1j}-q_{2j}\right)}{r_{12}} \] where the plus is for $i=1$ and the minus for $i=2$. 

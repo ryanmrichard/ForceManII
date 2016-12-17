@@ -1,0 +1,8 @@
+The purpose of this page is to clarify what we mean by some basic terms throughout the manual and throughout the code. I have tried to be consistent but let me know if you find exceptions.
+
+
+\begin{DoxyItemize}
+\item atom number \+: Atoms in an input are listed in some order, whichever atom is listed first is said to have atom number 1, the second is atom number 2, etc.
+\item V\+DW type\+: I don\textquotesingle{}t know how standard this is, and I\textquotesingle{}m willing to change the term if someone tells me the standard term for this. Forcefields usually map an atom in a particular chemical enviornment, say an $sp^2$ hybridized carbon in a carbonyl, to a single number, called the V\+DW type. The V\+DW type is then mapped to another number called...
+\item atom type\+: This is less specific than the V\+DW type, say all $sp^2$ atoms map to the same atom type. Properties that are more geometric in nature, bonds and angles, tend to list parameters by this type, whereas properties that are more chemical in nature, Coulomb and V\+DW potentials, tend to use the V\+DW type to list parameters. If it helps clarify, atom types are only used internally and are read from the force field, the value you provide to Force\+Man\+II is always the V\+DW type 
+\end{DoxyItemize}

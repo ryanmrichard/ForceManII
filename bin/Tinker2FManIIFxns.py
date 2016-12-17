@@ -21,7 +21,7 @@ angle_type="FManII::IntCoord_t::ANGLE"
 torsion_type="FManII::IntCoord_t::TORSION"
 imp_type="FManII::IntCoord_t::IMPTORSION"
 vdw_type="FManII::IntCoord_t::LENNARD_JONES"
-charge_type="FMANII::IntCoord_t::Electrostatics"
+charge_type="FManII::IntCoord_t::ELECTROSTATICS"
 k_param="FManII::Param_t::K"
 r0_param="FManII::Param_t::r0"
 v_param="FManII::Param_t::amp"
@@ -161,6 +161,8 @@ def read_ff(ff_file):
             if da_line[0]=="radiusrule":
                 global rad_rule
                 rad_rule=da_line[1]
+            if da_line[0]=="radiustype":
+                rad_type=da_line[1]
             if da_line[0]=="epsilonrule":
                 global epsilon_rule
                 epsilon_rule=da_line[1]
@@ -177,7 +179,7 @@ def read_ff(ff_file):
                 global dielectric
                 dielectric=da_line[1]
                 
-    return atom2tink,parms
+    return atom2tink,parms,rad_rule,rad_type,epsilon_rule,vdw_scale,chg_scale
             
 def compute_bonds(carts,atom2tink,connect,param_num,parms):
     bonds=[];bond_k=[];bond_r0=[];
@@ -196,49 +198,44 @@ def compute_bonds(carts,atom2tink,connect,param_num,parms):
             bond_r0.append(parms[bond_type][r0_param][pair])
     return bonds,bond_k,bond_r0
 def compute_pairs(carts,atom2tink,connect,param_num,parms):
-    pair13,pair14,pairs,chg,chg14=[],[],[],[],[]
+    pairs,chg,vdw=[],[],[]
     all_12_pairs,all_13_pairs,all_14_pairs=set(),set(),set()
     for i,r in enumerate(carts):
         qi=parms[charge_type][q_param][(param_num[i],)]
+        si=parms[vdw_type][sigma_param][(atom2tink[param_num[i]],)]
+        ei=parms[vdw_type][epsilon_param][(atom2tink[param_num[i]],)]
         for j in connect[i]:
             for k in connect[j]:
-                if k==j:continue
+                if k==i:continue
                 for l in connect[k]:
-                    if (i,l)==(19,22):print(i,j,k,l)
-                    if k<j:continue
                     if l==j:continue
-                    if l<=i: continue
+                    if l<i: continue
                     if l in connect[i]:continue
                     all_14_pairs.add((i,l))
-                    r14=[r[x]-carts[l][x] for x in range(3)]
-                    mag14=math.sqrt(dot(r14,r14))
-                    pair14.append(mag14)
-                    ql=parms[charge_type][q_param][(param_num[l],)]
-                    chg14.append(1/float(chg_scale)*qi*ql)
-                    print((i,l),mag14/ang2au,qi,ql,1/float(chg_scale)*qi*ql/(mag14*kcalmol2au))
-                if k<=i: continue
+                if k<i:continue
                 all_13_pairs.add((i,k))
-                r13=[r[x]-carts[k][x] for x in range(3)]
-                mag13=math.sqrt(dot(r13,r13))
-                pair13.append(mag13)
-            if j<=i:continue
+            if j<i:continue
             all_12_pairs.add((i,j))
-            
     for i,ri in enumerate(carts):
         qi=parms[charge_type][q_param][(param_num[i],)]
+        si=parms[vdw_type][sigma_param][(atom2tink[param_num[i]],)]
+        ei=parms[vdw_type][epsilon_param][(atom2tink[param_num[i]],)]
         for j in range(i+1,len(carts)):
             is12=(i,j) in all_12_pairs
             is13=(i,j) in all_13_pairs
             is14=(i,j) in all_14_pairs
-            if is12 or is13 or is14:continue
+            if is12 or is13:continue
             rij=[ri[x]-carts[j][x] for x in range(3)]
             magrij=math.sqrt(dot(rij,rij))
-            pairs.append(magrij)
             qj=parms[charge_type][q_param][(param_num[j],)]
-            print((i,j),magrij/ang2au,qi,qj,qi*qj/(magrij*kcalmol2au))
-            chg.append(qi*qj)
-    #print(len(pair14)+len(pairs))
-    return pair13,pair14,pairs,chg14,chg
+            sj=parms[vdw_type][sigma_param][(atom2tink[param_num[j]],)]
+            ej=parms[vdw_type][epsilon_param][(atom2tink[param_num[j]],)]
+            chg.append(qi*qj*(1/float(chg_scale) if is14 else 1.0))
+            pairs.append(magrij)
+            vdw.append((math.sqrt(ei*ej)*(1/float(vdw_scale) if is14 else 1.0),(si+sj)))
+            #print((i+1,j+1),qi*qj/magrij/kcalmol2au)
+
+    return pairs,chg,vdw
                     
 
 def compute_angles(carts,atom2tink,connect,param_num,parms):
@@ -400,7 +397,7 @@ def print_coord(f,mol_name,bonds_in,desc):
 
 def print_types(f,mol_name,param_num,atom2tink):
     f.write("const FManII::AtomTypes "+mol_name.lower()+"_FF_types={\n")
-    for p in param_num:f.write("{"+str(atom2tink[p])+",0},\n")
+    for p in param_num:f.write("{"+str(atom2tink[p])+","+str(p)+"},\n")
     f.write("};\n\n")
 
 def print_carts(f,mol_name,carts):

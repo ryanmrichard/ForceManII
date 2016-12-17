@@ -1,0 +1,148 @@
+Finding the actual criteria for the format of the Tiker Parameter file is somewhat difficult so I list it here. The file itself is seperated into three parts. The first part is metadata about the force-\/field such as citations, combining rules, scale factors, etc. The second part lists all recognized atom types and vdw types. The third part lists the parameters arranged by atom or vdw type.
+
+\begin{DoxyNote}{Note}
+As implemented in Force\+Man\+II, the Tinker Format is case-\/sensitive
+\end{DoxyNote}
+\subsection*{Force Field Metadata}
+
+This is the important metadata for a force field\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily radiusrule} \+: can be either {\ttfamily A\+R\+I\+T\+H\+M\+E\+T\+IC} or {\ttfamily G\+E\+O\+M\+E\+T\+R\+IC}. This is the type of the average used to combine the van Der Waals radii
+\item {\ttfamily radiussize} \+: is the radius a {\ttfamily R\+A\+D\+I\+US} or a {\ttfamily D\+I\+A\+M\+E\+T\+ER}
+\item {\ttfamily epsilonrul} \+: same as {\ttfamily radiusrule} except for the well-\/depth
+\item {\ttfamily vdw-\/14-\/scale} \+: this is a scale factor that will be applied to the van Der Waals interactions between 1-\/4 bonded atoms, i.\+e. ends of a torsion angle
+\item {\ttfamily chg-\/14-\/scale} \+: same as {\ttfamily vdw-\/14-\/scale} except for the charges
+\item {\ttfamily electric} \+: the electric perm 332.\+0522173
+\item {\ttfamily dielectric} \+: the dielectric constant (or absolute permitivity) for the force field in the same units as the electric permetivity
+\end{DoxyItemize}
+
+\subsection*{Atom Types and V\+DW Types}
+
+This is the specification of the atom and vdw types the format is\+:
+
+
+\begin{DoxyCode}
+1 atom <vdw type> <atom type> <symbol> <description> <atomic number> <mass> <number of bonds
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily atom} \+: this is flag to specify that we are defining vdw and atom types
+\item {\ttfamily vdw type} \+: this is an integer specifying which vdw type we are defnining
+\item {\ttfamily atom type} \+: this is an integer specifying the atom type
+\item {\ttfamily symobl} \+: 1 to 2 characters for the atom type, is usually some mixture of the atomic symbol and a letter to describe the chemical environment like T for terminal
+\item {\ttfamily description} \+: a string giving a more readable description
+\item {\ttfamily atomic number} \+: The atomic number of the atom as it appears on the periodic table
+\item {\ttfamily mass} \+: the isotope averaged mass of the atom in Daltons, i.\+e. the mass you find on the periodic table
+\item {\ttfamily number of bonds} \+: the usual number of bonds that an atom of this vdw type makes
+\end{DoxyItemize}
+
+\subsection*{Parameters}
+
+The order of the parameter sections does not matter aside from the fact that if a parameter occurs more than once, i.\+e. you specify the force constant for atom types 1 and 2 twice, the last value will be used.
+
+\subsubsection*{Harmonic Bond Stretching Potential}
+
+
+\begin{DoxyCode}
+1 bond   <atom type 1>  <atom type 2> <force constant> <r\_0>
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily bond} \+: a flag to specify these parameters are for bonds
+\item {\ttfamily atom type 1} \+: the atom type of one of the two atoms
+\item {\ttfamily atom type 2} \+: the atom type for the other atom
+\item {\ttfamily force constant} \+: the force constant in kcal/(mol Angstrom$^\wedge$2), the 1/2 of the harmonic potential is included
+\item {\ttfamily r\+\_\+0} \+: the equilibrium distance for the bond in Angstroms
+\end{DoxyItemize}
+
+\subsubsection*{Angle-\/\+Bending Harmonic Potential Parameters}
+
+
+\begin{DoxyCode}
+1 angle  <atom type 1> <vertex atom type> <atom type 2> <force constant> <theta\_0>
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily angle} \+: a flag to specify that these are parameters for an angle
+\item {\ttfamily atom type 1} \+: one of the non-\/vertex atoms\textquotesingle{} types
+\item {\ttfamily vertex atom type} \+: the atom type of the vertex atom
+\item {\ttfamily atom type 2} \+: the other non-\/vertex atom\textquotesingle{}s type
+\item {\ttfamily force constant} \+: the force constant in kcal/(mol$\ast$radians$^\wedge$2)
+\item {\ttfamily theta\+\_\+0} \+: the equilibrium angle in degrees
+\end{DoxyItemize}
+
+\#\#\# Torsion Fourier-\/\+Series Parameters 
+\begin{DoxyCode}
+1 torsion <end 1> <center 1> <center 2> <end 2> <V> <gamma> <n> [<V> <gamma> <n> [<V> <gamma> <n>]] 
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily torsion} \+: a flag specifying these are parameters for a proper torsion
+\item {\ttfamily end 1} \+: the atom type of one of the ends of the torsion angle
+\item {\ttfamily center 1} \+: the atom type of the central atom bonded to the first end atom
+\item {\ttfamily center 2} \+: the atom type of the next central atom
+\item {\ttfamily end 2} \+: the atom type of the other end atom
+\item {\ttfamily V} \+: the amplitude of the Fourier Series component in kcal/mol
+\item {\ttfamily gamma} \+: the equlibrium value of the torsion in degrees
+\item {\ttfamily n} \+: the periodicity of the Fourier Series component
+\item Other values of {\ttfamily V}, {\ttfamily gamma}, and {\ttfamily n} can optionally be repeated up to another two times to specify additional terms in the Fourier Series for this interaction
+\end{DoxyItemize}
+
+\#\#\# Improper Torsion Fourier-\/\+Series Parameters 
+\begin{DoxyCode}
+1 imptors <atom type 1> <atom type 2> <central atom type> <atom type 3> <V> <gamma> <n>
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily imptors} \+: a flag specifying these are parameters for an improper torsion
+\item {\ttfamily atom type 1} \+: the atom type of one of the orbital atoms
+\item {\ttfamily atom type 2} \+: the atom type of one of the other orbital atoms
+\item {\ttfamily central atom type} \+: the atom type of the central atom
+\item {\ttfamily atom type 3} \+: the atom type of the last orbital atom
+\item {\ttfamily V} \+: the amplitude of the Fourier Series component in kcal/mol
+\item {\ttfamily gamma} \+: the equlibrium value of the torsion in degrees
+\item {\ttfamily n} \+: the periodicity of the Fourier Series component
+\end{DoxyItemize}
+
+\subsubsection*{Charge-\/\+Charge Potential Parameters}
+
+
+\begin{DoxyCode}
+1 charge <vdw type> <q>
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily charge} \+: a flag specifying these parameters are for a charge
+\item {\ttfamily vdw type} \+: the vdw type of the atom
+\item {\ttfamily q} \+: the charge in atomic units, i.\+e. number of electrons
+\end{DoxyItemize}
+
+\subsubsection*{Lennard-\/\+Jones 6-\/12 Potential Parameters}
+
+
+\begin{DoxyCode}
+1 vdw           <atom\_type>               <radius> <epsilon>
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily vdw} \+: a flag to specify that these are parameters for van Der Waals interaction
+\item {\ttfamily atom\+\_\+type} \+: the atom type this parameter is for
+\item {\ttfamily radius} \+: the radius (or diameter depending on the metadata provided) in Angstroms
+\item {\ttfamily epsilon} \+: the well depth in kcal/mol 
+\end{DoxyItemize}

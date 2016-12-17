@@ -33,68 +33,33 @@
 #ifndef FMANII_FMANII_HPP
 #define FMANII_FMANII_HPP
 
-#include <map>
-#include <vector>
-#include <array>
-#include <memory>
+#include "ForceManII/FManIIDefs.hpp"
+#include "ForceManII/ForceField.hpp"
+#include "ForceManII/InternalCoordinates.hpp"
+#include <istream>
+#include <cmath>
 
 ///Namespace for all code associated with ForceManII
 namespace FManII {
-class IntCoords;//Avoids cyclic inclusion problem
-
-///These are the recognized types of parameters
-enum Param_t {
-    K,///<A force constant
-    r0,///<The equilibrium value
-    amp,///<The amplitude for Fourier series
-    phi,///<The phase shift for Fourier series
-    n,///<The periodicity for Fourier series
-    amp2,///<The amplitude for a two-part Fourier series
-    phi2,///<The phase shift for a two-part Fourier series
-    n2,///<The periodicity for a two-part Fourier series
-    amp3,///<The amplitude for a three-part Fourier series
-    phi3,///<The phase shift for a three-part Fourier series
-    n3,///<The periodicity for a three-part Fourier series
-    q,///<The charge, in a.u., for point-charge, point-charge
-    sigma,///<The radius of a 6-12 potential
-    epsilon,///<The well depth of a 6-12 potential
-};
-
-///These are the recognized types of IntCoords
-enum IntCoord_t {
-    BOND,///<A bond
-    UBPAIR,///<A 1,3 pair
-    PAIR,///<A pair that is not a bond or a 1,3 pair
-    ANGLE,///<An angle
-    TORSION,///<A torsion
-    IMPTORSION,///<An improper torsion angle
-    ELECTROSTATICS,///<A charge-charge interaction
-    LENNARD_JONES,///<A 6-12 Lennard-Jones potential
-};
 
 ///An array of internal coordinates arranged by type
 using CoordArray=std::map<IntCoord_t,std::unique_ptr<IntCoords>>;
 
-///Array where element i respectively is the atom type and VDW type of atom i
-using AtomTypes=std::vector<std::array<size_t,2>>;
 
-///Array such that element i is a vector of the atoms bonded to atom i
-using ConnData=std::vector<std::vector<size_t>>;
-
-/**\brief An object to hold the parameters of a force field
+/**\brief Given a force field file in Tinker format makes a ForceField object
  *
- *  If you like you can think of this as a rank 3 tensor.  The first rank tells
- *  us which of the recognized internal coordinates the parameters are for.  The
- *  second rank tells us which of the recognized types of parameters the set is
- *  and the third rank tells us the atom type.  Putting that all together, the
- *  bond force constant between say atoms of type 3  and 4 is given by:
- *  \code
- *  ParamTypes params;//Assume we already had this
- *  double k=params[FManII::Bond][FManII::K][{3,4}];
- *  \endcode
+ * Optionally one may specify their own unit conversions as well
+ * \param[in] file an istream instance loaded with a Tinker formated string
+ * \param[in] kcalmol2au The conversion from kcal/mol to Hartrees
+ * \param[in] ang2au The conversion from Angstroms to Bohr
+ * \param[in] deg2rad The conversion from degrees to radians
+ * \return Your parsed force field
  */
-using ParamTypes=std::map<IntCoord_t,std::map<Param_t,
-        std::map<std::vector<size_t>,double>>>;
+ForceField parse_file(std::istream&& file,
+                      double kcalmol2au=1.0/627.5096,
+                      double ang2au=1.889725989,
+                      double deg2rad=M_PI/180.0);
+
 
 /**\brief A function that processes the input and returns a set of objects set
  *     up for use in FManII
@@ -108,17 +73,16 @@ using ParamTypes=std::map<IntCoord_t,std::map<Param_t,
  * \param[in] Types An array of the atom types of each atom
  * \param[in] Params The parameters for the force field
  * \param[in] Conns The connectivity information
+ * \param[in] chg14scale How much should 1-4 electrostatics be scaled by
+ * \param[in] vdw14scale How much should 1-4 VDW terms be scaled by
  * 
  */
 CoordArray get_coords(const std::vector<double>& Carts,
                      const AtomTypes& Types,
                      const ParamTypes& Params,
-                     const ConnData& Conns);
+                     const ConnData& Conns,
+                     double chg14scale=1.0,double vdw14scale=1.0);
 } //End namespace FManII
-
-//Must come last b/c it uses this header
-#include "ForceManII/InternalCoordinates.hpp"
-
 
 #endif /* End header guard */
 

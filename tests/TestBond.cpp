@@ -24,14 +24,21 @@ int main(int argc, char** argv){
     test_header("Testing Distance class");
  
     FManII::CoordArray Bonds=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
-            ubiquitin_FF_params,ubiquitin_conns);
-    
+         ubiquitin_FF_params,ubiquitin_conns,1/1.2);
     const std::vector<double>& BondLength=
         Bonds[FManII::IntCoord_t::BOND]->values();
     const std::vector<double>& bond_k=Bonds[FManII::BOND]->params(FManII::K);
     
     compare_vectors(BondLength,ubiquitin_bonds,1e-4,"Bond displacements");
     compare_vectors(bond_k,ubiquitin_K,1e-4,"Bond parameters");
+    
+    const std::vector<double>& PairLength=
+        Bonds[FManII::ELECTROSTATICS]->values();
+    const std::vector<double>& Pair_q=
+        Bonds[FManII::ELECTROSTATICS]->params(FManII::q);
+    compare_vectors(PairLength,ubiquitin_pairs,1e-4,"Pair distances");
+    compare_vectors(Pair_q,ubiquitin_charge_q,1e-4,"Charges");
+    
     
     test_footer();
     return 0;

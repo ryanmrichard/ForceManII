@@ -1,8 +1,11 @@
 set(FMANII_SRC Angle.cpp
                Distance.cpp
+               Electrostatics.cpp
                FManII.cpp
                FourierSeries.cpp
                HarmonicOscillator.cpp
+               LennardJones.cpp
+               ParseFile.cpp
                Torsion.cpp
 )
 
