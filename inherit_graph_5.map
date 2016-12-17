@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classFManII_1_1IntCoords.html" title="A base class designed to provide basic functionality to things like bonds, angles, etc. " alt="" coords="5,56,133,83"/>
+<area shape="rect" id="node2" href="$classFManII_1_1Angle.html" title="FManII::Angle" alt="" coords="191,5,295,32"/>
+<area shape="rect" id="node3" href="$classFManII_1_1Distance.html" title="FManII::Distance" alt="" coords="181,56,304,83"/>
+<area shape="rect" id="node4" href="$classFManII_1_1Torsion.html" title="FManII::Torsion" alt="" coords="185,107,300,133"/>
+</map>
