@@ -1,1 +1,6 @@
+/build/
+CMakeCache.txt
+docs/
+bin/analyze
+bin/amber99.prm
 html/
