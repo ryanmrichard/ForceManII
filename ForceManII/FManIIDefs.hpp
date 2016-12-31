@@ -16,21 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-/** \file FManIIDefs.hpp
- *
- * \brief This header contains enums and other defs used
- * throughout the code
- *
- * \version 0.1
- * \date December 10, 2016 at 2:38 PM (EST)
- *
- * Original Author: \author Ryan M. Richard (ryanmrichard1<at>gmail.com)
- *
- * Additional contributions by:
- *
- */
-#ifndef FMANIIDEFS_HPP
-#define FMANIIDEFS_HPP
+#pragma once
 
 #include <map>
 #include <vector>
@@ -46,12 +32,6 @@ enum Param_t {
     amp,///<The amplitude for Fourier series
     phi,///<The phase shift for Fourier series
     n,///<The periodicity for Fourier series
-    amp2,///<The amplitude for a two-part Fourier series
-    phi2,///<The phase shift for a two-part Fourier series
-    n2,///<The periodicity for a two-part Fourier series
-    amp3,///<The amplitude for a three-part Fourier series
-    phi3,///<The phase shift for a three-part Fourier series
-    n3,///<The periodicity for a three-part Fourier series
     q,///<The charge, in a.u., for point-charge, point-charge
     sigma,///<The minimum diameter of a 6-12 potential
     epsilon,///<The well depth of a 6-12 potential
@@ -60,43 +40,52 @@ enum Param_t {
 ///These are the recognized types of IntCoords
 enum IntCoord_t {
     BOND,///<A bond
-    UBPAIR,///<A 1,3 pair
-    PAIR,///<A pair that is not a bond or a 1,3 pair
+    PAIR13,///<A 1,3 pair
+    PAIR14,///<A 1,4 pair
+    PAIR,///<A pair that is not a 1,2; 1,3; or 1,4 pair
     ANGLE,///<An angle
     TORSION,///<A torsion
     IMPTORSION,///<An improper torsion angle
+};
+
+///These are the recognized types of models
+enum class Model_t{
+    HARMONICOSCILLATOR,///<Bond-stretching treated harmonically
+    FOURIERSERIES,///<A fourier series potential
     ELECTROSTATICS,///<A charge-charge interaction
     LENNARD_JONES,///<A 6-12 Lennard-Jones potential
 };
 
 ///These are the recognized combination rules
-enum CombRule_t {
+enum class CombRule_t {
+    PRODUCT,///<The product of the parameters \f$\prod_{i=1}^Nx_i\f$
     ARITHMETIC,///<A normal average \f$\frac{1}{N}\sum_{i=1}^Nx_i\f$
     GEOMETRIC,///<Geometric average \f$\left(\prod_{i=1}^Nx_i\right)^{1/N}\f$
 };
 
-///Array where element i respectively is the class type and atom type of atom i
-using AtomTypes=std::vector<std::array<size_t,2>>;
+///Flag for using the atom type or the atom class
+enum class TypeTypes_t{
+    TYPE,///<The term uses the atom type
+    CLASS,///<The term uses the atom class
+};
 
-///Array such that element i is a vector of the atoms bonded to atom i
-using ConnData=std::vector<std::vector<size_t>>;
+///Type of a FFTerm
+using FFTerm_t=std::pair<Model_t,IntCoord_t>;
 
-/**\brief An object to hold the parameters of a force field
- *
- *  If you like you can think of this as a rank 3 tensor.  The first rank tells
- *  us which of the recognized internal coordinates the parameters are for.  The
- *  second rank tells us which of the recognized types of parameters the set is
- *  and the third rank tells us the atom type.  Putting that all together, the
- *  bond force constant between say atoms of type 3  and 4 is given by:
- *  \code
- *  ParamTypes params;//Assume we already had this
- *  double k=params[FManII::Bond][FManII::K][{3,4}];
- *  \endcode
- */
-using ParamTypes=std::map<IntCoord_t,std::map<Param_t,
-        std::map<std::vector<size_t>,double>>>;
+///Type of a quantity we are treating as a mathematical vector
+using Vector=std::vector<double>;
 
-}
+///Shared pointer to a mathematical vector
+using SharedVector=std::shared_ptr<Vector>;
 
+///Shared pointer to a const mathematical vector
+using cSharedVector=std::shared_ptr<const Vector>;
 
-#endif // FMANIIDEFS_HPP
+///Array of unsigned long integers
+using IVector=std::vector<size_t>;
+
+}//end namespace
+
+//Instatiate some templates we know we're going to use
+template class std::vector<double>;
+template class std::vector<size_t>;

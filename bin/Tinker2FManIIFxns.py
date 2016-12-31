@@ -37,6 +37,7 @@ q_param="FManII::Param_t::q"
 sigma_param="FManII::Param_t::sigma"
 epsilon_param="FManII::Param_t::epsilon"
 rad_rule=""
+rad_type=""
 epsilon_rule=""
 vdw_scale=""
 chg_scale=""
@@ -156,12 +157,14 @@ def read_ff(ff_file):
             if da_line[0]=="vdw":
                 i=int(da_line[1])
                 elem=(i,)
-                parms[vdw_type][sigma_param][elem]=float(da_line[2])*ang2au
+                parms[vdw_type][sigma_param][elem]=\
+                float(da_line[2])*ang2au*(2.0 if rad_type=="R-MIN" else 1.0)
                 parms[vdw_type][epsilon_param][elem]=float(da_line[3])*kcalmol2au
             if da_line[0]=="radiusrule":
                 global rad_rule
                 rad_rule=da_line[1]
             if da_line[0]=="radiustype":
+                global rad_type
                 rad_type=da_line[1]
             if da_line[0]=="epsilonrule":
                 global epsilon_rule
@@ -395,11 +398,6 @@ def print_coord(f,mol_name,bonds_in,desc):
     for i in bonds_in[:-1]:f.write(str(i)+",\n")
     f.write(str(bonds_in[-1])+"};\n\n")
 
-def print_types(f,mol_name,param_num,atom2tink):
-    f.write("const FManII::AtomTypes "+mol_name.lower()+"_FF_types={\n")
-    for p in param_num:f.write("{"+str(atom2tink[p])+","+str(p)+"},\n")
-    f.write("};\n\n")
-
 def print_carts(f,mol_name,carts):
     f.write("const std::vector<double> "+mol_name.lower()+"={\n")
     for i in carts[:-1]:
@@ -407,19 +405,3 @@ def print_carts(f,mol_name,carts):
     f.write(str(carts[-1][0])+","+str(carts[-1][1])+
             ","+str(carts[-1][2])+"};\n\n")
 
-def print_parms(f,mol_name,parms):
-    """Prints parameter map in initializer list format
-    Theactual map is coordtype by parameter type by atom types"""
-    var_name=mol_name.lower()+"_FF_params"
-    f.write("const FManII::ParamTypes "+var_name+"={\n")#outer most map
-    for ct,rest in parms.items():
-        f.write("{"+ct+",{\n")#Start of pair 1st map and start of middle map
-        for pt,rest1 in rest.items():
-            f.write("   {"+pt+",{\n")#Start of pair middle map and start of last map
-            for atoms,value in rest1.items():
-                f.write("      {{")#Start of pair last map and start of atom vector
-                for ai in atoms:f.write(str(ai)+",")
-                f.write("},"+str(value)+"},\n")#end atom vector, end pair last map
-            f.write("      }},\n")#end last map end pair middle map
-        f.write("   }},\n")#end middle map end 1st pair
-    f.write("};\n")#end outer map

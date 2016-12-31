@@ -16,61 +16,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-/** \file FFTerm.hpp
- * 
- * \version 0.1
- * \date October 1, 2016 at 11:32 AM (EST)
- *  
- * Original Author: \author Ryan M. Richard (ryanmrichard1<at>gmail.com)
- * 
- * Additional contributions by:
- *
- */
 
-#ifndef FFTERM_HPP
-#define FFTERM_HPP
+#pragma once
+#include "ForceManII/ModelPotential.hpp"
 
 ///Namespace for all code associated with ForceManII
 namespace FManII {
 
+class FFTerm{
+    std::shared_ptr<const ModelPotential> model_;///< The model to use
+public:
+    ///Makes a new FF term given the model and coordinates it depends on
+    FFTerm(std::shared_ptr<const ModelPotential> m,
+           const std::vector<IntCoord_t>& cs):
+        model_(std::move(m)),coords(cs){}
 
-/** The class responsible for computing derivatives of a force field term
- * 
- *  All energetic terms in a forcefield depend on some generic coordinate
- *  \f$q\f$, which itself depends on the standard Cartesian coordinates of the
- *  system.  Consequentially, the first derivative of the energy with respect to
- *  one of these coordinates, say \f$x\f$ is:
- *  \f[
-      \frac{\partial E(q)}{\partial x}=\frac{\partial f(q)}{\partial q}
-                                         \frac{\partial q}{\partial x},
-    \f]
- *  where \f$f(q)\f$ is the functional form of the term (harmonic oscillator, 
- *  Fourier series, etc).  The second derivative with respect to \f$x\f$ and
- *  \f$y\f$ is then:
- *  \f[
-      \frac{\partial^2 E(q)}{\partial x\partial y}=
-        \frac{\partial^2 f(q)}{\partial q^2}\frac{\partial q}{\partial x}
-        \frac{\partial q}{\partial y}+
-        \frac{\partial f(q)}{\partial q}
-        \frac{\partial q^2}{\partial x\partial y}
-    \f]
- *  
- *  This class is responsible for handeling these derivative manipulations in a
- *  generic way.  Eventually I probably will want to expand this to include
- *  higher-order terms like those in the MM4 series which involve cross-terms
- *  between parameters.  In those cases the chain rule seen here needs
- *  generalized to multiple \f$q\f$ and I anticipate there being an additional
- *  template type parameter.
- * 
- *  \param[in] Model_t The class type of our functional form
- *  \param[in] Coord_t The class type of the coordinate this term depends on
- * 
- */
-template <typename Model_t, typename Coord_t>
-class FFTerm {
+    ///Returns the model
+    const ModelPotential& model()const{return *model_;}
+
+    const std::vector<IntCoord_t> coords;///<Coordinates this term depends on
+
+    Vector deriv(size_t order,const std::vector<cSharedVector>& ps,
+                              const std::vector<cSharedVector>& cs)const{}
+
+    bool operator==(const FFTerm& other)const{
+        return(*model_==*other.model_ &&
+               coords==other.coords);
+    }
+
+    bool operator!=(const FFTerm& other)const{
+        return !this->operator==(other);
+    }
 };
 
 } //End namespace FManII
 
-#endif /* End header guard */
 

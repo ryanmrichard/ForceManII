@@ -16,35 +16,63 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-/** \file FManII.hpp
- * 
- * \brief This header is meant to be the main API to ForceManII.  Anything users
- *     need to interface with ForceManII goes here.
- * 
- * \version 0.1
- * \date October 14, 2016 at 10:17 PM (EST)
- *  
- * Original Author: \author Ryan M. Richard (ryanmrichard1<at>gmail.com)
- * 
- * Additional contributions by:
- *
- */
 
 #ifndef FMANII_FMANII_HPP
 #define FMANII_FMANII_HPP
 
+#
 #include "ForceManII/FManIIDefs.hpp"
 #include "ForceManII/ForceField.hpp"
 #include "ForceManII/InternalCoordinates.hpp"
+#include "ForceManII/ModelPotential.hpp"
+#include "ForceManII/FFTerm.hpp"
+#include "ForceManII/ModelPotentials/HarmonicOscillator.hpp"
+#include "ForceManII/ModelPotentials/LennardJones.hpp"
+#include "ForceManII/ModelPotentials/FourierSeries.hpp"
+#include "ForceManII/ModelPotentials/Electrostatics.hpp"
+
 #include <istream>
 #include <cmath>
 
 ///Namespace for all code associated with ForceManII
 namespace FManII {
 
-///An array of internal coordinates arranged by type
-using CoordArray=std::map<IntCoord_t,std::unique_ptr<IntCoords>>;
+///Convenience classes for common model/coord choices
+///@{
+struct HarmonicBond:public FFTerm{HarmonicBond();};
 
+struct HarmonicAngle:public FFTerm{HarmonicAngle();};
+
+struct FourierTorsion:public FFTerm{FourierTorsion();};
+
+struct FourierImproperTorsion:public FFTerm{FourierImproperTorsion();};
+
+struct LJ14:public FFTerm{LJ14();};
+
+struct LJPair:public FFTerm{LJPair();};
+
+struct Electrostatics14:public FFTerm{Electrostatics14();};
+
+struct ElectrostaticsPair:public FFTerm{ElectrostaticsPair();};
+
+///@}
+
+
+///Available hard-coded force fields
+extern const ForceField amber99;
+
+
+///An array of internal coordinates arranged by type
+using CoordArray=std::map<IntCoord_t,std::unique_ptr<InternalCoordinates>>;
+
+///Array such that element i is a vector of the atoms bonded to atom i
+using ConnData=std::vector<IVector>;
+
+///Map from a ff term to its set of parameters
+using ParamSet=std::map<FFTerm_t,std::map<Param_t,Vector>>;
+
+///An array of the requested derivatives sorted by force field term type
+using DerivType=std::map<FFTerm_t,Vector>;
 
 /**\brief Given a force field file in Tinker format makes a ForceField object
  *
@@ -53,7 +81,7 @@ using CoordArray=std::map<IntCoord_t,std::unique_ptr<IntCoords>>;
  * \param[in] kcalmol2au The conversion from kcal/mol to Hartrees
  * \param[in] ang2au The conversion from Angstroms to Bohr
  * \param[in] deg2rad The conversion from degrees to radians
- * \return Your parsed force field
+ * \return Your parsed force field in atomic units
  */
 ForceField parse_file(std::istream&& file,
                       double kcalmol2au=1.0/627.5096,
@@ -61,27 +89,45 @@ ForceField parse_file(std::istream&& file,
                       double deg2rad=M_PI/180.0);
 
 
-/**\brief A function that processes the input and returns a set of objects set
- *     up for use in FManII
- * 
- * See the documentation for each type for information on how to set it up.
- * Each type is actually just a typedef of STL containers so no other resources
- * of FManII are needed to run this function.
- * 
+/**\brief A function that processes the input and returns a set of internal
+ *        coordinates
+ *
+ * \note Atom ordering refers to whatever order the user gives us the atoms in.
+ *       This order is assumed arbitrary, but consistent (i.e. element i of
+ *       \p Carts corresponds to the same atom as element i of \p Types, which
+ *       corresponds to the same atom as element i of \p Conns)
+ *
+ *
  * \param[in] Carts The Cartesian coordinates in a.u. of each atom in the form
- *                  \f$x,y,z\f$ of atom 1, then \f$x,y,z\f$ of atom 2, etc.
- * \param[in] Types An array of the atom types of each atom
- * \param[in] Params The parameters for the force field
- * \param[in] Conns The connectivity information
- * \param[in] chg14scale How much should 1-4 electrostatics be scaled by
- * \param[in] vdw14scale How much should 1-4 VDW terms be scaled by
+ *                  \f$x,y,z\f$ of atom 1, then \f$x,y,z\f$ of atom 2, etc.  If
+ *                  you like this is an natoms by 3 matrix with atoms on the
+ *                  rows and Cartesian coordinates on the columns.
+ * \param[in] Types An array so that element i is the atom type of atom i
+ * \param[in] Conns The connectivity information for your system such that
+ *                  element i is a vector of atoms bonded to atom i (all atoms
+ *                  must have a vector associated with them, even if it is
+ *                  empty
+ * \param[in] ff A ForceField instance with the details of your forcefield
+ * \return Your system's internal coordinates, in a.u.
  * 
  */
-CoordArray get_coords(const std::vector<double>& Carts,
-                     const AtomTypes& Types,
-                     const ParamTypes& Params,
-                     const ConnData& Conns,
-                     double chg14scale=1.0,double vdw14scale=1.0);
+CoordArray get_coords(const Vector& Carts,
+                      const ConnData& Conns);
+
+
+/**\brief A function that assigns the final parameters to a system
+ *
+ *
+ */
+ParamSet assign_params(const CoordArray& coords,
+                       const ForceField& ff,
+                       const IVector& types);
+
+/*DerivType deriv(size_t order,
+                const ForceField& ff,
+                const CoordArray& coords,
+                const Param);
+*/
 } //End namespace FManII
 
 #endif /* End header guard */

@@ -1,13 +1,27 @@
 Tinker Format                                                    {#tinkerformat}
 =============
 
-Finding the actual criteria for the format of the Tiker Parameter file is
-somewhat difficult so I list it here.  The file itself is seperated into three
+Tinker has invented two of its own file formats: .prm and .xyz (the tinker .xyz
+is not quite the same as the more prevelant standard version seen in
+electronic structure theory).  This page explains the two file formats and
+represents what we expect them to look like at the moment (there's nothing
+stopping Tinker from modifying them after all).
+
+- [Tinker Parameter File](#file_tinker_param)
+- [Tinker .xyz File](#file_tinker_xyz)
+
+
+## The Tinker Parameter File {#file_tinker_param}
+
+Finding the actual criteria for the format of the Tiker parameter file is
+somewhat difficult.  What is listed here is reverse engineered from the
+parameter files included with Tinker.  The file itself is seperated into three
 parts.  The first part is metadata about the force-field such as citations,
 combining rules, scale factors, etc.  The second part lists all recognized atom
 types and class types.  The third part lists the parameters arranged by atom or
 class type. A line starting with `#` character is considered a comment line.
-`!!` is also considered a comment character, but is typically used at the end of the line.
+`!!` is also considered a comment character, but is typically used at the end of
+the line.
 
 The ForceManII API provides the function `parse_file` which given an
 `std::istream` instance (the base class of either an input file or an input
@@ -16,7 +30,7 @@ ForceField instance.  The parser follows the rules listed in this document.
 
 \note As implemented in ForceManII, the Tinker Format is case-insensitive
 
-## Force Field Metadata
+### Force Field Metadata
 
 This is the important metadata for a force field:
 
@@ -33,18 +47,20 @@ This is the important metadata for a force field:
 - `dielectric` : the dielectric constant (or absolute permitivity) for the force
    field in the same units as the electric permetivity
 
-## Atom Types and Class Types
+### Atom Types and Class Types
 
 This is the specification of the atom and class types the format is:
 
 ```
-atom <atom type> <class type> <symbol> <description> <atomic number> <mass> <number of bonds
+atom <atom type> <class type> <symbol> <description> <atomic number> <mass>
+<number of bonds>
 ```
 
 - `atom` : this is flag to specify that we are defining vdw and atom types
 - `atom type` : this is an integer specifying which atom type we are defnining
 - `class type` : this is an integer specifying the class type
-- `symbol` : 1 to 2 characters describing the atom type, is usually some mixture of the atomic
+- `symbol` : 1 to 2 characters describing the atom type, is usually some mixture
+   of the atomic
   symbol and a letter to describe the chemical environment like T for terminal
 - `description` : a string giving a more readable description
 - `atomic number` : The atomic number of the atom as it appears on the periodic
@@ -54,13 +70,13 @@ atom <atom type> <class type> <symbol> <description> <atomic number> <mass> <num
 - `number of bonds` : the usual number of bonds that an atom of this atom type
   makes
 
-## Parameters
+### Parameters
 
 The order of the parameter sections does not matter aside from the fact that if
 a parameter occurs more than once, i.e. you specify the force constant for
 class types 1 and 2 twice, the last value will be used.
 
-### Harmonic Bond Stretching Potential
+#### Harmonic Bond Stretching Potential
 
 ```
 bond   <class type 1>  <class type 2> <force constant> <r_0>
@@ -69,11 +85,11 @@ bond   <class type 1>  <class type 2> <force constant> <r_0>
 - `bond` : a flag to specify these parameters are for bonds
 - `class type 1` : the class type of one of the two atoms
 - `class type 2` : the class type for the other atom
-- `force constant` : the force constant in kcal/(mol Angstrom\f$^2\f$), the 1/2 of
-  the harmonic potential is included
+- `force constant` : the force constant in kcal/(mol Angstrom\f$^2\f$), the 1/2
+  of the harmonic potential is included
 - `r_0` : the equilibrium distance for the bond in Angstroms
 
-### Angle-Bending Harmonic Potential Parameters
+#### Angle-Bending Harmonic Potential Parameters
 
 ```
 angle  <class type 1> <vertex class type> <class type 2> <force constant> <theta_0>
@@ -86,7 +102,7 @@ angle  <class type 1> <vertex class type> <class type 2> <force constant> <theta
 - `force constant` : the force constant in kcal/(mol*radians^2)
 - `theta_0` : the equilibrium angle in degrees
 
-### Torsion Fourier-Series Parameters
+#### Torsion Fourier-Series Parameters
 ```
 torsion <end 1> <center 1> <center 2> <end 2> <V> <gamma> <n> [<V> <gamma> <n> [<V> <gamma> <n>]] 
 ```
@@ -103,7 +119,7 @@ torsion <end 1> <center 1> <center 2> <end 2> <V> <gamma> <n> [<V> <gamma> <n> [
   two times to specify additional terms in the Fourier Series for this 
   interaction
 
-### Improper Torsion Fourier-Series Parameters
+#### Improper Torsion Fourier-Series Parameters
 ```
 imptors <class type 1> <class type 2> <central class type> <class type 3> <V> <gamma> <n>
 ```
@@ -117,7 +133,7 @@ imptors <class type 1> <class type 2> <central class type> <class type 3> <V> <g
 - `gamma` : the equlibrium value of the torsion in degrees
 - `n` : the periodicity of the Fourier Series component
 
-### Charge-Charge Potential Parameters
+#### Charge-Charge Potential Parameters
 
 ```
 charge <vdw type> <q>
@@ -128,7 +144,7 @@ charge <vdw type> <q>
 - `q` : the charge in atomic units, i.e. number of electrons
 
 
-### Lennard-Jones 6-12 Potential Parameters
+#### Lennard-Jones 6-12 Potential Parameters
 
 ```
 vdw           <atom_type>               <radius> <epsilon>
@@ -141,6 +157,6 @@ vdw           <atom_type>               <radius> <epsilon>
   Angstroms
 - `epsilon` : the well depth in kcal/mol
 
-
+## The Tinker .xyz File {#file_tinker_xyz}
 
 

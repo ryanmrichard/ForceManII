@@ -1,4 +1,5 @@
-/build/
+html/
+build/
 CMakeCache.txt
 bin/analyze
 bin/amber99.prm

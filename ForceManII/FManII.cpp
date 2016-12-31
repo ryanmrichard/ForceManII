@@ -17,59 +17,30 @@
  * MA 02110-1301  USA
  */
 #include "ForceManII/FManII.hpp"
-#include "ForceManII/Distance.hpp"
-#include "ForceManII/Angle.hpp"
-#include "ForceManII/Torsion.hpp"
 #include "ForceManII/Common.hpp"
 #include "ForceManII/Util.hpp"
+#include "ForceManII/InternalCoords/Distance.hpp"
+#include "ForceManII/InternalCoords/Angle.hpp"
+#include "ForceManII/InternalCoords/Torsion.hpp"
+#include "ForceManII/InternalCoords/ImproperTorsion.hpp"
 #include <iostream>
 #include <algorithm>
 
 namespace FManII {
-using DVector=std::vector<double>;
-using IVector=std::vector<size_t>;
-template<size_t n> using IArray=std::array<size_t,n>;
-using shared_DVector=std::shared_ptr<const DVector>;
-using std::max;
-using std::min;
 
-/* These end up being giant messy blocks of indirection that disguises what's
-   actually going on so we introduce some functions to hide it and make it
-   prettier to read*/
-inline void add_bond(const IVector& Atoms,const AtomTypes& Types,
-                     const ParamTypes& Params,CoordArray& FoundCoords);
-
-inline void add_angle(const IVector& Atoms,
-               const AtomTypes& Types,const ParamTypes& Params,
-               CoordArray& FoundCoords);
-
-inline void add_torsion(const IVector& Atoms,
-        const AtomTypes& Types,const ParamTypes& Params,
-        CoordArray& FoundCoords);
-
-inline void add_imp(const IVector& Atoms,
-        const AtomTypes& Types,const ParamTypes& Params,
-        CoordArray& FoundCoords,const DVector& carts);
-
-inline void add_els(const IVector& Atoms,const AtomTypes& Types,
-        const ParamTypes& Params,CoordArray& FoundCoords,double scale);
-inline void add_lj(const IVector& Atoms,const AtomTypes& Types,
-        const ParamTypes& Params,CoordArray& FoundCoords,double scale);
-
-CoordArray get_coords(const DVector& Carts,const AtomTypes& Types,
-                     const ParamTypes& Params,const ConnData& Conns,
-                     double chg14scale,double vdw14scale){
+CoordArray get_coords(const Vector& Carts,
+                      const ConnData& Conns){
     const size_t NAtoms=Carts.size()/3;
     DEBUG_CHECK(NAtoms==Conns.size(),"Number of atoms differs among inputs");
-    shared_DVector Sys=std::make_shared<DVector>(Carts);
+    auto Sys=std::make_shared<Vector>(Carts);
     
     CoordArray FoundCoords;
-    FoundCoords.emplace(BOND,std::move(make_unique<Distance>(Sys)));
-    FoundCoords.emplace(ANGLE,std::move(make_unique<Angle>(Sys)));
-    FoundCoords.emplace(TORSION,std::move(make_unique<Torsion>(Sys)));
-    FoundCoords.emplace(IMPTORSION,std::move(make_unique<Torsion>(Sys)));
-    FoundCoords.emplace(ELECTROSTATICS,std::move(make_unique<Distance>(Sys)));
-    FoundCoords.emplace(LENNARD_JONES,std::move(make_unique<Distance>(Sys)));
+    FoundCoords.emplace(IntCoord_t::BOND,std::move(make_unique<Distance>(Sys)));
+    FoundCoords.emplace(IntCoord_t::ANGLE,std::move(make_unique<Angle>(Sys)));
+    FoundCoords.emplace(IntCoord_t::TORSION,std::move(make_unique<Torsion>(Sys)));
+    FoundCoords.emplace(IntCoord_t::IMPTORSION,std::move(make_unique<ImproperTorsion>(Sys)));
+    FoundCoords.emplace(IntCoord_t::PAIR,std::move(make_unique<Distance>(Sys)));
+    FoundCoords.emplace(IntCoord_t::PAIR14,std::move(make_unique<Distance>(Sys)));
     std::set<std::pair<size_t,size_t>> pair14,pair13,pair12;
     for(size_t AtomI=0;AtomI<NAtoms;++AtomI){
         for(size_t AtomJ : Conns[AtomI]){
@@ -84,156 +55,140 @@ CoordArray get_coords(const DVector& Carts,const AtomTypes& Types,
                         pair14.insert(std::make_pair(AtomI,AtomL));
                     }
                     if(AtomK<AtomJ)continue;
-                    add_torsion({AtomI,AtomJ,AtomK,AtomL},Types,Params,FoundCoords);        
+                    FoundCoords[IntCoord_t::TORSION]->add_coord({AtomI,AtomJ,AtomK,AtomL});
                 }//Close AtomL
                 if(AtomK<AtomI)continue;//Avoid 2x counting angle
                 pair13.insert(std::make_pair(AtomI,AtomK));
-                add_angle({AtomI,AtomJ,AtomK},Types,Params,FoundCoords);
+                FoundCoords[IntCoord_t::ANGLE]->add_coord({AtomI,AtomJ,AtomK});
                 if(Conns[AtomJ].size()==3){
                     for(size_t AtomL: Conns[AtomJ]){
                         if(AtomL==AtomK||AtomL==AtomI||AtomL<AtomK)continue;
-                        add_imp({AtomI,AtomJ,AtomK,AtomL},Types,
-                                Params,FoundCoords,Carts);    
+                        FoundCoords[IntCoord_t::IMPTORSION]->add_coord({AtomI,AtomJ,AtomK,AtomL});
                     }//Close AtomL imptorsion
                 }//Close if imptorsion
             }//Close Atom K
             if(AtomJ<AtomI)continue; //Avoid 2x counting bond
             pair12.insert(std::make_pair(AtomI,AtomJ));
-            add_bond({AtomI,AtomJ},Types,Params,FoundCoords);
+            FoundCoords[IntCoord_t::BOND]->add_coord({AtomI,AtomJ});
         }//Close Atom J     
     }//Close AtomI
     for(size_t AtomI=0;AtomI<NAtoms;++AtomI){
         for(size_t AtomJ=AtomI+1;AtomJ<NAtoms;++AtomJ){
             auto pair=std::make_pair(AtomI,AtomJ);
-            bool is12=pair12.count(pair),is13=pair13.count(pair),
-                 is14=pair14.count(pair);
-            if(is12||is13)continue;
-            add_els({AtomI,AtomJ},Types,Params,FoundCoords,is14?chg14scale:1.0);
-            add_lj({AtomI,AtomJ},Types,Params,FoundCoords,is14?vdw14scale:1.0);
+            if(pair12.count(pair))continue;
+            const bool is13=pair13.count(pair),is14=pair14.count(pair);
+            IntCoord_t ctype=IntCoord_t::PAIR;
+            if(is13)ctype=IntCoord_t::PAIR13;
+            else if(is14)ctype=IntCoord_t::PAIR14;
+            FoundCoords[ctype]->add_coord({AtomI,AtomJ});
         }
     }
     return FoundCoords;
 }
 
-void add_lj(const IVector& Atoms,const AtomTypes& Types,
-             const ParamTypes& Params,CoordArray& FoundCoords,double scale){
-    const IArray<2> ts={Types[Atoms[0]][0],Types[Atoms[1]][0]};
-    const double sigmai=Params.at(LENNARD_JONES).at(sigma).at({ts[0]}),
-          sigmaj=Params.at(LENNARD_JONES).at(sigma).at({ts[1]}),
-          epsiloni=Params.at(LENNARD_JONES).at(epsilon).at({ts[0]}),
-          epsilonj=Params.at(LENNARD_JONES).at(epsilon).at({ts[1]});
-    const double avgsigma=sigmai+sigmaj,avgepsilon=sqrt(epsiloni*epsilonj);
-    FoundCoords[LENNARD_JONES]->add_coord(Atoms,sigma,avgsigma,epsilon,avgepsilon*scale);
+ParamSet assign_params(const CoordArray& coords,
+                       const ForceField& ff,
+                       const IVector& Types)
+ {
+    ParamSet ps;
+    for(const auto& termi:ff.terms){//Loop over terms in force field
+        const FFTerm_t term_type=termi.first;
+        const Model_t model=term_type.first;
+        const bool use_class=ff.paramtypes.at(term_type)==TypeTypes_t::CLASS;
+        for(const auto& coordi:termi.second.coords){
+            const InternalCoordinates& coord=*coords.at(coordi);
+            for(IVector typei:coord.get_types()){
+                IVector types;
+                for(size_t t:typei){
+                    const size_t ti=Types[t];
+                    types.push_back(use_class?ff.type2class.at(ti):ti);
+                }
+                IVector Orderedts=(ff.orderrules.count(term_type)?
+                                   ff.orderrules.at(term_type)(types):types);
+                for(auto parami:termi.second.model().params){
+                    auto prule=std::make_pair(model,parami);
+                    if(ff.combrules.count(prule)){
+                       const CombRule_t rule=ff.combrules.at(prule);
+                       double val;
+                        if(rule==CombRule_t::ARITHMETIC){
+                            val=0.0;
+                            for(auto ti:types)
+                                val+=ff.params.at(term_type).at(parami).at({ti})[0];
+                            val/=types.size();
+                        }
+                        else{
+                            val=1.0;
+                            for(auto ti:types)
+                                val*=ff.params.at(term_type).at(parami).at({ti})[0];
+                            if(rule==CombRule_t::GEOMETRIC)
+                                val=std::pow(val,(1.0/types.size()));
+                        }
+                        ps[term_type][parami].push_back(val);
+                    }
+                    else{
+                        const Vector& vs=
+                                ff.params.at(term_type).at(parami).at(Orderedts);
+                        if(term_type.first==Model_t::FOURIERSERIES)
+                            for(size_t i=0;i<3;i++)
+                                ps[term_type][parami].push_back(vs.size()>i?
+                                                                    vs[i]:0.0);
+                        else{
+                            DEBUG_CHECK(vs.size()==1,"Wasn't expecting a vector");
+                            ps[term_type][parami].push_back(vs[0]);
+                        }
+                    }
+                }//End loop over parameters
+            }//End loop over values of coordinate
+        }//End loop over coordinates
+    }//End loop over terms
+    return ps;
 }
 
-void add_els(const IVector& Atoms,const AtomTypes& Types,
-             const ParamTypes& Params,CoordArray& FoundCoords,double scale){
-    const IArray<2> ts={Types[Atoms[0]][1],Types[Atoms[1]][1]};
-    const double qi=Params.at(ELECTROSTATICS).at(q).at({ts[0]}),
-          qj=Params.at(ELECTROSTATICS).at(q).at({ts[1]});
-    
-    FoundCoords[ELECTROSTATICS]->add_coord(Atoms,Param_t::q,qi*qj*scale);
+std::map<FFTerm_t,Vector> deriv(size_t order,
+                                const ForceField& ff,
+                                const CoordArray& coords)
+{
+    std::map<FFTerm_t,Vector> rv;
+//    for(const auto& i:ff.terms){
+//        const FFTerm_t term_type=i.first;
+//        const FFTerm& ffterm=i.second;
+//        std::vector<Vector> cs,ps;
+//        for(auto ci:ffterm.coords){
+//            cs.push_back(coords.at(ci)->get_coords());
+//            for(auto pi:ffterm.model().params)
+//                ps.push_back(coords.at(ci)->get_params(pi));
+//        }
+//        Vector d=ffterm.deriv(order,ps,cs);
+//        if(ff.scale_factors.count(term_type))
+//            for(double& di:d)di*=ff.scale_factors.at(term_type);
+//        rv.emplace(term_type,std::move(d));
+//    }
+    return rv;
 }
 
-/* Begin indirection galore*/
+HarmonicBond::HarmonicBond():
+    FFTerm(std::make_shared<HarmonicOscillator>(),{IntCoord_t::BOND}){}
 
-void add_bond(const IVector& Atoms,const AtomTypes& Types,
-              const ParamTypes& Params,CoordArray& FoundCoords){
-    const IArray<2> ts={Types[Atoms[0]][0],Types[Atoms[1]][0]};
-    const IVector ff_types={min(ts[0],ts[1]),max(ts[0],ts[1])};
-    const double K_in=Params.at(BOND).at(K).at(ff_types);
-    const double r0_in=Params.at(BOND).at(r0).at(ff_types);
-    FoundCoords[BOND]->add_coord(Atoms,Param_t::K,K_in,Param_t::r0,r0_in);
-}
+HarmonicAngle::HarmonicAngle():
+    FFTerm(std::make_shared<HarmonicOscillator>(),{IntCoord_t::ANGLE}){}
 
-void add_angle(const IVector& Atoms,
-               const AtomTypes& Types,const ParamTypes& Params,
-               CoordArray& FoundCoords){
-    const IArray<3> ts={Types[Atoms[0]][0],Types[Atoms[1]][0],
-                        Types[Atoms[2]][0]};
-    const IVector ff_types={min(ts[0],ts[2]),ts[1],max(ts[0],ts[2])};
-    const double K_in=Params.at(ANGLE).at(K).at(ff_types);
-    const double r0_in=Params.at(ANGLE).at(r0).at(ff_types);
-    FoundCoords[ANGLE]->add_coord(Atoms,K,K_in,r0,r0_in);
-}
+FourierTorsion::FourierTorsion():
+    FFTerm(std::make_shared<FourierSeries>(),{IntCoord_t::TORSION}){}
 
-void add_torsion(const IVector& Atoms,
-                 const AtomTypes& Types,const ParamTypes& Params,
-                 CoordArray& FoundCoords){
-    const IArray<4> ts={Types[Atoms[0]][0],Types[Atoms[1]][0],
-                        Types[Atoms[2]][0],Types[Atoms[3]][0]};
-    const bool already_ordered=ts[1]<ts[2]||((ts[1]==ts[2])&&ts[0]<ts[3]);
-    const IVector ff_types=(already_ordered?IVector({ts[0],ts[1],ts[2],ts[3]}):
-                                            IVector({ts[3],ts[2],ts[1],ts[0]}));
-    double V_in=Params.at(TORSION).at(amp).at(ff_types);
-    double n_in=Params.at(TORSION).at(n).at(ff_types);
-    double phi_in=Params.at(TORSION).at(phi).at(ff_types);
-    FoundCoords[TORSION]->add_coord(Atoms,amp,V_in,n,n_in,phi,phi_in);
-    if(Params.at(TORSION).at(amp2).count(ff_types)){
-        V_in=Params.at(TORSION).at(amp2).at(ff_types);
-        n_in=Params.at(TORSION).at(n2).at(ff_types);
-        phi_in=Params.at(TORSION).at(phi2).at(ff_types);
-        FoundCoords[TORSION]->add_coord(Atoms,amp,V_in,n,n_in,phi,phi_in);
-    }
-    if(Params.at(TORSION).at(amp3).count(ff_types)){
-        V_in=Params.at(TORSION).at(amp3).at(ff_types);
-        n_in=Params.at(TORSION).at(n3).at(ff_types);
-        phi_in=Params.at(TORSION).at(phi3).at(ff_types);
-        FoundCoords[TORSION]->add_coord(Atoms,amp,V_in,n,n_in,phi,phi_in);
-    }
-}
+FourierImproperTorsion::FourierImproperTorsion():
+    FFTerm(std::make_shared<FourierSeries>(),{IntCoord_t::IMPTORSION}){}
 
-//Code factorization for ordering the atoms in the improper torsions
-template<typename T,typename T2,typename T3>
-IArray<3> order_imp(size_t common,size_t v1,
-           size_t v2,const T& spokes, const T2& mags, const T3& ts){
-        const double angle1=std::acos(
-            dot(spokes[common],spokes[v1])/(mags[common]*mags[v1]));
-        const double angle2=std::acos(
-            dot(spokes[common],spokes[v2])/(mags[common]*mags[v2]));
-        const IArray<2> deg=angle1<angle2? IArray<2>({v1,v2}):IArray<2>({v2,v1});
-        return ts[common]>ts[v1]? 
-                 IArray<3>({deg[0],deg[1],common}):IArray<3>({common,deg[0],deg[1]});
-}
+LJ14::LJ14():
+    FFTerm(std::make_shared<LennardJones>(),{IntCoord_t::PAIR14}){}
 
-using DArray=std::array<double,3>;
+LJPair::LJPair():
+    FFTerm(std::make_shared<LennardJones>(),{IntCoord_t::PAIR}){}
 
-void add_imp(const IVector& Atoms,const AtomTypes& Types,
-             const ParamTypes& Params,CoordArray& FoundCoords,const DVector& carts){
-    const int tj=Types[Atoms[1]][0];//The type of the central atom
-    //Eventually we need these sorted, but doing so destroys the map to the atoms
-    IArray<3> ts={Types[Atoms[0]][0],Types[Atoms[2]][0],Types[Atoms[3]][0]};
+Electrostatics14::Electrostatics14():
+    FFTerm(std::make_shared<Electrostatics>(),{IntCoord_t::PAIR14}){}
 
-    const std::array<DArray,3> spokes={//Distance from each atom to center
-        diff(&carts[Atoms[1]*3],&carts[Atoms[0]*3]),
-        diff(&carts[Atoms[1]*3],&carts[Atoms[2]*3]),
-        diff(&carts[Atoms[1]*3],&carts[Atoms[3]*3])};
-    const DArray mags={mag(spokes[0]),mag(spokes[1]),mag(spokes[2])};
-    
-    //Sort the atoms according to criteria described in manual
-    IArray<3> final_order={0,1,2};//This will be the order of the periphereal atoms
-    
-    //Worry about cases where one atom type is degenerate
-    if(ts[0]==ts[1])final_order=order_imp(2,0,1,spokes,mags,ts);
-    else if(ts[0]==ts[2])final_order=order_imp(1,0,2,spokes,mags,ts);
-    else if(ts[1]==ts[2])final_order=order_imp(0,1,2,spokes,mags,ts);
-    else //Case where all unique (all same hits condition 1) 
-        std::sort(final_order.begin(),final_order.end(),[&](size_t i, size_t j){
-            return ts[i]<ts[j];}//End lambda
-        );
-    //Parameters are always looked up sorted
-    std::sort(ts.begin(),ts.end());
-    const IVector ff_types={ts[0],tj,ts[1],ts[2]};
-    
-    //Indices in final_order are only for periphereal atoms
-    const IVector TempAtoms={Atoms[0],Atoms[2],Atoms[3]};
-    const IVector FinalAtoms={TempAtoms[final_order[0]],Atoms[1],
-                              TempAtoms[final_order[1]],TempAtoms[final_order[2]]};
-    const double V_in=Params.at(IMPTORSION).at(amp).at(ff_types),
-                 n_in=Params.at(IMPTORSION).at(n).at(ff_types),
-               phi_in=Params.at(IMPTORSION).at(phi).at(ff_types);
-    FoundCoords[IMPTORSION]->add_coord(FinalAtoms,amp,V_in,n,n_in,phi,phi_in);
-}
+ElectrostaticsPair::ElectrostaticsPair():
+    FFTerm(std::make_shared<Electrostatics>(),{IntCoord_t::PAIR}){}
 
 } //End namespace FManII
 

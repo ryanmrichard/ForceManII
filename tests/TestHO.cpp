@@ -18,34 +18,46 @@
  */
 
 #include <ForceManII/FFTerm.hpp>
-#include <ForceManII/HarmonicOscillator.hpp>
+#include <ForceManII/ModelPotentials/HarmonicOscillator.hpp>
 #include "TestMacros.hpp"
 #include "ubiquitin.hpp"
 #include <cmath>
 
+using namespace FManII;
+using namespace std;
+
 int main(int argc, char** argv){
+
     test_header("Testing Harmonic Oscillator force-field term");
-    FManII::HarmonicOscillator HO;
-    
+    HarmonicOscillator HO;
 #ifndef NDEBUG
-std::vector<double> a(3,0.0),b(2,0.0),c;
-TEST_THROW(c=HO.deriv(a,b),"bond.size()==ks.size()");
+std::vector<double> a(2,0.0),d;
+std::map<FManII::Param_t,std::vector<double>> ps={
+    {FManII::Param_t::K,{0.0}},
+    {FManII::Param_t::r0,{}}};
+TEST_THROW(d=HO.deriv(0,ps,{a}),"len(k)!=len(r0)");
+ps[FManII::Param_t::r0].push_back(0.0);
+TEST_THROW(d=HO.deriv(0,ps,{a}),"len(k)!=len(r)");
 #endif
 
-     FManII::CoordArray coords=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
-            ubiquitin_FF_params,ubiquitin_conns);
-     const std::vector<double>& bonds=coords[FManII::BOND]->values();
-     const std::vector<double>& bond_k=coords[FManII::BOND]->params(FManII::K);
-     const std::vector<double>& angles=coords[FManII::ANGLE]->values();
-     const std::vector<double>& angle_k=coords[FManII::ANGLE]->params(FManII::K);
-     
-    //Energy check
-    std::vector<double> Energy=HO.deriv(bonds,bond_k);
-    test_value(Energy[0],ubiquitinbond_e,1e-5,"Bond Energy");
-    
-    Energy=HO.deriv(angles,angle_k);
-    test_value(Energy[0],ubiquitinangle_e,1e-5,"Angle Energy");
-    
+    FManII::CoordArray coords=
+        FManII::get_coords(ubiquitin,ubiquitin_conns);
+    FManII::ParamSet params=
+        FManII::assign_params(coords,FManII::amber99,ubiquitin_FF_types);
+     for(auto qi : {IntCoord_t::BOND,IntCoord_t::ANGLE}){
+        const vector<double>& qs=coords[qi]->get_coords();
+        auto term_type=std::make_pair(FManII::Model_t::HARMONICOSCILLATOR,qi);
+        //Energy check
+        if(qi==IntCoord_t::BOND){
+            std::vector<double> Energy=HO.deriv(0,params[term_type],{qs});
+            test_value(Energy[0],ubiquitinbond_e,1e-5,"Bond Energy");
+        }
+        else{
+            HarmonicOscillator HO1;
+            std::vector<double> Energy=HO1.deriv(0,params[term_type],{qs});
+            test_value(Energy[0],ubiquitinangle_e,1e-5,"Angle Energy");
+        }
+    }
     test_footer();
     return 0;
 } //End main

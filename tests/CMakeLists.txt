@@ -6,8 +6,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 include(CTest)
 enable_testing()
 
-#This is the correct answers
-add_library(molecules SHARED ubiquitin.cpp ub2.cpp)
+#These are the correct answers
+add_library(molecules SHARED deltorphin.cpp ubiquitin.cpp ubiquitin_intcoords.cpp)
 target_include_directories(molecules PRIVATE ${PROJECT_SOURCE_DIR})
 add_dependencies(molecules fmanii)
 
@@ -19,12 +19,10 @@ function(NEW_TEST test_name)
    add_test(NAME ${test_name} COMMAND ${test_name})
 endfunction()
 
-NEW_TEST(TestAngle)
-NEW_TEST(TestBond)
 NEW_TEST(TestCoulomb)
 NEW_TEST(TestFourierSeries)
 NEW_TEST(TestHO)
-NEW_TEST(TestImp)
+NEW_TEST(TestIntCoords)
 NEW_TEST(TestLJ)
 NEW_TEST(TestParse)
-NEW_TEST(TestTorsion)
+

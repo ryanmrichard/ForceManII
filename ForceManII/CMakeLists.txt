@@ -1,12 +1,9 @@
-set(FMANII_SRC Angle.cpp
-               Distance.cpp
-               Electrostatics.cpp
+add_subdirectory(ForceFields)
+add_subdirectory(InternalCoords)
+add_subdirectory(ModelPotentials)
+set(FMANII_SRC ${FMANII_SRC}
                FManII.cpp
-               FourierSeries.cpp
-               HarmonicOscillator.cpp
-               LennardJones.cpp
                ParseFile.cpp
-               Torsion.cpp
 )
 
 add_library(fmanii ${FMANII_SRC})

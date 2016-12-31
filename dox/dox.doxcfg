@@ -1,6 +1,9 @@
 INPUT+=  dox/mainpage.dox \
          dox/angle.md \
          dox/distance.md \
+         dox/electrostatics.md \
+         dox/ffterm.md \
+         dox/FileLayout.md \
          dox/fourierseries.md \
          dox/harmonicoscillator.md \
          dox/LJ.md \

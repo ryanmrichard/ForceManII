@@ -17,18 +17,41 @@
  * MA 02110-1301  USA
  */
 
-/* 
- * File:   InternalCoordinates.hpp
- * Author: Ryan M. Richard <ryanmrichard1 at gmail.com>
- *
- * Created on October 9, 2016, 11:46 AM
- */
 
-#ifndef INTERNALCOORDINATES_HPP
-#define INTERNALCOORDINATES_HPP
+
+#pragma once
 #include "ForceManII/FManIIDefs.hpp"
 
 namespace FManII {
+
+class InternalCoordinates{
+public:
+    void add_coord(const IVector& atoms){
+        atoms_.push_back(atoms);
+        coords_->push_back(compute_value_(0,atoms)[0]);
+    }
+
+    const Vector& get_coords()const{return *coords_;}
+    const std::vector<IVector>& get_types()const{return atoms_;}
+
+protected:
+    ///A vector such that element i is the value of the i-th coord
+    SharedVector coords_;
+
+    ///The Cartesian coordinates of the system
+    cSharedVector carts_;
+
+    ///A list such that element i is the NAtoms associated with the i-th coord
+    std::vector<IVector> atoms_;
+
+    InternalCoordinates(cSharedVector system):
+        coords_(std::make_shared<Vector>()),carts_(system){}
+
+    ///Override in derived classes so that it returns the deriv of the coord
+    virtual Vector compute_value_(size_t,const IVector&)const=0;
+
+
+};
 
 /** \brief A base class designed to provide basic functionality to things like
  *         bonds, angles, etc.
@@ -53,14 +76,15 @@ namespace FManII {
  *  Bonds.add_coord({1,2},Param_t::K,value_of_K);
  *  \endcode
  *  and similarly for other coordinates.
- */
+ *
+template<size_t NAtoms>
 class IntCoords {   
 protected:
     ///The number of atoms this coordinate depends on
-    size_t natoms_;
+    static size_t natoms=NAtoms;
     
     ///Typedef for the set of atoms in an IntCoord
-    using Atoms_t=std::vector<size_t>;
+    using Atoms_t=std::array<size_t,natoms>;
     
     ///Typedef for a vector of doubles
     using VDouble=std::vector<double>;
@@ -93,15 +117,11 @@ protected:
      *   x of the first atom in the coord, y of the first atom in the coord, z
      *   of the first atom in the coord, x of the second atom in the coord,...
      *   along each of the \f$i\f$ dimensions of the derivative.
-     */ 
+     *
     virtual VDouble compute_value(size_t deriv_i, Atoms_t coord_i)const=0;
     
-    ///Recursion end point
-    void add_coord(const Atoms_t& coord){
-        value_.push_back(compute_value(0,coord)[0]);
-    }
-    
-        ///\p Carts is coordinates of the molecule in a.u. in a NAtoms X 3 array
+
+    ///\p Carts is coordinates of the molecule in a.u. in a NAtoms X 3 array
     IntCoords(size_t NAtoms,std::shared_ptr<const VDouble> Carts):
         natoms_(NAtoms),carts_(Carts){}
     
@@ -134,8 +154,7 @@ public:
      *  \param[in] param The type of the parameter, e.g. force constant
      *  \param[in] pvalue The value of the parameter in a.u.
      *  \param[in] other_params Remaining parameter type, parameter value pairs
-     */
-    template<typename...args>
+     *    template<typename...args>
     void add_coord(const Atoms_t& coord,Param_t param,
                    double pvalue,args...other_params){
         static_assert(!(sizeof...(args)%2),
@@ -143,6 +162,7 @@ public:
         params_[param].push_back(pvalue);
         add_coord(coord,other_params...);
     }
+
     
     ///Returns the array of coordinates
     const VDouble& values()const{return value_;}
@@ -154,10 +174,8 @@ public:
     virtual ~IntCoords(){}
     
 
-};
+};*/
 
 
 }//End namespace FManII
-
-#endif /* INTERNALCOORDINATES_HPP */
 

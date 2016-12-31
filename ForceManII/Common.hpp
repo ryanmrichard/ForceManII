@@ -56,8 +56,6 @@ inline void CHECK(bool cond,const std::string& msg){
 #endif /* End ndebug*/
 
 
-
-
 } //End namespace FManII
 
 #endif /* End header guard */

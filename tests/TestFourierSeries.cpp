@@ -18,7 +18,7 @@
  */
 
 #include <ForceManII/FFTerm.hpp>
-#include <ForceManII/FourierSeries.hpp>
+#include <ForceManII/ModelPotentials/FourierSeries.hpp>
 #include "TestMacros.hpp"
 #include "ubiquitin.hpp"
 #include <cmath>
@@ -28,28 +28,32 @@ int main(int argc, char** argv){
     FManII::FourierSeries FS;
     
 #ifndef NDEBUG
-std::vector<double> a(3,0.0),b(2,0.0),c,d;
-TEST_THROW(d=FS.deriv(a,c,b),"Qs.size()!=Vs.size()");
-TEST_THROW(d=FS.deriv(a,b,c),"Qs.size()!=ns.size()");
+std::vector<double> a(2,0.0),d;
+std::map<FManII::Param_t,std::vector<double>> ps={
+    {FManII::Param_t::amp,{0.0}},
+    {FManII::Param_t::phi,{0.0}},
+    {FManII::Param_t::n,{0.0}}};
+TEST_THROW(d=FS.deriv(0,ps,{a}),"Qs.size()!=Vs.size()");
+ps[FManII::Param_t::amp].push_back(0.0);
+TEST_THROW(d=FS.deriv(0,ps,{a}),"Qs.size()!=phis.size()");
+ps[FManII::Param_t::phi].push_back(0.0);
+TEST_THROW(d=FS.deriv(0,ps,{a}),"Qs.size()!=ns.size()");
 #endif
-
-     FManII::CoordArray coords=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
-            ubiquitin_FF_params,ubiquitin_conns);
-     const std::vector<double>& torsions=coords[FManII::TORSION]->values(),
-        tor_v=coords[FManII::TORSION]->params(FManII::amp),
-        tor_n=coords[FManII::TORSION]->params(FManII::n),
-        imps=coords[FManII::IMPTORSION]->values(),
-        imp_v=coords[FManII::IMPTORSION]->params(FManII::amp),
-        imp_n=coords[FManII::IMPTORSION]->params(FManII::n);
-     
-    //Energy check
-    std::vector<double> Energy=FS.deriv(torsions,tor_v,tor_n);
-    test_value(Energy[0],ubiquitintorsion_e,1e-5,"Torsion Energy");
-    
-    Energy=FS.deriv(imps,imp_v,imp_n);
-    
-    //Lower convergence than other terms b/c of ambiguity in imp
-    test_value(Energy[0],ubiquitinimproper_e,1e-3,"Improper Torsion Energy");
+    FManII::CoordArray coords=
+        FManII::get_coords(ubiquitin,ubiquitin_conns);
+    FManII::ParamSet params=
+        FManII::assign_params(coords,FManII::amber99,ubiquitin_FF_types);
+    for(auto term:{FManII::IntCoord_t::TORSION,FManII::IntCoord_t::IMPTORSION}){
+        const FManII::FFTerm_t term_type=
+                std::make_pair(FManII::Model_t::FOURIERSERIES,term);
+        const FManII::Vector &qs=coords[term]->get_coords();
+        //Energy check
+        std::vector<double> Energy=FS.deriv(0,params.at(term_type),{qs});
+        if(term==FManII::IntCoord_t::TORSION)
+            test_value(Energy[0],ubiquitintorsion_e,1e-5,"Torsion Energy");
+        else
+            test_value(Energy[0],ubiquitinimproper_e,1e-3,"Improper Torsion Energy");
+    }
     
     test_footer();
     return 0;

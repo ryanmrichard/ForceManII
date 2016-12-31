@@ -55,6 +55,20 @@ inline void test_footer(){
 do{bool threw=false;try{fxn;}catch(const std::runtime_error& error){threw=true;}\
 if(!threw)throw std::runtime_error(msg);}while(0)
 
+/** Function for testing if two values are equievelent
+ *  \param[in] actual The value you computed
+ *  \param[in] theory The value you expected
+ *  \param[in] Msg    A brief description of the check you are performing
+ */
+template<typename T>
+inline void test_value(const T& actual,
+                       const T& theory,
+                       const std::string &Msg,
+                       bool print=true){
+    if(actual!=theory)
+        throw std::runtime_error("Values do not match");
+    if(print)std::cout<<Msg<<" : passed"<<std::endl;
+}
 
 /** Function for testing if two doubles are equivalent
  *  

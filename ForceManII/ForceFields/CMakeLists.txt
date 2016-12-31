@@ -1,0 +1,4 @@
+set(FMANII_SRC ${FMANII_SRC}
+    ${CMAKE_CURRENT_SOURCE_DIR}/amber99.cpp
+    PARENT_SCOPE
+    )

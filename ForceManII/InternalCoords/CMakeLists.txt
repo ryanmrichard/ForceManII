@@ -1,0 +1,7 @@
+set(FMANII_SRC ${FMANII_SRC}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Angle.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Distance.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ImproperTorsion.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Torsion.cpp
+    PARENT_SCOPE
+    )

@@ -7,10 +7,12 @@ Welcome to the ForceManII user/developer manual.  This is a work in progress.
 
 \section main_sec Contents
 - [History of the Project](@ref history) Coming Soon!!!!
+- [Quick Start](@ref quick_start) Coming Soon!!!!
 - Conventions
   - [Terminology](@ref terminology)
   - [Tinker Force Field Format](@ref tinkerformat)
-- Coordinate Types
+  - [ForceManII Directory Structure](@ref file_layout)
+- Internal Coordinate Types
   - [Distance](@ref distance)
   - [Angle](@ref angle)
   - [Torsion](@ref torsion)
@@ -19,6 +21,9 @@ Welcome to the ForceManII user/developer manual.  This is a work in progress.
   - [Polynomial](@ref polynomial)
   - [Fourier Series](@ref fourier)
   - [Lennard-Jones 6-12](@ref LJ)
+  - [Electrostatics](@ref electrostatics)
+- Data Structures In Detail
+  - [FFTerm](@ref force_field_terms)
 
 
 \section Authors

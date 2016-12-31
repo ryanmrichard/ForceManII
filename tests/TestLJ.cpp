@@ -17,7 +17,7 @@
  * MA 02110-1301  USA
  */
 #include <ForceManII/FFTerm.hpp>
-#include <ForceManII/LennardJones.hpp>
+#include <ForceManII/ModelPotentials/LennardJones.hpp>
 #include "TestMacros.hpp"
 #include "ubiquitin.hpp"
 #include <cmath>
@@ -27,22 +27,31 @@ int main(int argc, char** argv){
     FManII::LennardJones lj;
 
 #ifndef NDEBUG
-std::vector<double> a(3,0.0),b(2,0.0),c;
-TEST_THROW(c=lj.deriv(a,b,a),"sigmas.size()==dist.size()");
-TEST_THROW(c=lj.deriv(a,a,b),"epsilons.size()==dist.size()");
+std::map<FManII::Param_t,std::vector<double>> ps={
+    {FManII::Param_t::sigma,{0.0}},
+    {FManII::Param_t::epsilon,{0.0}}};
+std::vector<double> a(2,0.0),c;
+TEST_THROW(c=lj.deriv(0,ps,{a}),"Wrong number of parameters");
+TEST_THROW(c=lj.deriv(0,ps,{a,a}),"Wrong number of coordinates");
+TEST_THROW(c=lj.deriv(0,ps,{a}),"sigmas.size()==dist.size()");
+ps[FManII::Param_t::sigma].push_back(0.0);
+TEST_THROW(c=lj.deriv(0,ps,{a}),"epsilons.size()==dist.size()");
 #endif
 
-     FManII::CoordArray coords=FManII::get_coords(ubiquitin,ubiquitin_FF_types,
-            ubiquitin_FF_params,ubiquitin_conns,1/1.2,1/2.0);
-     const std::vector<double>& dist=
-        coords[FManII::LENNARD_JONES]->values();
-     const std::vector<double>& sigmas=
-        coords[FManII::LENNARD_JONES]->params(FManII::sigma);
-     const std::vector<double>& epsilons=
-        coords[FManII::LENNARD_JONES]->params(FManII::epsilon);
+    FManII::CoordArray coords=
+        FManII::get_coords(ubiquitin,ubiquitin_conns);
+    FManII::ParamSet params=
+        FManII::assign_params(coords,FManII::amber99,ubiquitin_FF_types);
+    std::vector<double> Energy(1,0.0);
+    for(auto param:{FManII::IntCoord_t::PAIR,FManII::IntCoord_t::PAIR14}){
+        const std::vector<double> &dist=coords[param]->get_coords();
+        auto term_type=std::make_pair(FManII::Model_t::ELECTROSTATICS,param);
+        double scale=1.0;
+        if(FManII::amber99.scale_factors.count(term_type))
+            scale=FManII::amber99.scale_factors.at(term_type);
+        Energy[0]+=scale*lj.deriv(0,params[term_type],{dist})[0];
+    }
 
-    //Energy check
-    std::vector<double> Energy=lj.deriv(dist,sigmas,epsilons);
     test_value(Energy[0],ubiquitinvdw_e,1e-5,"Lennard-Jones 6-12 Energy");
 
     test_footer();
