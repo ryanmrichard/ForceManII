@@ -26,4 +26,6 @@ but let me know if you find exceptions.
 - internal coordinate: This is the length of a bond, the angle of an angle, the
   angle of a torsion angle, etc. The internal coordinates depend on the
   Cartesian coordinates of each atom and the bond assignments
+- model potential: This is the functional form of the energy term.  It is
+  usually something like a harmonic oscillator or Fourier series.
 

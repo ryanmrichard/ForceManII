@@ -40,23 +40,16 @@ ps[FManII::Param_t::r0].push_back(0.0);
 TEST_THROW(d=HO.deriv(0,ps,{a}),"len(k)!=len(r)");
 #endif
 
-    FManII::CoordArray coords=
-        FManII::get_coords(ubiquitin,ubiquitin_conns);
-    FManII::ParamSet params=
-        FManII::assign_params(coords,FManII::amber99,ubiquitin_FF_types);
+    FManII::DerivType deriv=
+            FManII::run_forcemanii(0,ubiquitin,ubiquitin_conns,
+                                       FManII::amber99,ubiquitin_FF_types);
      for(auto qi : {IntCoord_t::BOND,IntCoord_t::ANGLE}){
-        const vector<double>& qs=coords[qi]->get_coords();
         auto term_type=std::make_pair(FManII::Model_t::HARMONICOSCILLATOR,qi);
         //Energy check
-        if(qi==IntCoord_t::BOND){
-            std::vector<double> Energy=HO.deriv(0,params[term_type],{qs});
-            test_value(Energy[0],ubiquitinbond_e,1e-5,"Bond Energy");
-        }
-        else{
-            HarmonicOscillator HO1;
-            std::vector<double> Energy=HO1.deriv(0,params[term_type],{qs});
-            test_value(Energy[0],ubiquitinangle_e,1e-5,"Angle Energy");
-        }
+        if(qi==IntCoord_t::BOND)
+            test_value(deriv.at(term_type)[0],ubiquitinbond_e,1e-5,"Bond Energy");
+        else
+            test_value(deriv.at(term_type)[0],ubiquitinangle_e,1e-5,"Angle Energy");
     }
     test_footer();
     return 0;

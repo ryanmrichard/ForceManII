@@ -88,7 +88,8 @@ inline void parse_imp(const std::vector<std::string>& tokens,
                       double deg2rad){
     const size_t i=stoi(tokens[1]),j=stoi(tokens[2]),
             k=stoi(tokens[3]),l=stoi(tokens[4]);
-    const std::vector<size_t> types=imp_order({i,j,k,l});
+    //Tinker puts central atom third
+    const std::vector<size_t> types=imp_order({i,k,j,l});
     FFTerm_t ffterm=std::make_pair(Model_t::FOURIERSERIES,IntCoord_t::IMPTORSION);
     ff.orderrules[ffterm]=imp_order;
     ff.paramtypes[ffterm]=TypeTypes_t::CLASS;

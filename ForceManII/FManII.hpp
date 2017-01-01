@@ -61,19 +61,6 @@ struct ElectrostaticsPair:public FFTerm{ElectrostaticsPair();};
 ///Available hard-coded force fields
 extern const ForceField amber99;
 
-
-///An array of internal coordinates arranged by type
-using CoordArray=std::map<IntCoord_t,std::unique_ptr<InternalCoordinates>>;
-
-///Array such that element i is a vector of the atoms bonded to atom i
-using ConnData=std::vector<IVector>;
-
-///Map from a ff term to its set of parameters
-using ParamSet=std::map<FFTerm_t,std::map<Param_t,Vector>>;
-
-///An array of the requested derivatives sorted by force field term type
-using DerivType=std::map<FFTerm_t,Vector>;
-
 /**\brief Given a force field file in Tinker format makes a ForceField object
  *
  * Optionally one may specify their own unit conversions as well
@@ -123,11 +110,22 @@ ParamSet assign_params(const CoordArray& coords,
                        const ForceField& ff,
                        const IVector& types);
 
-/*DerivType deriv(size_t order,
+DerivType deriv(size_t order,
                 const ForceField& ff,
-                const CoordArray& coords,
-                const Param);
-*/
+                const ParamSet& ps,
+                const CoordArray& coords);
+
+inline DerivType run_forcemanii(size_t order,
+                                const Vector& Carts,
+                                const ConnData& conns,
+                                const ForceField& ff,
+                                const IVector& types){
+    const CoordArray coords=get_coords(Carts,conns);
+    return deriv(order,ff,assign_params(coords,ff,types),coords);
+
+}
+
+
 } //End namespace FManII
 
 #endif /* End header guard */

@@ -84,8 +84,23 @@ using cSharedVector=std::shared_ptr<const Vector>;
 ///Array of unsigned long integers
 using IVector=std::vector<size_t>;
 
+///Type of the internal coordinate base class
+class InternalCoordinates;
+
+///An array of internal coordinates arranged by type
+using CoordArray=std::map<IntCoord_t,std::unique_ptr<InternalCoordinates>>;
+
+///Array such that element i is a vector of the atoms bonded to atom i
+using ConnData=std::vector<IVector>;
+
+///Map from a ff term to its set of parameters
+using ParamSet=std::map<FFTerm_t,std::map<Param_t,Vector>>;
+
+///An array of the requested derivatives sorted by force field term type
+using DerivType=std::map<FFTerm_t,Vector>;
+
 }//end namespace
 
-//Instatiate some templates we know we're going to use
+//Instantiate some templates we know we're going to use
 template class std::vector<double>;
 template class std::vector<size_t>;

@@ -40,6 +40,7 @@ CoordArray get_coords(const Vector& Carts,
     FoundCoords.emplace(IntCoord_t::TORSION,std::move(make_unique<Torsion>(Sys)));
     FoundCoords.emplace(IntCoord_t::IMPTORSION,std::move(make_unique<ImproperTorsion>(Sys)));
     FoundCoords.emplace(IntCoord_t::PAIR,std::move(make_unique<Distance>(Sys)));
+    FoundCoords.emplace(IntCoord_t::PAIR13,std::move(make_unique<Distance>(Sys)));
     FoundCoords.emplace(IntCoord_t::PAIR14,std::move(make_unique<Distance>(Sys)));
     std::set<std::pair<size_t,size_t>> pair14,pair13,pair12;
     for(size_t AtomI=0;AtomI<NAtoms;++AtomI){
@@ -128,7 +129,8 @@ ParamSet assign_params(const CoordArray& coords,
                     else{
                         const Vector& vs=
                                 ff.params.at(term_type).at(parami).at(Orderedts);
-                        if(term_type.first==Model_t::FOURIERSERIES)
+                        if(term_type.first==Model_t::FOURIERSERIES &&
+                           term_type.second==IntCoord_t::TORSION)
                             for(size_t i=0;i<3;i++)
                                 ps[term_type][parami].push_back(vs.size()>i?
                                                                     vs[i]:0.0);
@@ -144,25 +146,20 @@ ParamSet assign_params(const CoordArray& coords,
     return ps;
 }
 
-std::map<FFTerm_t,Vector> deriv(size_t order,
+DerivType deriv(size_t order,
                                 const ForceField& ff,
+                                const ParamSet& ps,
                                 const CoordArray& coords)
 {
-    std::map<FFTerm_t,Vector> rv;
-//    for(const auto& i:ff.terms){
-//        const FFTerm_t term_type=i.first;
-//        const FFTerm& ffterm=i.second;
-//        std::vector<Vector> cs,ps;
-//        for(auto ci:ffterm.coords){
-//            cs.push_back(coords.at(ci)->get_coords());
-//            for(auto pi:ffterm.model().params)
-//                ps.push_back(coords.at(ci)->get_params(pi));
-//        }
-//        Vector d=ffterm.deriv(order,ps,cs);
-//        if(ff.scale_factors.count(term_type))
-//            for(double& di:d)di*=ff.scale_factors.at(term_type);
-//        rv.emplace(term_type,std::move(d));
-//    }
+   DerivType rv;
+   for(const auto& i:ff.terms){
+        const FFTerm_t term_type=i.first;
+        const FFTerm& ffterm=i.second;
+        Vector d=ffterm.deriv(order,ps.at(term_type),coords);
+        if(ff.scale_factors.count(term_type))
+            for(double& di:d)di*=ff.scale_factors.at(term_type);
+        rv.emplace(term_type,std::move(d));
+    }
     return rv;
 }
 

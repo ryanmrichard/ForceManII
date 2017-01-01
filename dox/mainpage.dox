@@ -6,8 +6,8 @@
 Welcome to the ForceManII user/developer manual.  This is a work in progress.
 
 \section main_sec Contents
-- [History of the Project](@ref history) Coming Soon!!!!
-- [Quick Start](@ref quick_start) Coming Soon!!!!
+- [History of the Project](@ref history)
+- [Quick Start](@ref quickstart)
 - Conventions
   - [Terminology](@ref terminology)
   - [Tinker Force Field Format](@ref tinkerformat)
@@ -24,7 +24,16 @@ Welcome to the ForceManII user/developer manual.  This is a work in progress.
   - [Electrostatics](@ref electrostatics)
 - Data Structures In Detail
   - [FFTerm](@ref force_field_terms)
+  = [ForceField](@ref ffdef)
 
+\section plans Future Plans etc.
+
+This is a list of anticipated and planned changes to the API and the source
+code.
+
+- Switch enumerations to strings
+  - Although I prefer enumerations for compile-time checking, strings are easier
+    to interface with
 
 \section Authors
 

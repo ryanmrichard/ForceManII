@@ -1,6 +1,9 @@
 Polynomial Potential Terms                                         {#polynomial}
 ==========================
 
+\note The polynomial term is not yet implemented in ForceManII, but will be at
+some point.
+
 Many of the forms of force field potentials are that of polynomials.  That is
 they are a linear combination of \f$N\f$ terms of the form:
 \f[

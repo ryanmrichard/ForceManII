@@ -70,7 +70,6 @@ def read_ff(ff_file):
                 ff.terms[ffterm]="FourierTorsion"
                 for ti in range(3):
                     if len(da_line)<(6+3*ti):break
-                    print(da_line,ti)
                     v,phi,n=float(da_line[5+3*ti])*kcalmol2au,\
                             float(da_line[6+3*ti])*deg2rad,\
                             float(da_line[7+3*ti])

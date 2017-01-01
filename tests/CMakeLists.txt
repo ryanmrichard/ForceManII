@@ -7,7 +7,10 @@ include(CTest)
 enable_testing()
 
 #These are the correct answers
-add_library(molecules SHARED deltorphin.cpp ubiquitin.cpp ubiquitin_intcoords.cpp)
+add_library(molecules SHARED ubiquitin.cpp
+                             ubiquitin_intcoords.cpp
+                             ubiquitin_params.cpp
+)
 target_include_directories(molecules PRIVATE ${PROJECT_SOURCE_DIR})
 add_dependencies(molecules fmanii)
 
@@ -19,6 +22,7 @@ function(NEW_TEST test_name)
    add_test(NAME ${test_name} COMMAND ${test_name})
 endfunction()
 
+NEW_TEST(TestAssignParams)
 NEW_TEST(TestCoulomb)
 NEW_TEST(TestFourierSeries)
 NEW_TEST(TestHO)

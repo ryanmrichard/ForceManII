@@ -26,8 +26,6 @@ Vector LennardJones::deriv(size_t order,
               const ParamInput_t &in_params,
               const CoordInput_t &in_coords)const
 {
-    DEBUG_CHECK(in_params.size()==2,"LJ only needs two parameters");
-    DEBUG_CHECK(in_coords.size()==1,"LJ only expects one coordinate");
     const Vector &Qs=in_coords[0],
                  &ss=in_params.at(FManII::Param_t::sigma),
                  &es=in_params.at(FManII::Param_t::epsilon);

@@ -3,3 +3,9 @@ build/
 CMakeCache.txt
 bin/analyze
 bin/amber99.prm
+*.config
+*.creator
+*.creator.user
+*.files
+*.includes
+.*

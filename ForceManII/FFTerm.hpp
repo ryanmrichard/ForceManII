@@ -36,8 +36,12 @@ public:
 
     const std::vector<IntCoord_t> coords;///<Coordinates this term depends on
 
-    Vector deriv(size_t order,const std::vector<cSharedVector>& ps,
-                              const std::vector<cSharedVector>& cs)const{}
+    Vector deriv(size_t order,const std::map<Param_t,Vector>& ps,
+                              const CoordArray& cs)const{
+        std::vector<Vector> incoords;
+        for(auto ci:coords)incoords.push_back(cs.at(ci)->get_coords());
+        return model_->deriv(order,ps,incoords);
+    }
 
     bool operator==(const FFTerm& other)const{
         return(*model_==*other.model_ &&

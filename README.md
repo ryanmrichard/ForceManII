@@ -2,20 +2,27 @@
 
 TODO: CI integration
 
-User and Developer manual is available [here](https://ryanmrichard.github.io/ForceManII/).
-
-## History
-ForceManII was originally a code written to replace Q-Chem's original MM code, 
-which is entitled ForceMan (short for force-field manager).  I (Ryan M. Richard
-), started work on ForceManII as a graduate student at Ohio State where I was
-part of the Q-Chem development team.  I then went on to do a postdoc at Georgia
- Institue of Technology where I became a Psi4 developer.  In an effort to still
- maintain ForceManII the decision was made to make it a stand alone library that
- could be called from either Q-Chem or Psi4.
+User and Developer manual is available
+[here](https://ryanmrichard.github.io/ForceManII/) and is the primary source of
+information regarding usage of ForceManII (aside from this readme).
 
 ## Features
 
-TODO: Explain to the world why this is the greatest MM code ever
+ForceManII is designed to facilitate running MM computations from QM codes. This
+amounts to several important features in our opinion:
+
+- Usage of data typically available in a QM code such as Cartesian coordinates
+  and atomic numbers
+  - At the moment we also need the connectivity of the atoms and the force field
+  parameters for each atom, but we hope to remove these limitations in future
+  releases
+- A library like model
+  - Most MM packages are just that packages.  They are not designed to be called
+    from other programs.  This makes it challenging to write QM/MM models or
+    use MM results in traditional QM packages.
+- Easy addition of new force fields with (possibly) new functional forms
+- Object-oriented design written in C++
+- Minimal (currently no) dependencies
 
 
 ## Compilation
@@ -28,7 +35,7 @@ following should thus be sufficient to compile it:
 cmake -H. -Bbuild -DCMAKE_CXX_COMPILER=path/to/your/c++/compiler
 cd build && make
 
-#Optionally run the test suite
+#Optionally run the test suite (still in the build directory)
 ctest
 
 #Install (may require root depending on install location)
@@ -68,9 +75,10 @@ In the *.cpp* file you want to call ForceManII from:
 //e.g. Amber99, include its header file
 //#include <ForceFields/amber99.hpp>
 
-double my_fxn(){
-    //Conversions are optional, default values exist, skip this if you are
-    //using a force field that ships with FManII
+void my_fxn(){
+    //Conversions are optional, default values exist, skip this call if you are
+    //using a force field that ships with FManII and replace all instances of
+    //my_ff with FManII::amber99
     FManII::ForceField my_ff=FManII::parse_file
     (
         std::move(std::istream("path/to/.prm/file")),
@@ -81,10 +89,12 @@ double my_fxn(){
 
     //You somehow need to get the coordinates of your system, in bohr, into
     //an NAtoms by 3 long vector
+    //thus my_carts[i*3+j] is the j-th Cartesian coordinate of atom i
     std::vector<double> my_carts=magic_function_that_gets_coordinates();
 
     //You somehow need to get the atom types of the atoms in your system
     //AtomTypes is a typedef of std::vector<size_t>
+    //thus atom_types[i] is the atom type of atom i
     FManII::AtomTypes atom_types=magic_function_that_gets_types();
 
     //You somehow need to get the connectivity of your system
@@ -92,27 +102,22 @@ double my_fxn(){
     //connected to atom i
 
     //ConnData is a typedef of std::vector<std::vector<size_t>>
+    //thus conns[i][j] is the j-th atom connected to atom i
     FManII::ConnData conns=magic_function_that_gets_conns();
 
-    //Get the internal coordinates of your system
-    FManII::CoordArray Coords=FManII::get_coords
-    (
-        my_carts,
-        atom_types,
-        conns,
-        my_ff //would be FManII::amber99 if you were using included Amber99 ff
-     );
-
-    //Computes the requested derivative
-    return FManII::compute_deriv(CoordArray,derivative_order);
-
+    //Get the derivative you want
+    //DerivType is a typedef of std::map<FManII::FFTerm_t,std::vector<double>>
+    //thus `deriv.at({HARMONICOSCILLATOR,BOND})[i]` is the i-th component of the
+    //harmonic bond-stretching term of the force field
+    FManII::DerivType deriv=
+        FManII::run_fmanii(0,my_carts,conns,my_ff,atom_types);
 }
 ~~~
 
 As you can hopefully see the API design is designed to allow the user to
 customize each step of the process.
 
-- The decoupling of the three main steps allows the user to modify input to the
+- The decoupling of the main steps allows the user to modify input to the
   next step without modifying ForceManII
 - `parse_file` is designed to obtain the details of a force field
    - Force field files should be in Tinker format.
@@ -120,9 +125,10 @@ customize each step of the process.
      force fields that ship with ForceManII
    - One can also fill a `FManII::ForceField` instance manually for a more
      custom experience
-- `get_coords` determines the internal coordinates of a system and assigns
-   params
-   - Internal coordinates *e.g.* bonds, angles, torsions, etc.
-   - Combined determine/assign procedure is for effeciency
-- `compute_deriv` computes the requested derivative
+- `run_fmanii` computes the requested derivative
+  - actually has three sub calls get_coords, get_params, deriv that
+    respectively compute the internal coordinates, assign parmaeters to them,
+    and then ultimately compute the derivative
+    - These functions may be called by the user for even more fine grained
+      control over the API
   - note that the 0-th derivative is the energy, 1-st is the gradient, *etc.*

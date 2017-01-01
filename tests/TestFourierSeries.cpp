@@ -39,20 +39,16 @@ TEST_THROW(d=FS.deriv(0,ps,{a}),"Qs.size()!=phis.size()");
 ps[FManII::Param_t::phi].push_back(0.0);
 TEST_THROW(d=FS.deriv(0,ps,{a}),"Qs.size()!=ns.size()");
 #endif
-    FManII::CoordArray coords=
-        FManII::get_coords(ubiquitin,ubiquitin_conns);
-    FManII::ParamSet params=
-        FManII::assign_params(coords,FManII::amber99,ubiquitin_FF_types);
+    FManII::DerivType deriv=FManII::run_forcemanii(0,ubiquitin,ubiquitin_conns,
+                                           FManII::amber99,ubiquitin_FF_types);
+
     for(auto term:{FManII::IntCoord_t::TORSION,FManII::IntCoord_t::IMPTORSION}){
         const FManII::FFTerm_t term_type=
                 std::make_pair(FManII::Model_t::FOURIERSERIES,term);
-        const FManII::Vector &qs=coords[term]->get_coords();
-        //Energy check
-        std::vector<double> Energy=FS.deriv(0,params.at(term_type),{qs});
         if(term==FManII::IntCoord_t::TORSION)
-            test_value(Energy[0],ubiquitintorsion_e,1e-5,"Torsion Energy");
+            test_value(deriv.at(term_type)[0],ubiquitintorsion_e,1e-5,"Torsion Energy");
         else
-            test_value(Energy[0],ubiquitinimproper_e,1e-3,"Improper Torsion Energy");
+            test_value(deriv.at(term_type)[0],ubiquitinimproper_e,1e-3,"Improper Torsion Energy");
     }
     
     test_footer();

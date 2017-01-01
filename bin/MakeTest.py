@@ -1,7 +1,7 @@
 """Given an .xyz in Tinker format, this script will assemble the .hpp and .cpp
    files for the system so that the coordinates, connectivity, parameter types,
    and energies are in a format suitable for testing.  The energies will be in
-   the .hpp file, the coordinates and connectivity in <mol_name>_coord.cpp
+   the .hpp file, the coordinates and connectivity in <mol_name>.cpp
 """
 import sys
 import os

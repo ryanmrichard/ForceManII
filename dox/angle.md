@@ -25,3 +25,10 @@ the tangent of the angle:
 \tan\theta=\frac{\left(\vec{r_{12}}\times\vec{r_{32}}\right)\cdot\vec{n}}
                 {\vec{r_{12}}\cdot\vec{r_{32}}n}.
 \f]
+
+The use of the tangent of the angle is preferred numerically as in most coding
+languages, there exists a function (usually called `atan2`) that preserves the
+sign of the resulting angle and does not suffer from numerical issues at any
+angle value (90 degrees, which is not in arctangent's range is handled
+correctly, as is the nefarious angle of 180 degrees which is outside of
+arccosine's range).

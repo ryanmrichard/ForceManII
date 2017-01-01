@@ -45,7 +45,7 @@ TEST_THROW(c=lj.deriv(0,ps,{a}),"epsilons.size()==dist.size()");
     std::vector<double> Energy(1,0.0);
     for(auto param:{FManII::IntCoord_t::PAIR,FManII::IntCoord_t::PAIR14}){
         const std::vector<double> &dist=coords[param]->get_coords();
-        auto term_type=std::make_pair(FManII::Model_t::ELECTROSTATICS,param);
+        auto term_type=std::make_pair(FManII::Model_t::LENNARD_JONES,param);
         double scale=1.0;
         if(FManII::amber99.scale_factors.count(term_type))
             scale=FManII::amber99.scale_factors.at(term_type);

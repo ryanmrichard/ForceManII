@@ -6,8 +6,11 @@ INPUT+=  dox/mainpage.dox \
          dox/FileLayout.md \
          dox/fourierseries.md \
          dox/harmonicoscillator.md \
+         dox/history.md \
          dox/LJ.md \
          dox/polynomial.md \
-         dox/tinkerformat.md \
-         dox/torsion.md \
+         dox/quickstart.md \
          dox/terminology.md \
+         dox/tinkerformat.md \
+         dox/torsion.md
+
