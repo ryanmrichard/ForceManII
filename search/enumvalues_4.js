@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['imptorsion',['IMPTORSION',['../namespaceFManII.html#aee2b0c5668a8970ffb58ac650994e059a650ab62f01654d8aae5b3a9c9919dbed',1,'FManII']]]
+  ['fourierseries',['FOURIERSERIES',['../namespaceFManII.html#aa6ecc8ef7c69a92846599375635b8ebead3f9eae800e144855763ac10832c7fcf',1,'FManII']]]
 ];

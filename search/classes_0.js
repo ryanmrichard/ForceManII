@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['angle',['Angle',['../classFManII_1_1Angle.html',1,'FManII']]]
+  ['bfsiterator',['BFSIterator',['../classBFSIterator.html',1,'']]]
 ];

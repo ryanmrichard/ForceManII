@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>ForceManII: FManII::FFTerm&lt; Model_t, Coord_t &gt; Class Template Reference</title>
+<title>ForceManII: FManII::FFTerm Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -90,32 +90,65 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classFManII_1_1FFTerm-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">FManII::FFTerm&lt; Model_t, Coord_t &gt; Class Template Reference</div>  </div>
+<div class="title">FManII::FFTerm Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="FFTerm_8hpp_source.html">FFTerm.hpp</a>&gt;</code></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename Model_t, typename Coord_t&gt;<br />
-class FManII::FFTerm&lt; Model_t, Coord_t &gt;</h3>
-
-<p>The class responsible for computing derivatives of a force field term</p>
-<p>All energetic terms in a forcefield depend on some generic coordinate <img class="formulaInl" alt="$q$" src="form_0.png"/>, which itself depends on the standard Cartesian coordinates of the system. Consequentially, the first derivative of the energy with respect to one of these coordinates, say <img class="formulaInl" alt="$x$" src="form_1.png"/> is: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \frac{\partial E(q)}{\partial x}=\frac{\partial f(q)}{\partial q} \frac{\partial q}{\partial x}, \]" src="form_2.png"/>
-</p>
-<p> where <img class="formulaInl" alt="$f(q)$" src="form_3.png"/> is the functional form of the term (harmonic oscillator, Fourier series, etc). The second derivative with respect to <img class="formulaInl" alt="$x$" src="form_1.png"/> and <img class="formulaInl" alt="$y$" src="form_4.png"/> is then: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \frac{\partial^2 E(q)}{\partial x\partial y}= \frac{\partial^2 f(q)}{\partial q^2}\frac{\partial q}{\partial x} \frac{\partial q}{\partial y}+ \frac{\partial f(q)}{\partial q} \frac{\partial q^2}{\partial x\partial y} \]" src="form_5.png"/>
-</p>
-<p>This class is responsible for handeling these derivative manipulations in a generic way. Eventually I probably will want to expand this to include higher-order terms like those in the MM4 series which involve cross-terms between parameters. In those cases the chain rule seen here needs generalized to multiple <img class="formulaInl" alt="$q$" src="form_0.png"/> and I anticipate there being an additional template type parameter.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">Model_t</td><td>The class type of our functional form </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">Coord_t</td><td>The class type of the coordinate this term depends on </td></tr>
-  </table>
-  </dd>
-</dl>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+<div class="dynheader">
+Inheritance diagram for FManII::FFTerm:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFManII_1_1FFTerm__inherit__graph.png" border="0" usemap="#FManII_1_1FFTerm_inherit__map" alt="Inheritance graph"/></div>
+<map name="FManII_1_1FFTerm_inherit__map" id="FManII_1_1FFTerm_inherit__map">
+<area shape="rect" id="node2" href="structFManII_1_1Electrostatics14.html" title="FManII::Electrostatics14" alt="" coords="191,5,356,32"/>
+<area shape="rect" id="node3" href="structFManII_1_1ElectrostaticsPair.html" title="FManII::ElectrostaticsPair" alt="" coords="186,56,361,83"/>
+<area shape="rect" id="node4" href="structFManII_1_1FourierImproperTorsion.html" title="FManII::FourierImproperTorsion" alt="" coords="171,107,376,133"/>
+<area shape="rect" id="node5" href="structFManII_1_1FourierTorsion.html" title="FManII::FourierTorsion" alt="" coords="196,157,351,184"/>
+<area shape="rect" id="node6" href="structFManII_1_1HarmonicAngle.html" title="FManII::HarmonicAngle" alt="" coords="193,208,353,235"/>
+<area shape="rect" id="node7" href="structFManII_1_1HarmonicBond.html" title="FManII::HarmonicBond" alt="" coords="195,259,352,285"/>
+<area shape="rect" id="node8" href="structFManII_1_1LJ14.html" title="FManII::LJ14" alt="" coords="224,309,323,336"/>
+<area shape="rect" id="node9" href="structFManII_1_1LJPair.html" title="FManII::LJPair" alt="" coords="219,360,327,387"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for FManII::FFTerm:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFManII_1_1FFTerm__coll__graph.png" border="0" usemap="#FManII_1_1FFTerm_coll__map" alt="Collaboration graph"/></div>
+<map name="FManII_1_1FFTerm_coll__map" id="FManII_1_1FFTerm_coll__map">
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:af10956faf451add3b0e8d0b1c39de740"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af10956faf451add3b0e8d0b1c39de740"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFManII_1_1FFTerm.html#af10956faf451add3b0e8d0b1c39de740">FFTerm</a> (std::shared_ptr&lt; const <a class="el" href="structFManII_1_1ModelPotential.html">ModelPotential</a> &gt; m, const std::vector&lt; <a class="el" href="namespaceFManII.html#aee2b0c5668a8970ffb58ac650994e059">IntCoord_t</a> &gt; &amp;cs)</td></tr>
+<tr class="memdesc:af10956faf451add3b0e8d0b1c39de740"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a new FF term given the model and coordinates it depends on. <br /></td></tr>
+<tr class="separator:af10956faf451add3b0e8d0b1c39de740"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad826326c9289fcc575cf00ce0ee2d428"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad826326c9289fcc575cf00ce0ee2d428"></a>
+const <a class="el" href="structFManII_1_1ModelPotential.html">ModelPotential</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFManII_1_1FFTerm.html#ad826326c9289fcc575cf00ce0ee2d428">model</a> () const </td></tr>
+<tr class="memdesc:ad826326c9289fcc575cf00ce0ee2d428"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the model. <br /></td></tr>
+<tr class="separator:ad826326c9289fcc575cf00ce0ee2d428"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af69e3077ae0bafc8e5d993ce81151e9f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af69e3077ae0bafc8e5d993ce81151e9f"></a>
+<a class="el" href="namespaceFManII.html#aa967833d4468e3e3b264dc76116b5891">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><b>deriv</b> (size_t order, const std::map&lt; <a class="el" href="namespaceFManII.html#ab331802fde4c5f2564443f1704c25363">Param_t</a>, <a class="el" href="namespaceFManII.html#aa967833d4468e3e3b264dc76116b5891">Vector</a> &gt; &amp;ps, const <a class="el" href="namespaceFManII.html#a6b1adbb067be8f7fff2051e424c870c6">CoordArray</a> &amp;cs) const </td></tr>
+<tr class="separator:af69e3077ae0bafc8e5d993ce81151e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2618531be97e6fecbe8b4af461625e4f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2618531be97e6fecbe8b4af461625e4f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classFManII_1_1FFTerm.html">FFTerm</a> &amp;other) const </td></tr>
+<tr class="separator:a2618531be97e6fecbe8b4af461625e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4f9854e3b92804a64140989809be4ad"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4f9854e3b92804a64140989809be4ad"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classFManII_1_1FFTerm.html">FFTerm</a> &amp;other) const </td></tr>
+<tr class="separator:ab4f9854e3b92804a64140989809be4ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a9881853ab441f13eec295feaa0eb40d4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9881853ab441f13eec295feaa0eb40d4"></a>
+const std::vector&lt; <a class="el" href="namespaceFManII.html#aee2b0c5668a8970ffb58ac650994e059">IntCoord_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFManII_1_1FFTerm.html#a9881853ab441f13eec295feaa0eb40d4">coords</a></td></tr>
+<tr class="memdesc:a9881853ab441f13eec295feaa0eb40d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coordinates this term depends on. <br /></td></tr>
+<tr class="separator:a9881853ab441f13eec295feaa0eb40d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="FFTerm_8hpp_source.html">FFTerm.hpp</a></li>
 </ul>
 </div><!-- contents -->

@@ -90,7 +90,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">FManII.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -134,9 +135,16 @@ Functions</h2></td></tr>
 <tr class="memitem:a07536f438cb1bd705d1e491dd3b1fa14"><td class="memItemLeft" align="right" valign="top">ForceField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFManII.html#a07536f438cb1bd705d1e491dd3b1fa14">FManII::parse_file</a> (std::istream &amp;&amp;file, double kcalmol2au=1.0/627.5096, double ang2au=1.889725989, double deg2rad=M_PI/180.0)</td></tr>
 <tr class="memdesc:a07536f438cb1bd705d1e491dd3b1fa14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a force field file in Tinker format makes a <a class="el" href="structFManII_1_1ForceField.html" title="A struct to hold the details about a force field. ">ForceField</a> object.  <a href="namespaceFManII.html#a07536f438cb1bd705d1e491dd3b1fa14">More...</a><br /></td></tr>
 <tr class="separator:a07536f438cb1bd705d1e491dd3b1fa14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a6dc351e34c98e639b7a84d3a70c96a"><td class="memItemLeft" align="right" valign="top">CoordArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFManII.html#a4a6dc351e34c98e639b7a84d3a70c96a">FManII::get_coords</a> (const std::vector&lt; double &gt; &amp;Carts, const AtomTypes &amp;Types, const ParamTypes &amp;Params, const ConnData &amp;Conns, double chg14scale=1.0, double vdw14scale=1.0)</td></tr>
-<tr class="memdesc:a4a6dc351e34c98e639b7a84d3a70c96a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function that processes the input and returns a set of objects set up for use in <a class="el" href="namespaceFManII.html" title="Namespace for all code associated with ForceManII. ">FManII</a>.  <a href="namespaceFManII.html#a4a6dc351e34c98e639b7a84d3a70c96a">More...</a><br /></td></tr>
-<tr class="separator:a4a6dc351e34c98e639b7a84d3a70c96a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c822b0c4f7cdefbe6bb42388db408a7"><td class="memItemLeft" align="right" valign="top">CoordArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFManII.html#a8c822b0c4f7cdefbe6bb42388db408a7">FManII::get_coords</a> (const std::vector&lt; double &gt; &amp;Carts, const AtomTypes &amp;Types, const ConnData &amp;Conns, const ForceField &amp;ff)</td></tr>
+<tr class="memdesc:a8c822b0c4f7cdefbe6bb42388db408a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function that processes the input and returns a set of coordinates that can be used to compute a derivative.  <a href="namespaceFManII.html#a8c822b0c4f7cdefbe6bb42388db408a7">More...</a><br /></td></tr>
+<tr class="separator:a8c822b0c4f7cdefbe6bb42388db408a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a391e661dfbea5bf8a993a74a99a05c80"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a391e661dfbea5bf8a993a74a99a05c80"></a>
+const ForceField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFManII.html#a391e661dfbea5bf8a993a74a99a05c80">FManII::amber99</a></td></tr>
+<tr class="memdesc:a391e661dfbea5bf8a993a74a99a05c80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Available hard-coded force fields. <br /></td></tr>
+<tr class="separator:a391e661dfbea5bf8a993a74a99a05c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section version"><dt>Version</dt><dd>0.1 </dd></dl>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['value_5f',['value_',['../classFManII_1_1IntCoords.html#a1dfc726f1b6060c0f4e26eafb51953f9',1,'FManII::IntCoords']]],
-  ['vdw14scale',['vdw14scale',['../structFManII_1_1ForceField.html#a6901933ef796e58cdd2a99f841f633e4',1,'FManII::ForceField']]]
+  ['terms',['terms',['../structFManII_1_1ForceField.html#a62029e5add3067f641d095297e9537f3',1,'FManII::ForceField']]],
+  ['type2class',['type2class',['../structFManII_1_1ForceField.html#a98cb2a553361802bf1ce39897ab21c38',1,'FManII::ForceField']]]
 ];

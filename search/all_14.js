@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['_7eintcoords',['~IntCoords',['../classFManII_1_1IntCoords.html#ad31ec2a0d63bb2fc33677057546d2763',1,'FManII::IntCoords']]]
+  ['value',['Value',['../classEnumeration.html#ab2d386b4be509d71912087213fd82ac6',1,'Enumeration']]],
+  ['vector',['Vector',['../namespaceFManII.html#aa967833d4468e3e3b264dc76116b5891',1,'FManII']]]
 ];

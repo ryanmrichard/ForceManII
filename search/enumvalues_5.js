@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['k',['K',['../namespaceFManII.html#ab331802fde4c5f2564443f1704c25363acce4c4e3a7008d8a210e0950f0ae6646',1,'FManII']]]
+  ['geometric',['GEOMETRIC',['../namespaceFManII.html#a37459377e256a6f76fae641cfbc2069da5202c67f624b4ec6ddd60f69394c80b5',1,'FManII']]]
 ];

@@ -91,6 +91,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structFManII_1_1ForceField-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -107,33 +109,65 @@ Collaboration diagram for FManII::ForceField:</div>
 <div class="dyncontent">
 <div class="center"><img src="structFManII_1_1ForceField__coll__graph.png" border="0" usemap="#FManII_1_1ForceField_coll__map" alt="Collaboration graph"/></div>
 <map name="FManII_1_1ForceField_coll__map" id="FManII_1_1ForceField_coll__map">
+<area shape="rect" id="node7" href="classFManII_1_1FFTerm.html" title="FManII::FFTerm" alt="" coords="283,261,400,287"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="280,391,403,418"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:aab6e1650ee21859e846551e7879dfdfa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab6e1650ee21859e846551e7879dfdfa"></a>
+typedef std::vector&lt; size_t &gt;(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#aab6e1650ee21859e846551e7879dfdfa">orderer</a>) (const std::vector&lt; size_t &gt; &amp;)</td></tr>
+<tr class="memdesc:aab6e1650ee21859e846551e7879dfdfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of a function that can order atoms. <br /></td></tr>
+<tr class="separator:aab6e1650ee21859e846551e7879dfdfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c399455e23feed42028a861ffcb51ea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4c399455e23feed42028a861ffcb51ea"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>PTerm_t</b> = std::pair&lt; <a class="el" href="namespaceFManII.html#aa6ecc8ef7c69a92846599375635b8ebe">Model_t</a>, <a class="el" href="namespaceFManII.html#ab331802fde4c5f2564443f1704c25363">Param_t</a> &gt;</td></tr>
+<tr class="separator:a4c399455e23feed42028a861ffcb51ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ae427e501cdb755fb0e16dd7649b4d1cf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae427e501cdb755fb0e16dd7649b4d1cf"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#ae427e501cdb755fb0e16dd7649b4d1cf">operator==</a> (const <a class="el" href="structFManII_1_1ForceField.html">ForceField</a> &amp;other) const </td></tr>
+<tr class="memdesc:ae427e501cdb755fb0e16dd7649b4d1cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks for exact equality of all members. <br /></td></tr>
+<tr class="separator:ae427e501cdb755fb0e16dd7649b4d1cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac44c5a93c16a2ca898c948a189c1a19b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac44c5a93c16a2ca898c948a189c1a19b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#ac44c5a93c16a2ca898c948a189c1a19b">operator!=</a> (const <a class="el" href="structFManII_1_1ForceField.html">ForceField</a> &amp;other) const </td></tr>
+<tr class="memdesc:ac44c5a93c16a2ca898c948a189c1a19b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks for inequality of any member. <br /></td></tr>
+<tr class="separator:ac44c5a93c16a2ca898c948a189c1a19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ae0d755010ac843ea759d24c7d26eb9ab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae0d755010ac843ea759d24c7d26eb9ab"></a>
-<a class="el" href="namespaceFManII.html#a16edca665b5dfcdf9b3995844ad01bb5">ParamTypes</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#ae0d755010ac843ea759d24c7d26eb9ab">params</a></td></tr>
-<tr class="memdesc:ae0d755010ac843ea759d24c7d26eb9ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The complete set of parameters. <br /></td></tr>
-<tr class="separator:ae0d755010ac843ea759d24c7d26eb9ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74aaae492ec90c8e524d9099a15015ac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a74aaae492ec90c8e524d9099a15015ac"></a>
-std::set&lt; <a class="el" href="namespaceFManII.html#aee2b0c5668a8970ffb58ac650994e059">IntCoord_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#a74aaae492ec90c8e524d9099a15015ac">terms</a></td></tr>
-<tr class="memdesc:a74aaae492ec90c8e524d9099a15015ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">The types of terms. <br /></td></tr>
-<tr class="separator:a74aaae492ec90c8e524d9099a15015ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8574ee49ad32abcea8caf13a3db0d8ae"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8574ee49ad32abcea8caf13a3db0d8ae"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#a8574ee49ad32abcea8caf13a3db0d8ae">chg14scale</a> =1.0</td></tr>
-<tr class="memdesc:a8574ee49ad32abcea8caf13a3db0d8ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">What to scale 1-4 chg-chg by. <br /></td></tr>
-<tr class="separator:a8574ee49ad32abcea8caf13a3db0d8ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6901933ef796e58cdd2a99f841f633e4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6901933ef796e58cdd2a99f841f633e4"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#a6901933ef796e58cdd2a99f841f633e4">vdw14scale</a> =1.0</td></tr>
-<tr class="memdesc:a6901933ef796e58cdd2a99f841f633e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">What to scale 1-4 vdw by. <br /></td></tr>
-<tr class="separator:a6901933ef796e58cdd2a99f841f633e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17e02c4b1ecd24a459d3548280dcad8e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a17e02c4b1ecd24a459d3548280dcad8e"></a>
-std::map&lt; <a class="el" href="namespaceFManII.html#ab331802fde4c5f2564443f1704c25363">Param_t</a>, <a class="el" href="namespaceFManII.html#a37459377e256a6f76fae641cfbc2069d">CombRule_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>combrules</b></td></tr>
-<tr class="separator:a17e02c4b1ecd24a459d3548280dcad8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fc412d14068f59c63f9788dabd4cf4b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0fc412d14068f59c63f9788dabd4cf4b"></a>
+<a class="el" href="namespaceFManII.html#a9cb092b70c5d619efc45fe715bd8abb9">Term2Type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#a0fc412d14068f59c63f9788dabd4cf4b">params</a></td></tr>
+<tr class="memdesc:a0fc412d14068f59c63f9788dabd4cf4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The complete set of parameters. <br /></td></tr>
+<tr class="separator:a0fc412d14068f59c63f9788dabd4cf4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98cb2a553361802bf1ce39897ab21c38"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a98cb2a553361802bf1ce39897ab21c38"></a>
+std::map&lt; size_t, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#a98cb2a553361802bf1ce39897ab21c38">type2class</a></td></tr>
+<tr class="memdesc:a98cb2a553361802bf1ce39897ab21c38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of atom type 2 atom class. <br /></td></tr>
+<tr class="separator:a98cb2a553361802bf1ce39897ab21c38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62029e5add3067f641d095297e9537f3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a62029e5add3067f641d095297e9537f3"></a>
+std::map&lt; <a class="el" href="namespaceFManII.html#a5ef0ee8276d4445697f56a0cfa6c620e">FFTerm_t</a>, <a class="el" href="classFManII_1_1FFTerm.html">FFTerm</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#a62029e5add3067f641d095297e9537f3">terms</a></td></tr>
+<tr class="memdesc:a62029e5add3067f641d095297e9537f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The terms in the force field. <br /></td></tr>
+<tr class="separator:a62029e5add3067f641d095297e9537f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e95f3287ba21145251250b31af614e0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4e95f3287ba21145251250b31af614e0"></a>
+std::map&lt; <a class="el" href="namespaceFManII.html#a5ef0ee8276d4445697f56a0cfa6c620e">FFTerm_t</a>, <a class="el" href="structFManII_1_1ForceField.html#aab6e1650ee21859e846551e7879dfdfa">orderer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#a4e95f3287ba21145251250b31af614e0">orderrules</a></td></tr>
+<tr class="memdesc:a4e95f3287ba21145251250b31af614e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">How the parameters are ordered. <br /></td></tr>
+<tr class="separator:a4e95f3287ba21145251250b31af614e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c4192795ac3a9ce28e07fce2a308cf6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c4192795ac3a9ce28e07fce2a308cf6"></a>
+std::map&lt; <a class="el" href="namespaceFManII.html#a5ef0ee8276d4445697f56a0cfa6c620e">FFTerm_t</a>, <a class="el" href="namespaceFManII.html#ab234eb126224bb36f23c28047914613a">TypeTypes_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#a5c4192795ac3a9ce28e07fce2a308cf6">paramtypes</a></td></tr>
+<tr class="memdesc:a5c4192795ac3a9ce28e07fce2a308cf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does the parameter use class or type. <br /></td></tr>
+<tr class="separator:a5c4192795ac3a9ce28e07fce2a308cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a518b012a72c17ee1cad8e1105bf982a0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a518b012a72c17ee1cad8e1105bf982a0"></a>
+std::map&lt; PTerm_t, <a class="el" href="namespaceFManII.html#a37459377e256a6f76fae641cfbc2069d">CombRule_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#a518b012a72c17ee1cad8e1105bf982a0">combrules</a></td></tr>
+<tr class="memdesc:a518b012a72c17ee1cad8e1105bf982a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">How to combine parameters. <br /></td></tr>
+<tr class="separator:a518b012a72c17ee1cad8e1105bf982a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae43224df4e9afe5a544293c162e5fe49"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae43224df4e9afe5a544293c162e5fe49"></a>
+std::map&lt; <a class="el" href="namespaceFManII.html#a5ef0ee8276d4445697f56a0cfa6c620e">FFTerm_t</a>, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ForceField.html#ae43224df4e9afe5a544293c162e5fe49">scale_factors</a></td></tr>
+<tr class="memdesc:ae43224df4e9afe5a544293c162e5fe49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale terms by how much? <br /></td></tr>
+<tr class="separator:ae43224df4e9afe5a544293c162e5fe49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This class holds the definitions of a force field not a force filed applied to a molecule. </p>
+<div class="textblock"><p>This class holds the definitions of a force field not a force field applied to a molecule. See <a class="el" href="ffdef.html">Force Fields in FManII</a> for more details. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="ForceField_8hpp_source.html">ForceField.hpp</a></li>
 </ul>

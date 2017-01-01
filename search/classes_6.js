@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lennardjones',['LennardJones',['../structFManII_1_1LennardJones.html',1,'FManII']]]
+  ['modelpotential',['ModelPotential',['../structFManII_1_1ModelPotential.html',1,'FManII']]]
 ];

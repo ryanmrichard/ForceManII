@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['harmonicoscillator',['HarmonicOscillator',['../structFManII_1_1HarmonicOscillator.html',1,'FManII']]]
+  ['internalcoordinates',['InternalCoordinates',['../classFManII_1_1InternalCoordinates.html',1,'FManII']]]
 ];

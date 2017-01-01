@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['torsion',['TORSION',['../namespaceFManII.html#aee2b0c5668a8970ffb58ac650994e059a4f481d454dea70e1a1c7ef63d99d3402',1,'FManII']]]
+  ['q',['q',['../namespaceFManII.html#ab331802fde4c5f2564443f1704c25363afec764e5c20f480b9b706861106356de',1,'FManII']]]
 ];

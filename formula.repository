@@ -100,3 +100,35 @@
 \form#99:\[ \tan\theta=\frac{\left(\vec{n_1}\times\vec{n_2}\right)\cdot\vec{r_{23}}} {r_{23}} \]
 \form#100:$a_1, a_2, a_3$
 \form#101:$a_2, a_3, a_4$
+\form#102:$Q$
+\form#103:$vec{q}$
+\form#104:$E$
+\form#105:\[ \frac{\partial E[Q(\vec{q})]}{\partial \vec{q}}= \frac{\partial E[Q(\vec{q})]}{\partial Q(\vec{q})} \frac{\partial Q(\vec{q})}{\partial \vec{q}}, \]
+\form#106:\[ \frac{\partial^2 E[Q(\vec{q})]}{\partial\vec{q}^2}= \frac{\partial^2 E[Q(\vec{q})]}{\partial Q(\vec{q})^2} \frac{\partial Q(\vec{q})}{\partial \vec{q}}+ \frac{\partial E[Q(\vec{q})]}{\partial Q(\vec{q})} \frac{\partial Q(\vec{q})^2}{\partial \vec{q}^2} \]
+\form#107:$\prod_{i=1}^Nx_i$
+\form#108:$t_{ij}=q_iq_j$
+\form#109:$t_{ij}$
+\form#110:$\vec{x}$
+\form#111:$n_{\text{terms}}$
+\form#112:$E(\vec{x})=\sum_{=1}^{n_\text{terms}}E_i(\vec{x})$
+\form#113:$E_i$
+\form#114:$\vec{q}_i(\vec{x})$
+\form#115:$\vec{t}$
+\form#116:$\vec{t}_i$
+\form#117:$n(\vec{x}$
+\form#118:$N[n(\vec{x})]$
+\form#119:$\vec{q}_i(N[n(\vec{x})])$
+\form#120:$\vec{t}_i[\vec{q}_i(N[n(\vec{x})])]$
+\form#121:$\vec{t}^\prime_i$
+\form#122:\[ E(\vec{x};\mathbf{T},\vec{c})= \sum_{=1}^{n_\text{terms}}c_iE_i( \mathbf{q}(\vec{x});\mathbf{t}^\prime(\mathbf{t}[\mathbf{q}(N[n(\vec{x})])])). \]
+\form#123:$\cos(\theta)=\sin(\theta+\pi/2)$
+\form#124:\[ \frac{\partial E(\theta)}{\partial \theta}=-\sum_{n=0}^\infty n a_n\sin(n\theta-\gamma) \]
+\form#125:\[ \frac{\partial^2 E(\theta)}{\partial^2 \theta}=-\sum_{n=0}^\infty n^2 a_n\cos(n\theta-\gamma). \]
+\form#126:\[ \frac{\partial E(\theta)}{\partial \theta}=(-1)^{(d+1)/2}\sum_{n=0}^\infty n^d a_n\sin(n\theta-\gamma) \]
+\form#127:\[ \frac{\partial^2 E(\theta)}{\partial^2 \theta}=(-1)^{d/2}\sum_{n=0}^\infty n^d a_n\cos(n\theta-\gamma) \]
+\form#128:\[ E(\vec{q};\vec{k},\vec{q}_0)=\frac{1}{2}\vec{k}\cdot \left[\left(\vec{q}-\vec{q}_0\right)\circ\left(\vec{q}-\vec{q}_0\right)\right], \]
+\form#129:$\vec{q}_0$
+\form#130:$[q_0]_i$
+\form#131:\[ E(\vec{q};\vec{k},\vec{q}_0)=\sum_{i=1}^N\frac{1}{2}k_i \left(q_i-\left[q_0\right]_i\right)^2, \]
+\form#132:\[ \frac{\partial E(\vec{q};\vec{k},\vec{q}_0)}{\partial q_i}= k_i\left(q_i-\left[q_0\right]_i\right), \]
+\form#133:$\pm 0.25$

@@ -83,18 +83,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>One of the cornerstones of physics' approximations is the harmonic oscillator. The energy of an <img class="formulaInl" alt="$N$" src="form_29.png"/>-dimensional harmonic oscillator is given by: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ E(\vec{q};\vec{k})=\frac{1}{2}\vec{k}\cdot(\vec{q}\circ\vec{q}), \]" src="form_54.png"/>
+<img class="formulaDsp" alt="\[ E(\vec{q};\vec{k},\vec{q}_0)=\frac{1}{2}\vec{k}\cdot \left[\left(\vec{q}-\vec{q}_0\right)\circ\left(\vec{q}-\vec{q}_0\right)\right], \]" src="form_128.png"/>
 </p>
-<p> where <img class="formulaInl" alt="$\vec{q}$" src="form_55.png"/> is a vector of <img class="formulaInl" alt="$N$" src="form_29.png"/> coordinates and <img class="formulaInl" alt="$\vec{k}$" src="form_56.png"/> is a vector of <img class="formulaInl" alt="$N$" src="form_29.png"/> force constants such that the <img class="formulaInl" alt="$q_i$" src="form_32.png"/> has force constant <img class="formulaInl" alt="$k_i$" src="form_57.png"/>. <img class="formulaInl" alt="$\circ$" src="form_58.png"/> denotes the Hadamard product (element-wise multiplication), i.e. <img class="formulaInl" alt="$\left[\vec{q}\circ\vec{q}\right]_{i}=q_i^2$" src="form_59.png"/>.</p>
-<p>The derivative w.r.t. to <img class="formulaInl" alt="$\vec{q}$" src="form_55.png"/> is: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \left[\frac{\partial E(\vec{q};\vec{k})}{\partial\vec{q}}\right]_i=k_i q_i, \]" src="form_60.png"/>
+<p> where <img class="formulaInl" alt="$\vec{q}$" src="form_55.png"/> and <img class="formulaInl" alt="$\vec{q}_0$" src="form_129.png"/> are vectors of <img class="formulaInl" alt="$N$" src="form_29.png"/> coordinates such that <img class="formulaInl" alt="$q_i$" src="form_32.png"/> and <img class="formulaInl" alt="$[q_0]_i$" src="form_130.png"/> respectively are the current and equilibrium values of the <img class="formulaInl" alt="$i$" src="form_10.png"/>-th coordinate. <img class="formulaInl" alt="$\vec{k}$" src="form_56.png"/> is a vector of <img class="formulaInl" alt="$N$" src="form_29.png"/> force constants such that the <img class="formulaInl" alt="$q_i$" src="form_32.png"/> has force constant <img class="formulaInl" alt="$k_i$" src="form_57.png"/>. <img class="formulaInl" alt="$\circ$" src="form_58.png"/> denotes the Hadamard product (element-wise multiplication), i.e. <img class="formulaInl" alt="$\left[\vec{q}\circ\vec{q}\right]_{i}=q_i^2$" src="form_59.png"/>. In element-wise notation this reduces to the more familiar form: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ E(\vec{q};\vec{k},\vec{q}_0)=\sum_{i=1}^N\frac{1}{2}k_i \left(q_i-\left[q_0\right]_i\right)^2, \]" src="form_131.png"/>
+</p>
+<p>The derivative w.r.t. to <img class="formulaInl" alt="$q_i$" src="form_32.png"/> is: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \frac{\partial E(\vec{q};\vec{k},\vec{q}_0)}{\partial q_i}= k_i\left(q_i-\left[q_0\right]_i\right), \]" src="form_132.png"/>
 </p>
 <p> the Hessian is just <img class="formulaInl" alt="$\vec{k}$" src="form_56.png"/> down the diagonal. All higher derivatives are 0. Doesn't get much easier than that.</p>
 <h2>Notes on H.O. as Implemented in ForceManII</h2>
 <ul>
 <li>As with all force field quantities we assume atomic units are used throughout</li>
-<li>We explicitly include the 1/2 in our energy formula</li>
-<li>Usually a H.O. measures the energy penelty caused by displacemet from some value <img class="formulaInl" alt="$\vec{q_0}$" src="form_61.png"/>. To simplify the underlying code we assume that input coordinates <img class="formulaInl" alt="$\vec{q}=\vec{q}^\prime-\vec{q_0}$" src="form_62.png"/> where <img class="formulaInl" alt="$\vec{q}^\prime$" src="form_63.png"/> is the actual value of the bond, angle, etc. </li>
+<li>We explicitly include the 1/2 in our energy formula as it simplifies the derivatives </li>
 </ul>
 </div></div><!-- contents -->
 <!-- start footer part -->
