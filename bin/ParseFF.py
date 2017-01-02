@@ -67,8 +67,8 @@ def read_ff(ff_file):
                 ff.paramtypes[ffterms["ha"]]=typetypes["class"]
                 ff.terms[ffterms["ha"]]="HarmonicAngle"
                 k,r0=2*float(da_line[4])*anglek2au,float(da_line[5])*deg2rad
-                check_add(ff.params,ffterm,params["k"],triple,k)
-                check_add(ff.params,ffterm,params["r0"],triple,r0)
+                check_add(ff.params,ffterms["ha"],params["k"],triple,k)
+                check_add(ff.params,ffterms["ha"],params["r0"],triple,r0)
             if da_line[0]=="torsion":
                 i,j,k,l=int(da_line[1]),int(da_line[2]),\
                         int(da_line[3]),int(da_line[4])
@@ -170,7 +170,7 @@ def main():
     for ct,rest in ff.params.items():
         for pt,rest1 in rest.items():
             for atoms,value in rest1.items():
-                f.write("ff.params[{"+ct[0]+","+ct[1]+"}]["+pt+"][{")
+                f.write("ff.params[std::make_pair("+ct[0]+","+ct[1]+")]["+pt+"][{")
                 for ai in atoms:f.write(str(ai)+",")
                 f.write("}]={")
                 for pi in value:f.write(str(pi)+",")
@@ -180,15 +180,15 @@ def main():
     for key,value in ff.terms.items():
         f.write("ff.terms.emplace(std::make_pair("+key[0]+","+key[1]+"),std::move(FManII::"+value+"()));\n")
     for key,value in ff.orderrules.items():
-        f.write("ff.orderrules[{"+key[0]+","+key[1]+"}]=FManII::"+value+";\n")
+        f.write("ff.orderrules[std::make_pair("+key[0]+","+key[1]+")]=FManII::"+value+";\n")
     for key,value in ff.paramtypes.items():
-        f.write("ff.paramtypes[{"+key[0]+","+key[1]+"}]="+value+";\n")
+        f.write("ff.paramtypes[std::make_pair("+key[0]+","+key[1]+")]="+value+";\n")
     for key,value in ff.combrules.items():
-        f.write("ff.combrules[{"+key[0]+","+key[1]+"}]="+value+";\n")
+        f.write("ff.combrules[std::make_pair("+key[0]+","+key[1]+")]="+value+";\n")
     for key,value in ff.scale_factors.items():
-        f.write("ff.scale_factors[{"+key[0]+","+key[1]+"}]="+value+";\n")
+        f.write("ff.scale_factors[std::make_pair("+key[0]+","+key[1]+")]="+value+";\n")
     f.write("return ff;\n}\n")
-    f.write("const FManII::ForceField "+ff_name+"=make_ff();\n")
+    f.write("const FManII::ForceField FManII::"+ff_name+"=make_ff();\n")
     f.close()
 if __name__ == "__main__":
     main()

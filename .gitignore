@@ -1,8 +1,11 @@
 html/
 build/
+latex/
 CMakeCache.txt
 bin/analyze
-bin/amber99.prm
+bin/*.prm
+bin/*.xyz
+bin/__pycache__
 *.config
 *.creator
 *.creator.user

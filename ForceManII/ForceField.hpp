@@ -22,6 +22,7 @@
 #include "ForceManII/FFTerm.hpp"
 #include <algorithm>
 #include <set>
+#include <unordered_map>
 
 ///Namespace for all code associated with ForceManII
 namespace FManII {
@@ -57,7 +58,7 @@ struct ForceField{
     using PTerm_t=std::pair<std::string,std::string>;
 
     Term2Type_t params;///<The complete set of parameters
-    std::map<size_t,size_t> type2class;///<Map of atom type 2 atom class
+    std::unordered_map<size_t,size_t> type2class;///<Map of atom type 2 atom class
     std::map<FFTerm_t,FFTerm> terms;///< The terms in the force field
     std::map<FFTerm_t,orderer> orderrules;///<How the parameters are ordered
     std::map<FFTerm_t,std::string> paramtypes;///<Does the parameter use class or type

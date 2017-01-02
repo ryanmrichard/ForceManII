@@ -50,7 +50,7 @@ namespace IntCoord_t {
 
 ///These are the recognized types of models
 namespace Model_t{
-    constexpr auto HARMONICOSCILLATOR="HARMONCOSCILLATOR";
+    constexpr auto HARMONICOSCILLATOR="HARMONICOSCILLATOR";
     constexpr auto FOURIERSERIES="FOURIERSERIES";
     constexpr auto ELECTROSTATICS="ELECTROSTATICS";
     constexpr auto LENNARD_JONES="LENNARD_JONES";
@@ -98,5 +98,6 @@ using ParamSet=std::map<FFTerm_t,std::map<std::string,Vector>>;
 
 ///An array of the requested derivatives sorted by force field term type
 using DerivType=std::map<FFTerm_t,Vector>;
+
 
 }//end namespace
