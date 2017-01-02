@@ -19,7 +19,7 @@
 #include <ForceManII/FManII.hpp>
 #include <ForceManII/ModelPotentials/Electrostatics.hpp>
 #include "TestMacros.hpp"
-#include "ubiquitin.hpp"
+#include "testdata/ubiquitin.hpp"
 #include <cmath>
 
 int main(int argc, char** argv){
@@ -34,14 +34,13 @@ TEST_THROW(c=ct.deriv(0,{{FManII::Param_t::q,a}},{b}),
 
     FManII::DerivType deriv=FManII::run_forcemanii(0,
                   ubiquitin,ubiquitin_conns,FManII::amber99,ubiquitin_FF_types);
-    std::vector<double> Energy(1,0.0);
     for(auto param:{FManII::IntCoord_t::PAIR,FManII::IntCoord_t::PAIR14}){
          const FManII::FFTerm_t term_type=
                 std::make_pair(FManII::Model_t::ELECTROSTATICS,param);
-        Energy[0]+=deriv.at(term_type)[0];
+        //There appears to be a slight loss in precision for this term...
+        test_value(deriv.at(term_type)[0],ubiquitin_egys.at(term_type),4e-4,"Charge-Charge Energy");
      }
-    //There appears to be a slight loss in precision for this term...
-    test_value(Energy[0],ubiquitinelectrostatics_e,2e-4,"Charge-Charge Energy");
+
         
     test_footer();
     return 0;

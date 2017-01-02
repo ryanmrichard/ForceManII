@@ -16,19 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-/** \file Angle.hpp
- * 
- * \version 0.1
- * \date October 29, 2016 at 12:55 PM (EST)
- *  
- * Original Author: \author Ryan M. Richard (ryanmrichard1<at>gmail.com)
- * 
- * Additional contributions by:
- *
- */
-
-#ifndef FMANII_ANGLE_HPP
-#define FMANII_ANGLE_HPP
+#pragma once
 
 #include "ForceManII/InternalCoordinates.hpp"
 
@@ -45,6 +33,4 @@ protected:
 };
 
 } //End namespace FManII
-
-#endif /* End header guard */
 

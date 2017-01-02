@@ -19,8 +19,8 @@
 #include <ForceManII/FManII.hpp>
 #include <fstream>
 #include "TestMacros.hpp"
-#include "ubiquitin.hpp"
-#include "ubiquitin_params.hpp"
+#include "testdata/ubiquitin.hpp"
+#include "testdata/ubiquitin_params.hpp"
 
 int main(int argc, char** argv){
     test_header("Testing force field parameter assignment function");

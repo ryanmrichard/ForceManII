@@ -17,8 +17,7 @@
  * MA 02110-1301  USA
  */
 
-#ifndef FMANII_FMANII_HPP
-#define FMANII_FMANII_HPP
+#pragma once
 
 #
 #include "ForceManII/FManIIDefs.hpp"
@@ -60,6 +59,7 @@ struct ElectrostaticsPair:public FFTerm{ElectrostaticsPair();};
 
 ///Available hard-coded force fields
 extern const ForceField amber99;
+//extern const ForceField oplsaa;
 
 /**\brief Given a force field file in Tinker format makes a ForceField object
  *
@@ -127,6 +127,4 @@ inline DerivType run_forcemanii(size_t order,
 
 
 } //End namespace FManII
-
-#endif /* End header guard */
 

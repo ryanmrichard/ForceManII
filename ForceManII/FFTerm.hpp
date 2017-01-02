@@ -28,26 +28,30 @@ class FFTerm{
 public:
     ///Makes a new FF term given the model and coordinates it depends on
     FFTerm(std::shared_ptr<const ModelPotential> m,
-           const std::vector<IntCoord_t>& cs):
+           const std::vector<std::string>& cs):
         model_(std::move(m)),coords(cs){}
 
     ///Returns the model
     const ModelPotential& model()const{return *model_;}
 
-    const std::vector<IntCoord_t> coords;///<Coordinates this term depends on
+    const std::vector<std::string> coords;///<Coordinates this term depends on
 
-    Vector deriv(size_t order,const std::map<Param_t,Vector>& ps,
+    ///Given the parameters for this term and a set of internal coordinates
+    ///computes the derivative
+    Vector deriv(size_t order,const std::map<std::string,Vector>& ps,
                               const CoordArray& cs)const{
         std::vector<Vector> incoords;
         for(auto ci:coords)incoords.push_back(cs.at(ci)->get_coords());
         return model_->deriv(order,ps,incoords);
     }
 
+    ///True if both terms have the same model and type of coordinates
     bool operator==(const FFTerm& other)const{
         return(*model_==*other.model_ &&
                coords==other.coords);
     }
 
+    ///True if either term has a different model or type of coordinates
     bool operator!=(const FFTerm& other)const{
         return !this->operator==(other);
     }

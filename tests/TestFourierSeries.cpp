@@ -20,7 +20,7 @@
 #include <ForceManII/FFTerm.hpp>
 #include <ForceManII/ModelPotentials/FourierSeries.hpp>
 #include "TestMacros.hpp"
-#include "ubiquitin.hpp"
+#include "testdata/ubiquitin.hpp"
 #include <cmath>
 
 int main(int argc, char** argv){
@@ -29,7 +29,7 @@ int main(int argc, char** argv){
     
 #ifndef NDEBUG
 std::vector<double> a(2,0.0),d;
-std::map<FManII::Param_t,std::vector<double>> ps={
+std::map<std::string,std::vector<double>> ps={
     {FManII::Param_t::amp,{0.0}},
     {FManII::Param_t::phi,{0.0}},
     {FManII::Param_t::n,{0.0}}};
@@ -45,10 +45,8 @@ TEST_THROW(d=FS.deriv(0,ps,{a}),"Qs.size()!=ns.size()");
     for(auto term:{FManII::IntCoord_t::TORSION,FManII::IntCoord_t::IMPTORSION}){
         const FManII::FFTerm_t term_type=
                 std::make_pair(FManII::Model_t::FOURIERSERIES,term);
-        if(term==FManII::IntCoord_t::TORSION)
-            test_value(deriv.at(term_type)[0],ubiquitintorsion_e,1e-5,"Torsion Energy");
-        else
-            test_value(deriv.at(term_type)[0],ubiquitinimproper_e,1e-3,"Improper Torsion Energy");
+        const double tol=term==FManII::IntCoord_t::TORSION?1e-5:3e-4;
+        test_value(deriv.at(term_type)[0],ubiquitin_egys.at(term_type),tol,"Torsion Energy");
     }
     
     test_footer();

@@ -26,51 +26,51 @@
 namespace FManII {
 
 ///These are the recognized types of parameters
-enum Param_t {
-    K,///<A force constant
-    r0,///<The equilibrium value
-    amp,///<The amplitude for Fourier series
-    phi,///<The phase shift for Fourier series
-    n,///<The periodicity for Fourier series
-    q,///<The charge, in a.u., for point-charge, point-charge
-    sigma,///<The minimum diameter of a 6-12 potential
-    epsilon,///<The well depth of a 6-12 potential
-};
+namespace Param_t {
+    constexpr auto K="K";///<A force constant
+    constexpr auto r0="r0";///<The equilibrium value
+    constexpr auto amp="amp";///<The amplitude for Fourier series
+    constexpr auto phi="phi";///<The phase shift for Fourier series
+    constexpr auto n="n";///<The periodicity for Fourier series
+    constexpr auto q="q";///<The charge, in a.u., for point-charge, point-charge
+    constexpr auto sigma="sigma";///<The minimum diameter of a 6-12 potential
+    constexpr auto epsilon="epsilon";///<The well depth of a 6-12 potential
+}
 
 ///These are the recognized types of IntCoords
-enum IntCoord_t {
-    BOND,///<A bond
-    PAIR13,///<A 1,3 pair
-    PAIR14,///<A 1,4 pair
-    PAIR,///<A pair that is not a 1,2; 1,3; or 1,4 pair
-    ANGLE,///<An angle
-    TORSION,///<A torsion
-    IMPTORSION,///<An improper torsion angle
-};
+namespace IntCoord_t {
+    constexpr auto BOND="BOND";///<A bond
+    constexpr auto PAIR13="PAIR13";///<A 1,3 pair
+    constexpr auto PAIR14="PAIR14";///<A 1,4 pair
+    constexpr auto PAIR="PAIR";///<A pair that is not a 1,2; 1,3; or 1,4 pair
+    constexpr auto ANGLE="ANGLE";///<An angle
+    constexpr auto TORSION="TORSION";///<A torsion
+    constexpr auto IMPTORSION="IMPTORSION";///<An improper torsion angle
+}
 
 ///These are the recognized types of models
-enum class Model_t{
-    HARMONICOSCILLATOR,///<Bond-stretching treated harmonically
-    FOURIERSERIES,///<A fourier series potential
-    ELECTROSTATICS,///<A charge-charge interaction
-    LENNARD_JONES,///<A 6-12 Lennard-Jones potential
-};
+namespace Model_t{
+    constexpr auto HARMONICOSCILLATOR="HARMONCOSCILLATOR";
+    constexpr auto FOURIERSERIES="FOURIERSERIES";
+    constexpr auto ELECTROSTATICS="ELECTROSTATICS";
+    constexpr auto LENNARD_JONES="LENNARD_JONES";
+}
 
 ///These are the recognized combination rules
-enum class CombRule_t {
-    PRODUCT,///<The product of the parameters \f$\prod_{i=1}^Nx_i\f$
-    ARITHMETIC,///<A normal average \f$\frac{1}{N}\sum_{i=1}^Nx_i\f$
-    GEOMETRIC,///<Geometric average \f$\left(\prod_{i=1}^Nx_i\right)^{1/N}\f$
-};
+namespace CombRule_t {
+    constexpr auto PRODUCT="PRODUCT";///<The product of the parameters \f$\prod_{i=1}^Nx_i\f$
+    constexpr auto ARITHMETIC="ARITHMETIC";///<A normal average \f$\frac{1}{N}\sum_{i=1}^Nx_i\f$
+    constexpr auto GEOMETRIC="GEOMETRIC";///<Geometric average \f$\left(\prod_{i=1}^Nx_i\right)^{1/N}\f$
+}
 
 ///Flag for using the atom type or the atom class
-enum class TypeTypes_t{
-    TYPE,///<The term uses the atom type
-    CLASS,///<The term uses the atom class
-};
+namespace TypeTypes_t{
+    constexpr auto TYPE="TYPE";///<The term uses the atom type
+    constexpr auto CLASS="CLASS";///<The term uses the atom class
+}
 
 ///Type of a FFTerm
-using FFTerm_t=std::pair<Model_t,IntCoord_t>;
+using FFTerm_t=std::pair<std::string,std::string>;
 
 ///Type of a quantity we are treating as a mathematical vector
 using Vector=std::vector<double>;
@@ -88,19 +88,15 @@ using IVector=std::vector<size_t>;
 class InternalCoordinates;
 
 ///An array of internal coordinates arranged by type
-using CoordArray=std::map<IntCoord_t,std::unique_ptr<InternalCoordinates>>;
+using CoordArray=std::map<std::string,std::unique_ptr<InternalCoordinates>>;
 
 ///Array such that element i is a vector of the atoms bonded to atom i
 using ConnData=std::vector<IVector>;
 
 ///Map from a ff term to its set of parameters
-using ParamSet=std::map<FFTerm_t,std::map<Param_t,Vector>>;
+using ParamSet=std::map<FFTerm_t,std::map<std::string,Vector>>;
 
 ///An array of the requested derivatives sorted by force field term type
 using DerivType=std::map<FFTerm_t,Vector>;
 
 }//end namespace
-
-//Instantiate some templates we know we're going to use
-template class std::vector<double>;
-template class std::vector<size_t>;

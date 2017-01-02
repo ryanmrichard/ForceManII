@@ -78,7 +78,7 @@ CoordArray get_coords(const Vector& Carts,
             auto pair=std::make_pair(AtomI,AtomJ);
             if(pair12.count(pair))continue;
             const bool is13=pair13.count(pair),is14=pair14.count(pair);
-            IntCoord_t ctype=IntCoord_t::PAIR;
+            std::string ctype=IntCoord_t::PAIR;
             if(is13)ctype=IntCoord_t::PAIR13;
             else if(is14)ctype=IntCoord_t::PAIR14;
             FoundCoords[ctype]->add_coord({AtomI,AtomJ});
@@ -94,7 +94,7 @@ ParamSet assign_params(const CoordArray& coords,
     ParamSet ps;
     for(const auto& termi:ff.terms){//Loop over terms in force field
         const FFTerm_t term_type=termi.first;
-        const Model_t model=term_type.first;
+        const auto& model=term_type.first;
         const bool use_class=ff.paramtypes.at(term_type)==TypeTypes_t::CLASS;
         for(const auto& coordi:termi.second.coords){
             const InternalCoordinates& coord=*coords.at(coordi);
@@ -109,7 +109,7 @@ ParamSet assign_params(const CoordArray& coords,
                 for(auto parami:termi.second.model().params){
                     auto prule=std::make_pair(model,parami);
                     if(ff.combrules.count(prule)){
-                       const CombRule_t rule=ff.combrules.at(prule);
+                       const auto& rule=ff.combrules.at(prule);
                        double val;
                         if(rule==CombRule_t::ARITHMETIC){
                             val=0.0;
@@ -153,7 +153,7 @@ DerivType deriv(size_t order,
 {
    DerivType rv;
    for(const auto& i:ff.terms){
-        const FFTerm_t term_type=i.first;
+        const auto& term_type=i.first;
         const FFTerm& ffterm=i.second;
         Vector d=ffterm.deriv(order,ps.at(term_type),coords);
         if(ff.scale_factors.count(term_type))
@@ -164,7 +164,9 @@ DerivType deriv(size_t order,
 }
 
 HarmonicBond::HarmonicBond():
-    FFTerm(std::make_shared<HarmonicOscillator>(),{IntCoord_t::BOND}){}
+    FFTerm(std::make_shared<HarmonicOscillator>(),{IntCoord_t::BOND}){
+
+}
 
 HarmonicAngle::HarmonicAngle():
     FFTerm(std::make_shared<HarmonicOscillator>(),{IntCoord_t::ANGLE}){}

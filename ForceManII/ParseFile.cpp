@@ -32,7 +32,7 @@ inline bool s_comp(const std::string& lhs, const std::string& rhs){
 }
 
 //Code factorization for setting the combination rule
-inline void set_mean(std::pair<Model_t,Param_t> p,const std::string& token, ForceField& ff){
+inline void set_mean(std::pair<std::string,std::string> p,const std::string& token, ForceField& ff){
     if(s_comp(token,"GEOMETRIC"))ff.combrules[p]=CombRule_t::GEOMETRIC;
     else if(s_comp(token,"ARITHMETIC"))ff.combrules[p]=CombRule_t::ARITHMETIC;
 }
@@ -49,20 +49,36 @@ std::vector<std::string> tokenize(const std::string& line){
     return tokens;
 }
 
+template<typename Fterm,typename Fxn_t>
+void generic_fill(ForceField&ff,
+                     FFTerm_t ffterm,
+                     const std::vector<std::string>& tokens,
+                     size_t size,
+                     Fxn_t fxn,
+                     const std::string defaulttype,
+                     std::vector<std::pair<std::string,double>> ps){
+    ff.orderrules[ffterm]=fxn;
+    if(!ff.paramtypes.count(ffterm))ff.paramtypes[ffterm]=defaulttype;
+    if(!ff.terms.count(ffterm))ff.terms.emplace(ffterm,std::move(Fterm()));
+    IVector vals;
+    for(size_t i=1;i<=size;++i)vals.push_back(stoi(tokens[i]));
+    vals=fxn(vals);
+    for(size_t i=0;i<ps.size();++i){
+        const size_t idx=i+size+1;
+        Vector& temp=ff.params[ffterm][ps[i].first][vals];
+        temp.push_back(ps[i].second*stod(tokens[idx]));
+    }
+
+}
+
 //Fills in the bond section of the FF
 inline void parse_bond(const std::vector<std::string>& tokens,
                        ForceField& ff,
                        double k2au,
                        double ang2au){
-    const size_t i=stoi(tokens[1]),j=stoi(tokens[2]);
-    const std::vector<size_t> types=pair_order({i,j});
     FFTerm_t ffterm=std::make_pair(Model_t::HARMONICOSCILLATOR,IntCoord_t::BOND);
-    ff.orderrules[ffterm]=pair_order;
-    ff.paramtypes[ffterm]=TypeTypes_t::CLASS;
-    if(!ff.terms.count(ffterm))
-        ff.terms.emplace(ffterm,std::move(HarmonicBond()));
-    ff.params[ffterm][Param_t::K][types].push_back(2.0*stod(tokens[3])*k2au);
-    ff.params[ffterm][Param_t::r0][types].push_back(stod(tokens[4])*ang2au);
+    generic_fill<HarmonicBond>(ff,ffterm,tokens,2,pair_order,TypeTypes_t::CLASS,
+        {{Param_t::K,2.0*k2au},{Param_t::r0,ang2au}});
 }
 
 //Fills in the angle section of the FF
@@ -70,22 +86,17 @@ inline void parse_angle(const std::vector<std::string>& tokens,
                         ForceField& ff,
                         double kcalmol2au,
                         double deg2rad){
-    const size_t i=stoi(tokens[1]),j=stoi(tokens[2]),k=stoi(tokens[3]);
-    const std::vector<size_t> types=angle_order({i,j,k});
     FFTerm_t ffterm=std::make_pair(Model_t::HARMONICOSCILLATOR,IntCoord_t::ANGLE);
-    ff.orderrules[ffterm]=angle_order;
-    ff.paramtypes[ffterm]=TypeTypes_t::CLASS;
-    if(!ff.terms.count(ffterm))
-        ff.terms.emplace(ffterm,std::move(HarmonicAngle()));
-    ff.params[ffterm][Param_t::K][types].push_back(2.0*stod(tokens[4])*kcalmol2au);
-    ff.params[ffterm][Param_t::r0][types].push_back(stod(tokens[5])*deg2rad);
+    generic_fill<HarmonicAngle>(ff,ffterm,tokens,3,angle_order,TypeTypes_t::CLASS,
+    {{Param_t::K,2.0*kcalmol2au},{Param_t::r0,deg2rad}});
 }
 
 //Fills in the improper torsion section of the FF
 inline void parse_imp(const std::vector<std::string>& tokens,
                       ForceField& ff,
                       double kcalmol2au,
-                      double deg2rad){
+                      double deg2rad,
+                      double impscale){
     const size_t i=stoi(tokens[1]),j=stoi(tokens[2]),
             k=stoi(tokens[3]),l=stoi(tokens[4]);
     //Tinker puts central atom third
@@ -95,7 +106,7 @@ inline void parse_imp(const std::vector<std::string>& tokens,
     ff.paramtypes[ffterm]=TypeTypes_t::CLASS;
     if(!ff.terms.count(ffterm))
         ff.terms.emplace(ffterm,std::move(FourierImproperTorsion()));
-    ff.params[ffterm][Param_t::amp][types].push_back(stod(tokens[5])*kcalmol2au);
+    ff.params[ffterm][Param_t::amp][types].push_back(impscale*stod(tokens[5])*kcalmol2au);
     ff.params[ffterm][Param_t::phi][types].push_back(stod(tokens[6])*deg2rad);
     ff.params[ffterm][Param_t::n][types].push_back(stod(tokens[7]));
 }
@@ -104,7 +115,8 @@ inline void parse_imp(const std::vector<std::string>& tokens,
 inline void parse_torsion(const std::vector<std::string>& tokens,
                           ForceField& ff,
                           double kcalmol2au,
-                          double deg2rad){
+                          double deg2rad,
+                          double torscale){
     size_t i=stoi(tokens[1]),j=stoi(tokens[2]),k=stoi(tokens[3]), l=stoi(tokens[4]);
     const std::vector<size_t> types=torsion_order({i,j,k,l});
     FFTerm_t ffterm=std::make_pair(Model_t::FOURIERSERIES,IntCoord_t::TORSION);
@@ -114,7 +126,7 @@ inline void parse_torsion(const std::vector<std::string>& tokens,
         ff.terms.emplace(ffterm,std::move(FourierTorsion()));
     for(size_t ti=0;ti<3;++ti){
         if(tokens.size()<=6+3*ti)break;//Null string on end of tokens
-        ff.params[ffterm][Param_t::amp][types].push_back(stod(tokens[5+3*ti])*kcalmol2au);
+        ff.params[ffterm][Param_t::amp][types].push_back(torscale*stod(tokens[5+3*ti])*kcalmol2au);
         ff.params[ffterm][Param_t::phi][types].push_back(stod(tokens[6+3*ti])*deg2rad);
         ff.params[ffterm][Param_t::n][types].push_back(stod(tokens[7+3*ti]));
     }
@@ -129,9 +141,9 @@ inline void parse_lj(const std::vector<std::string>& tokens,
                      bool isradius){
     const std::vector<size_t> types({stoul(tokens[1])});
     const double scale=ang2au*(isradius?2.0:1.0)*(isRMin?1.0:std::pow(2.0,1.0/6.0));
-    for(IntCoord_t ci:{IntCoord_t::PAIR,IntCoord_t::PAIR14}){
+    for(const auto& ci:{IntCoord_t::PAIR,IntCoord_t::PAIR14}){
         FFTerm_t ffterm=std::make_pair(Model_t::LENNARD_JONES,ci);
-        ff.paramtypes[ffterm]=TypeTypes_t::CLASS;
+        if(!ff.paramtypes.count(ffterm))ff.paramtypes[ffterm]=TypeTypes_t::CLASS;
         ff.params[ffterm][Param_t::sigma][types].push_back(stod(tokens[2])*scale);
         ff.params[ffterm][Param_t::epsilon][types].push_back(stod(tokens[3])*kcalmol2au);
         if(!ff.terms.count(ffterm)&&ci==IntCoord_t::PAIR14)
@@ -145,7 +157,7 @@ inline void parse_lj(const std::vector<std::string>& tokens,
 inline void parse_chg(const std::vector<std::string>& tokens,
                       ForceField& ff){
     const std::vector<size_t> types({stoul(tokens[1])});
-    for(IntCoord_t ci:{IntCoord_t::PAIR,IntCoord_t::PAIR14}){
+    for(const auto& ci:{IntCoord_t::PAIR,IntCoord_t::PAIR14}){
         FFTerm_t ffterm=std::make_pair(Model_t::ELECTROSTATICS,ci);
         ff.paramtypes[ffterm]=TypeTypes_t::TYPE;
         ff.params[ffterm][Param_t::q][types].push_back(stod(tokens[2]));
@@ -165,11 +177,19 @@ ForceField parse_file(std::istream&& file,
     ForceField ff;
     std::string line;
     bool isRMin=true,isradius=true;
+    double torscale=1.0,impscale=1.0;
     while(std::getline(file,line)){
         if(line.size()==1)continue;
         auto tokens=tokenize(line);
         if(s_comp(tokens[0],"radiusrule"))
             set_mean({Model_t::LENNARD_JONES,Param_t::sigma},tokens[1],ff);
+        else if(s_comp(tokens[0],"torsionunit"))torscale=stod(tokens[1]);
+        else if(s_comp(tokens[0],"impunit"))impscale=stod(tokens[1]);
+        else if(s_comp(tokens[0],"vdwindex")){
+            const auto& type=s_comp(tokens[1],"type")?TypeTypes_t::TYPE:TypeTypes_t::CLASS;
+            ff.paramtypes[std::make_pair(Model_t::LENNARD_JONES,IntCoord_t::PAIR14)]=type;
+            ff.paramtypes[std::make_pair(Model_t::LENNARD_JONES,IntCoord_t::PAIR)]=type;
+        }
         else if(s_comp(tokens[0],"radiustype"))
             isRMin=s_comp(tokens[1],"R-MIN");
         else if(s_comp(tokens[0],"radiussize"))
@@ -187,15 +207,15 @@ ForceField parse_file(std::istream&& file,
         else if(s_comp(tokens[0],"angle"))
             parse_angle(tokens,ff,kcalmol2au,deg2rad);
         else if(s_comp(tokens[0],"imptors"))
-            parse_imp(tokens,ff,kcalmol2au,deg2rad);
+            parse_imp(tokens,ff,kcalmol2au,deg2rad,impscale);
         else if(s_comp(tokens[0],"torsion"))
-            parse_torsion(tokens,ff,kcalmol2au,deg2rad);
+            parse_torsion(tokens,ff,kcalmol2au,deg2rad,torscale);
         else if(s_comp(tokens[0],"charge"))
             parse_chg(tokens,ff);
         else if(s_comp(tokens[0],"vdw"))
             parse_lj(tokens,ff,kcalmol2au,ang2au,isRMin,isradius);
     }
-    for(IntCoord_t pi:{IntCoord_t::PAIR,IntCoord_t::PAIR14}){
+    for(const auto& pi:{IntCoord_t::PAIR,IntCoord_t::PAIR14}){
         auto ffterm=std::make_pair(Model_t::ELECTROSTATICS,pi);
         auto pterm=std::make_pair(Model_t::ELECTROSTATICS,Param_t::q);
         if(ff.params.count(ffterm)){

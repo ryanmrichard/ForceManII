@@ -7,9 +7,9 @@ include(CTest)
 enable_testing()
 
 #These are the correct answers
-add_library(molecules SHARED ubiquitin.cpp
-                             ubiquitin_intcoords.cpp
-                             ubiquitin_params.cpp
+add_library(molecules SHARED testdata/ubiquitin.cpp
+                             testdata/ubiquitin_intcoords.cpp
+                             testdata/ubiquitin_params.cpp
 )
 target_include_directories(molecules PRIVATE ${PROJECT_SOURCE_DIR})
 add_dependencies(molecules fmanii)

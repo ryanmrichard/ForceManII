@@ -37,7 +37,7 @@ namespace FManII {
 using IndexedParam=std::map<IVector,Vector>;
 
 ///Map between a type of parameter and the indexed parameters
-using Type2Index_t=std::map<Param_t,IndexedParam>;
+using Type2Index_t=std::map<std::string,IndexedParam>;
 
 ///Full map of a ff's parameters
 using Term2Type_t=std::map<FFTerm_t,Type2Index_t>;
@@ -54,14 +54,14 @@ struct ForceField{
     ///Type of a function that can order atoms
     typedef std::vector<size_t>(*orderer)(const std::vector<size_t>&);
 
-    using PTerm_t=std::pair<Model_t,Param_t>;
+    using PTerm_t=std::pair<std::string,std::string>;
 
     Term2Type_t params;///<The complete set of parameters
     std::map<size_t,size_t> type2class;///<Map of atom type 2 atom class
     std::map<FFTerm_t,FFTerm> terms;///< The terms in the force field
     std::map<FFTerm_t,orderer> orderrules;///<How the parameters are ordered
-    std::map<FFTerm_t,TypeTypes_t> paramtypes;///<Does the parameter use class or type
-    std::map<PTerm_t,CombRule_t> combrules;///< How to combine parameters
+    std::map<FFTerm_t,std::string> paramtypes;///<Does the parameter use class or type
+    std::map<PTerm_t,std::string> combrules;///< How to combine parameters
     std::map<FFTerm_t,double> scale_factors;///<Scale terms by how much?
 
     ///Checks for exact equality of all members

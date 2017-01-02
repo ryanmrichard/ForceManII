@@ -16,6 +16,7 @@ amounts to several important features in our opinion:
   - At the moment we also need the connectivity of the atoms and the force field
   parameters for each atom, but we hope to remove these limitations in future
   releases
+- Reliance on atomic units
 - A library like model
   - Most MM packages are just that packages.  They are not designed to be called
     from other programs.  This makes it challenging to write QM/MM models or
@@ -26,6 +27,9 @@ amounts to several important features in our opinion:
 
 
 ## Compilation
+
+Note: If using GCC long (several minute) compile times may arise owing to
+[this known bug](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55402).
 
 ForceManII has no dependencies other than a C++11 compliant compiler.  The
 following should thus be sufficient to compile it:
@@ -42,9 +46,6 @@ ctest
 make install
 ~~~
 
-Note that due to the amount of information that the tests test compilation of
-the tests may be a bit slow (on a semi-modern computer, the entire build,
-including tests, should be less than 5 minutes though).
 
 There are a couple of other useful CMake variables you may want to consider
 setting:

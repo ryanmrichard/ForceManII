@@ -33,8 +33,9 @@ ForceField instance.  The parser follows the rules listed in this document.
 \note As implemented in ForceManII, the Tinker Format is case-insensitive.
 Parsing is handled by matching the keyword in the first column  and no
 additional criteria (*e.g.* number of columns, prescence of a comment character,
-etc.).  The ordering of sections in the input is arbitrary (*i.e.* the bond
-parameters can be the first or last thing in the input)
+etc.).  Aside from the metadata, which must come first, the ordering of all
+sections in the input is arbitrary (*e.g.* the bond
+parameters can be before or after the angle parameters)
 
 ### Force Field Metadata
 
@@ -43,7 +44,7 @@ This is the important metadata for a force field:
 - `radiusrule` : can be either `ARITHMETIC` or `GEOMETRIC`.  This is the type of
    the average used to combine the van Der Waals radii
 - `radiussize` : is sigma a `RADIUS` or a `DIAMETER`
-- `radiustype` : is sigma for the minimum `R-MIN` or the zero?
+- `radiustype` : is sigma for the minimum `R-MIN` or the zero, `SIGMA`?
 - `epsilonrul` : same as `radiusrule` except for the well-depth
 - `vdw-14-scale` : this is a scale factor that will be applied to the van Der 
    Waals interactions between 1-4 bonded atoms, i.e. ends of a torsion angle.
@@ -53,8 +54,11 @@ This is the important metadata for a force field:
                get the correct results, so I am not worried about it at the
                moment)
 - `dielectric` : the dielectric constant (or absolute permitivity) for the force
-               field in the same units (which I have not worked out) as the
-               electric permetivity
+               field
+- `torsionunit` : how much to scale torsion energy by
+  - Typically used if 0.5 of Fourier series is not included in amplitude
+- `imptorunit` : how much to scale imptorsion energy by
+  - Typically used if 0.5 of Fourier series is not included in amplitude
 
 ### Atom Types and Class Types
 
@@ -88,36 +92,51 @@ atom <atom type> <class type> <symbol> <description> <atomic number> <mass>
 #### Harmonic Bond Stretching Potential
 
 ```
-bond   <class type 1>  <class type 2> <force constant> <r_0>
+bond   <class 1>  <class 2> <k> <r_0>
 ```
 
 - `bond` : a flag to specify these parameters are for bonds
-- `class type 1` : the class type of one of the two atoms
-- `class type 2` : the class type for the other atom
-- `force constant` : the force constant in kcal/(mol Angstrom\f$^2\f$), the 1/2
-  of the harmonic potential is included
+- `class 1` : the class of one of the two atoms
+- `class 2` : the class for the other atom
+- `k` : the force constant in kcal/(mol Angstrom\f$^2\f$), the 1/2
+   of the harmonic potential is included
 - `r_0` : the equilibrium distance for the bond in Angstroms
 
-Tinker appears to follow the convention that class type 1 is less than or equal
-to class type 2.  Upon parsing, ForceManII enforces this ordering.
+Tinker appears to follow the convention that class 1 is less than or equal
+to class 2.  Upon parsing, ForceManII enforces this ordering.
 
 #### Angle-Bending Harmonic Potential Parameters
 
 ```
-angle  <class type 1> <vertex class type> <class type 2> <force constant>
-       <theta_0>
+angle  <class 1> <vertex class> <class 2> <k> <theta_0>
 ```
 
 - `angle` : a flag to specify that these are parameters for an angle
-- `class type 1` : one of the non-vertex atoms' class types
-- `vertex atom type` : the atom type of the vertex atom
-- `class type 2` : the other non-vertex atom's class type
-- `force constant` : the force constant in kcal/(mol*radians^2)
+- `class 1` : one of the non-vertex atoms' class
+- `vertex class` : the class of the vertex atom
+- `class 2` : the other non-vertex atom's class
+- `force constant` : the force constant in kcal/(mol*radians\f$^2\f$)
 - `theta_0` : the equilibrium angle in degrees
 
-Tinker appears to follow the convention that class type 1 is less than or equal
-to class type 2 (the vertex atom always appears in the middle, regardless of
+Tinker appears to follow the convention that class 1 is less than or equal
+to class 2 (the vertex atom always appears in the middle, regardless of
 value).  Upon parsing, ForceManII will enforce this ordering.
+
+#### Urey-Bradley Paramaters (1-3 interactions)
+
+```
+ureybrad     <class 1> <vertex class> <class 2> <k> <r0>
+```
+
+- `ureybrad` : a flag to specify that this is a 1-3 interaction
+- `class 1` : the class of one of the end atoms
+- `vertex class` : the class of the vertex atom
+- `class 2` : the class of the other end atom
+- `k` : the harmonic force constant in kcal/(mol*Angstroms\f$^2\f$)
+- `r0` : the equilibrium distance between the two end atoms in Angstroms
+
+Tinker appears to follow the convention that class 1 is less than or equal to
+class 2.  We enforce this ordering while parsing.
 
 #### Torsion Fourier-Series Parameters
 ```

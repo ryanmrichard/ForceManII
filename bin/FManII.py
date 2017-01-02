@@ -50,6 +50,16 @@ typetypes={"type":"FManII::TypeTypes_t::TYPE",
            "class":"FManII::TypeTypes_t::CLASS"
            }
 
+#Recognized force field terms
+ffterms={"hb":(models["ho"],intcoords["bond"]),
+        "ha":(models["ho"],intcoords["angle"]),
+        "ft":(models["fs"],intcoords["torsion"]),
+        "fi":(models["fs"],intcoords["imp"]),
+        "cl14":(models["cl"],intcoords["pair14"]),
+        "cl":(models["cl"],intcoords["pair"]),
+        "lj14":(models["lj"],intcoords["pair14"]),
+        "lj":(models["lj"],intcoords["pair"])}
+
 def check(cond,msg):
     if not cond: raise RuntimeError(msg)
 

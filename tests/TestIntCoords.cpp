@@ -18,8 +18,8 @@
  */
 #include <ForceManII/FManII.hpp>
 #include "TestMacros.hpp"
-#include "ubiquitin.hpp"
-#include "ubiquitin_intcoords.hpp"
+#include "testdata/ubiquitin.hpp"
+#include "testdata/ubiquitin_intcoords.hpp"
 
 
 int main(int argc, char** argv){

@@ -1,4 +1,5 @@
 set(FMANII_SRC ${FMANII_SRC}
     ${CMAKE_CURRENT_SOURCE_DIR}/amber99.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/oplsaa.cpp
     PARENT_SCOPE
     )

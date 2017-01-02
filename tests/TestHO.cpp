@@ -20,7 +20,7 @@
 #include <ForceManII/FFTerm.hpp>
 #include <ForceManII/ModelPotentials/HarmonicOscillator.hpp>
 #include "TestMacros.hpp"
-#include "ubiquitin.hpp"
+#include "testdata/ubiquitin.hpp"
 #include <cmath>
 
 using namespace FManII;
@@ -32,7 +32,7 @@ int main(int argc, char** argv){
     HarmonicOscillator HO;
 #ifndef NDEBUG
 std::vector<double> a(2,0.0),d;
-std::map<FManII::Param_t,std::vector<double>> ps={
+std::map<std::string,std::vector<double>> ps={
     {FManII::Param_t::K,{0.0}},
     {FManII::Param_t::r0,{}}};
 TEST_THROW(d=HO.deriv(0,ps,{a}),"len(k)!=len(r0)");
@@ -45,11 +45,7 @@ TEST_THROW(d=HO.deriv(0,ps,{a}),"len(k)!=len(r)");
                                        FManII::amber99,ubiquitin_FF_types);
      for(auto qi : {IntCoord_t::BOND,IntCoord_t::ANGLE}){
         auto term_type=std::make_pair(FManII::Model_t::HARMONICOSCILLATOR,qi);
-        //Energy check
-        if(qi==IntCoord_t::BOND)
-            test_value(deriv.at(term_type)[0],ubiquitinbond_e,1e-5,"Bond Energy");
-        else
-            test_value(deriv.at(term_type)[0],ubiquitinangle_e,1e-5,"Angle Energy");
+        test_value(deriv.at(term_type)[0],ubiquitin_egys.at(term_type),1e-5,"Bond Energy");
     }
     test_footer();
     return 0;
