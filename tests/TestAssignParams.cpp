@@ -29,25 +29,9 @@ int main(int argc, char** argv){
             FManII::get_coords(ubiquitin,ubiquitin_conns);
     FManII::ParamSet params=
             FManII::assign_params(coords,FManII::amber99,ubiquitin_FF_types);
-    for(auto pseti: {std::make_pair(FManII::Model_t::HARMONICOSCILLATOR,
-                                    FManII::IntCoord_t::BOND),
-                     std::make_pair(FManII::Model_t::HARMONICOSCILLATOR,
-                                    FManII::IntCoord_t::ANGLE),
-                     std::make_pair(FManII::Model_t::FOURIERSERIES,
-                                    FManII::IntCoord_t::TORSION),
-                    std::make_pair(FManII::Model_t::FOURIERSERIES,
-                                    FManII::IntCoord_t::IMPTORSION),
-                    std::make_pair(FManII::Model_t::ELECTROSTATICS,
-                                    FManII::IntCoord_t::PAIR14),
-                    std::make_pair(FManII::Model_t::ELECTROSTATICS,
-                                  FManII::IntCoord_t::PAIR),
-                    std::make_pair(FManII::Model_t::LENNARD_JONES,
-                                  FManII::IntCoord_t::PAIR14),
-                    std::make_pair(FManII::Model_t::LENNARD_JONES,
-                                  FManII::IntCoord_t::PAIR),
-                     })
+    for(auto pseti: ubiquitin_params)
     {
-        test_value(params.at(pseti),ubiquitin_params.at(pseti),"Params");
+        test_value(params.at(pseti.first),pseti.second,"Params");
     }
 
     test_footer();

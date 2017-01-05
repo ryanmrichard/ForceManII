@@ -20,28 +20,13 @@
 
 #include "ForceManII/FManIIDefs.hpp"
 #include "ForceManII/FFTerm.hpp"
+#include "ForceManII/ParameterSet.hpp"
 #include <algorithm>
 #include <set>
 #include <unordered_map>
 
 ///Namespace for all code associated with ForceManII
 namespace FManII {
-
-//Now we build up our parameter map type.  In general this is a deep mapping.
-//The outermost key is what sort of term are the parameters for (harmonic-bond
-//stretching, etc.)  The next key is what set of parameters is this
-//(equilibrium bond distance, force constant, etc.).  Finally, the next key maps
-//the ordered set of atom types (or classes) to the parameter's value.  We now
-//build up such a map in reverse.
-
-///Map between an ordered tuple to its parameter value (value may be a tensor)
-using IndexedParam=std::map<IVector,Vector>;
-
-///Map between a type of parameter and the indexed parameters
-using Type2Index_t=std::map<std::string,IndexedParam>;
-
-///Full map of a ff's parameters
-using Term2Type_t=std::map<FFTerm_t,Type2Index_t>;
 
 
 /** \brief  A struct to hold the details about a force field
@@ -55,15 +40,37 @@ struct ForceField{
     ///Type of a function that can order atoms
     typedef std::vector<size_t>(*orderer)(const std::vector<size_t>&);
 
+    ///Type of a function that can combine parameters
+    typedef double(*combiner)(const std::vector<double>&);
+
     using PTerm_t=std::pair<std::string,std::string>;
 
-    Term2Type_t params;///<The complete set of parameters
+    ///Value of a parameter matching any type or class
+    size_t wild_card=0;
+
+    ParameterSet params;///<The complete set of parameters
     std::unordered_map<size_t,size_t> type2class;///<Map of atom type 2 atom class
     std::map<FFTerm_t,FFTerm> terms;///< The terms in the force field
     std::map<FFTerm_t,orderer> orderrules;///<How the parameters are ordered
     std::map<FFTerm_t,std::string> paramtypes;///<Does the parameter use class or type
-    std::map<PTerm_t,std::string> combrules;///< How to combine parameters
+    std::map<PTerm_t,combiner> combrules;///< How to combine parameters
     std::map<FFTerm_t,double> scale_factors;///<Scale terms by how much?
+
+    /** \brief Given a set of internal coordinates assigns parameters
+     *
+     *  \param[in] term_type The model and intcoordinate of the term
+     *  \param[in] parmi The type of parameter
+     *  \param[in] coord The found internal coordinates
+     *  \param[in] atom2type A mapping from atom number to atom type
+     *  \param[in] skip_missing If true missing parameters will be ignored
+     *
+     *  \return The requested set of parameters
+     */
+    Vector assign_param(const FFTerm_t& term_type,
+                        const std::string& parmi,
+                        const InternalCoordinates& coord,
+                        const IVector& atom2type,
+                        bool skip_missing)const;
 
     ///Checks for exact equality of all members
     bool operator==(const ForceField& other)const{
@@ -81,6 +88,18 @@ struct ForceField{
         return !(*this==other);
     }
 };
+
+inline double mean(const Vector& params){
+    return std::accumulate(params.begin(),params.end(),0.0)/params.size();
+}
+
+inline double product(const Vector& params){
+    return std::accumulate(params.begin(),params.end(),1.0,std::multiplies<double>());
+}
+
+inline double geometric(const Vector& params){
+    return std::pow(product(params),1.0/params.size());
+}
 
 ///Some pre-defined order-er functions
 inline std::vector<size_t> pair_order(const std::vector<size_t>& atoms){

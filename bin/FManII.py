@@ -6,6 +6,7 @@ import os
 import sys
 #Constants as defined in ForceManII
 ang2au=1.889725989
+j2cal=4.184
 kcalmol2au=1/627.5096
 deg2rad=math.pi/180
 k2au=kcalmol2au/(ang2au**2)
@@ -40,9 +41,9 @@ models={"ho":"FManII::Model_t::HARMONICOSCILLATOR",
 }
 
 #Recognized ways of combining parameters
-comb_rules={"ARITHMETIC":"FManII::CombRule_t::ARITHMETIC",
-           "GEOMETRIC":"FManII::CombRule_t::GEOMETRIC",
-           "PRODUCT":"FManII::CombRule_t::PRODUCT"}
+comb_rules={"ARITHMETIC":"FManII::mean",
+           "GEOMETRIC":"FManII::geometric",
+           "PRODUCT":"FManII::product"}
 
 
 #Recognized atom type mappings

@@ -89,60 +89,20 @@ CoordArray get_coords(const Vector& Carts,
 
 ParamSet assign_params(const CoordArray& coords,
                        const ForceField& ff,
-                       const IVector& Types)
+                       const IVector& Types,
+                       bool skip_missing)
  {
     ParamSet ps;
-    for(const auto& termi:ff.terms){//Loop over terms in force field
+    for(const auto& termi:ff.terms){
         const FFTerm_t term_type=termi.first;
-        const auto& model=term_type.first;
-        const bool use_class=ff.paramtypes.at(term_type)==TypeTypes_t::CLASS;
         for(const auto& coordi:termi.second.coords){
             const InternalCoordinates& coord=*coords.at(coordi);
-            for(IVector typei:coord.get_types()){
-                IVector types;
-                for(size_t t:typei){
-                    const size_t ti=Types[t];
-                    types.push_back(use_class?ff.type2class.at(ti):ti);
-                }
-                IVector Orderedts=(ff.orderrules.count(term_type)?
-                                   ff.orderrules.at(term_type)(types):types);
-                for(auto parami:termi.second.model().params){
-                    auto prule=std::make_pair(model,parami);
-                    if(ff.combrules.count(prule)){
-                       const auto& rule=ff.combrules.at(prule);
-                       double val;
-                        if(rule==CombRule_t::ARITHMETIC){
-                            val=0.0;
-                            for(auto ti:types)
-                                val+=ff.params.at(term_type).at(parami).at({ti})[0];
-                            val/=types.size();
-                        }
-                        else{
-                            val=1.0;
-                            for(auto ti:types)
-                                val*=ff.params.at(term_type).at(parami).at({ti})[0];
-                            if(rule==CombRule_t::GEOMETRIC)
-                                val=std::pow(val,(1.0/types.size()));
-                        }
-                        ps[term_type][parami].push_back(val);
-                    }
-                    else{
-                        const Vector& vs=
-                                ff.params.at(term_type).at(parami).at(Orderedts);
-                        if(term_type.first==Model_t::FOURIERSERIES &&
-                           term_type.second==IntCoord_t::TORSION)
-                            for(size_t i=0;i<3;i++)
-                                ps[term_type][parami].push_back(vs.size()>i?
-                                                                    vs[i]:0.0);
-                        else{
-                            DEBUG_CHECK(vs.size()==1,"Wasn't expecting a vector");
-                            ps[term_type][parami].push_back(vs[0]);
-                        }
-                    }
-                }//End loop over parameters
-            }//End loop over values of coordinate
-        }//End loop over coordinates
-    }//End loop over terms
+            for(auto parami:termi.second.model().params){
+                ps[term_type][parami]=
+                    ff.assign_param(term_type,parami,coord,Types,skip_missing);
+            }
+        }
+    }
     return ps;
 }
 

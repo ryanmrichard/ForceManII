@@ -37,6 +37,10 @@ etc.).  Aside from the metadata, which must come first, the ordering of all
 sections in the input is arbitrary (*e.g.* the bond
 parameters can be before or after the angle parameters)
 
+\note Types and classes start at 1.  A value of 0 is treated as a wildcard.
+*e.g.* the parameters for a bond 0 1 are to be used for all bonds involving an
+atom of type/class 1.
+
 ### Force Field Metadata
 
 This is the important metadata for a force field:
@@ -50,9 +54,10 @@ This is the important metadata for a force field:
    Waals interactions between 1-4 bonded atoms, i.e. ends of a torsion angle.
    The actual value applied will be 1.0 over this value
 - `chg-14-scale` : same as `vdw-14-scale` except for the charges
-- `electric` : the permitivity of free space (? I don't parse this line and I
-               get the correct results, so I am not worried about it at the
-               moment)
+- `electric` : Coulomb's constant (\f$\frac{1}{4\pi\epsilon_0}\f$, where
+               \f$\epsilon_0\f$ is the permitivity of free space in
+               \f$\frac{mol}{kcal\ \AA}\f$).  This apparently varies from force
+               field to force field in Tinker...
 - `dielectric` : the dielectric constant (or absolute permitivity) for the force
                field
 - `torsionunit` : how much to scale torsion energy by

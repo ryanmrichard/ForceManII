@@ -59,7 +59,7 @@ struct ElectrostaticsPair:public FFTerm{ElectrostaticsPair();};
 
 ///Available hard-coded force fields
 extern const ForceField amber99;
-//extern const ForceField oplsaa;
+extern const ForceField oplsaa;
 
 /**\brief Given a force field file in Tinker format makes a ForceField object
  *
@@ -105,10 +105,17 @@ CoordArray get_coords(const Vector& Carts,
 /**\brief A function that assigns the final parameters to a system
  *
  *
+ *  \param[in] coords The internal coordinates of the system
+ *  \param[in] ff The force field to use for assigning parameters
+ *  \param[in] types A map from atom number to atom type
+ *  \param[in] skip_missing If true missing parameters will be counted as zero
+ *  \return The parameters of your system
+ *
  */
 ParamSet assign_params(const CoordArray& coords,
                        const ForceField& ff,
-                       const IVector& types);
+                       const IVector& types,
+                       bool skip_missing=true);
 
 DerivType deriv(size_t order,
                 const ForceField& ff,

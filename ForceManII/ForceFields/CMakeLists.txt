@@ -1,5 +1,6 @@
-set(FMANII_SRC ${FMANII_SRC}
-    ${CMAKE_CURRENT_SOURCE_DIR}/amber99.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/oplsaa.cpp
-    PARENT_SCOPE
-    )
+add_library(force_fields OBJECT
+    amber99.cpp
+    oplsaa.cpp
+)
+set_source_files_properties(amber99.cpp PROPERTIES COMPILE_FLAGS -O0)
+set_source_files_properties(oplsaa.cpp PROPERTIES COMPILE_FLAGS -O0)

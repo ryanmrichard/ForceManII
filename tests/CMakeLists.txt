@@ -7,7 +7,10 @@ include(CTest)
 enable_testing()
 
 #These are the correct answers
-add_library(molecules SHARED testdata/ubiquitin.cpp
+add_library(molecules SHARED
+                             testdata/peptide.cpp
+                             testdata/peptide_intcoords.cpp
+                             testdata/ubiquitin.cpp
                              testdata/ubiquitin_intcoords.cpp
                              testdata/ubiquitin_params.cpp
 )
@@ -23,6 +26,7 @@ function(NEW_TEST test_name)
 endfunction()
 
 NEW_TEST(TestAssignParams)
+NEW_TEST(TestDeriv)
 NEW_TEST(TestCoulomb)
 NEW_TEST(TestFourierSeries)
 NEW_TEST(TestHO)

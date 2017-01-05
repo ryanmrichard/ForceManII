@@ -62,7 +62,6 @@ cmake -H. -Bbuild -DCMAKE_CXX_COMPILER=path/to/your/c++/compiler\
                   -DCMAKE_INSTALL_PREFIX=where/you/want/ForceManII/installed
 ~~~
 
-
 ## Quick-Start
 
 If all you want to do is compute an MM energy for an existing force field this

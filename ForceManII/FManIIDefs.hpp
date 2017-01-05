@@ -56,21 +56,21 @@ namespace Model_t{
     constexpr auto LENNARD_JONES="LENNARD_JONES";
 }
 
-///These are the recognized combination rules
-namespace CombRule_t {
-    constexpr auto PRODUCT="PRODUCT";///<The product of the parameters \f$\prod_{i=1}^Nx_i\f$
-    constexpr auto ARITHMETIC="ARITHMETIC";///<A normal average \f$\frac{1}{N}\sum_{i=1}^Nx_i\f$
-    constexpr auto GEOMETRIC="GEOMETRIC";///<Geometric average \f$\left(\prod_{i=1}^Nx_i\right)^{1/N}\f$
-}
-
 ///Flag for using the atom type or the atom class
 namespace TypeTypes_t{
     constexpr auto TYPE="TYPE";///<The term uses the atom type
     constexpr auto CLASS="CLASS";///<The term uses the atom class
 }
 
+///For convenience these are most of the term types
+namespace Terms_t{
+    constexpr auto HO_BOND=std::make_pair(Model_t::HARMONICOSCILLATOR,
+                                          IntCoord_t::BOND);
+}
+
 ///Type of a FFTerm
 using FFTerm_t=std::pair<std::string,std::string>;
+
 
 ///Type of a quantity we are treating as a mathematical vector
 using Vector=std::vector<double>;

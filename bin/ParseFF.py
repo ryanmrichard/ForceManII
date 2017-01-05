@@ -7,8 +7,6 @@ class ForceField:
     def __init__(self):
         self.rad_type=""
         self.rad_size=""
-        self.torunit=1.0
-        self.impunit=1.0
         self.params={}
         self.type2class={}
         self.terms={}
@@ -20,8 +18,7 @@ class ForceField:
 def check_add(p,t,pt,k,v):
     if t not in p:p[t]={}
     if pt not in p[t]:p[t][pt]={}
-    if k not in p[t][pt]:p[t][pt][k]=[]
-    p[t][pt][k].append(v)
+    p[t][pt][k]=v
 
 def read_ff(ff_file):
     """Parses a tinker style force field file"""
@@ -34,12 +31,14 @@ def read_ff(ff_file):
                 ff.combrules[(models["lj"],params["sigma"])]=comb_rules[da_line[1]]
             elif da_line[0]=="radiustype":ff.rad_type=da_line[1]
             elif da_line[0]=="radiussize":ff.rad_size=da_line[1]
-            elif da_line[0]=="torsionunit":ff.torunit=float(da_line[1])
-            elif da_line[0]=="impunit":ff.impunit=float(da_line[1])
+            elif da_line[0]=="torsionunit":
+                ff.scale_factors[ffterms["ft"]]=da_line[1]
+            elif da_line[0]=="imptorunit":
+                ff.scale_factors[ffterms["fi"]]=da_line[1]
             elif da_line[0]=="vdwindex":
                 idxtype=typetypes[da_line[1].lower()]
-                ff.paramtypes[(models["lj"],intcoords["pair14"])]=idxtype
-                ff.paramtypes[(models["lj"],intcoords["pair"])]=idxtype
+                ff.paramtypes[ffterms["lj14"]]=idxtype
+                ff.paramtypes[ffterms["lj"]]=idxtype
             elif da_line[0]=="epsilonrule":
                 ff.combrules[(models["lj"],params["epsilon"])]=comb_rules[da_line[1]]
             elif da_line[0]=="vdw-14-scale":
@@ -58,8 +57,8 @@ def read_ff(ff_file):
                 ff.terms[ffterm]="HarmonicBond"
                 #Tinker bakes the 1/2 into k already
                 k,r0=2*float(da_line[3])*k2au,float(da_line[4])*ang2au
-                check_add(ff.params,ffterm,params["k"],pair,k)
-                check_add(ff.params,ffterm,params["r0"],pair,r0)
+                check_add(ff.params,ffterm,params["k"],pair,[k])
+                check_add(ff.params,ffterm,params["r0"],pair,[r0])
             if da_line[0]=="angle":
                 i=int(da_line[1]);j=int(da_line[2]);k=int(da_line[3])
                 triple=(i,j,k) if i<=k else (k,j,i)
@@ -67,8 +66,8 @@ def read_ff(ff_file):
                 ff.paramtypes[ffterms["ha"]]=typetypes["class"]
                 ff.terms[ffterms["ha"]]="HarmonicAngle"
                 k,r0=2*float(da_line[4])*anglek2au,float(da_line[5])*deg2rad
-                check_add(ff.params,ffterms["ha"],params["k"],triple,k)
-                check_add(ff.params,ffterms["ha"],params["r0"],triple,r0)
+                check_add(ff.params,ffterms["ha"],params["k"],triple,[k])
+                check_add(ff.params,ffterms["ha"],params["r0"],triple,[r0])
             if da_line[0]=="torsion":
                 i,j,k,l=int(da_line[1]),int(da_line[2]),\
                         int(da_line[3]),int(da_line[4])
@@ -77,40 +76,41 @@ def read_ff(ff_file):
                 ff.orderrules[ffterm]="torsion_order"
                 ff.paramtypes[ffterm]=typetypes["class"]
                 ff.terms[ffterm]="FourierTorsion"
+                v,phi,n=[],[],[]
                 for ti in range(3):
                     if len(da_line)<(6+3*ti):break
-                    v,phi,n=ff.torunit*float(da_line[5+3*ti])*kcalmol2au,\
-                            float(da_line[6+3*ti])*deg2rad,\
-                            float(da_line[7+3*ti])
-                    check_add(ff.params,ffterm,params["v"],quad,v)
-                    check_add(ff.params,ffterm,params["phi"],quad,phi)
-                    check_add(ff.params,ffterm,params["n"],quad,n)
+                    v.append(float(da_line[5+3*ti])*kcalmol2au)
+                    phi.append(float(da_line[6+3*ti])*deg2rad)
+                    n.append(float(da_line[7+3*ti]))
+                check_add(ff.params,ffterm,params["v"],quad,v)
+                check_add(ff.params,ffterm,params["phi"],quad,phi)
+                check_add(ff.params,ffterm,params["n"],quad,n)
             if da_line[0]=="imptors":
                 i,j,k,l=int(da_line[1]),int(da_line[2]),int(da_line[3]),int(da_line[4])
                 jkp=[i,j,l]
                 jkp.sort()
                 quad=(jkp[0],k,jkp[1],jkp[2])
-                v,phi,n=ff.impunit*float(da_line[5])*kcalmol2au,\
+                v,phi,n=float(da_line[5])*kcalmol2au,\
                         float(da_line[6])*deg2rad,\
                         float(da_line[7])
                 ffterm=(models["fs"],intcoords["imp"])
                 ff.paramtypes[ffterm]=typetypes["class"]
                 ff.orderrules[ffterm]="imp_order"
                 ff.terms[ffterm]="FourierImproperTorsion"
-                check_add(ff.params,ffterm,params["v"],quad,v)
-                check_add(ff.params,ffterm,params["phi"],quad,phi)
-                check_add(ff.params,ffterm,params["n"],quad,n)
+                check_add(ff.params,ffterm,params["v"],quad,[v])
+                check_add(ff.params,ffterm,params["phi"],quad,[phi])
+                check_add(ff.params,ffterm,params["n"],quad,[n])
             if da_line[0]=="charge":
                 i=int(da_line[1])
                 elem=(i,)
                 ffterm=(models["cl"],intcoords["pair14"])
                 ff.paramtypes[ffterm]=typetypes["type"]
                 ff.terms[ffterm]="Electrostatics14"
-                check_add(ff.params,ffterm,params["q"],elem,float(da_line[2]))
+                check_add(ff.params,ffterm,params["q"],elem,[float(da_line[2])])
                 ffterm=(models["cl"],intcoords["pair"])
                 ff.paramtypes[ffterm]=typetypes["type"]
                 ff.terms[ffterm]="ElectrostaticsPair"
-                check_add(ff.params,ffterm,params["q"],elem,float(da_line[2]))
+                check_add(ff.params,ffterm,params["q"],elem,[float(da_line[2])])
                 ff.combrules[(models["cl"],params["q"])]=comb_rules["PRODUCT"]
             if da_line[0]=="vdw":
                 i=int(da_line[1])
@@ -124,8 +124,8 @@ def read_ff(ff_file):
                     if ffterm not in ff.paramtypes:
                         ff.paramtypes[ffterm]=typetypes["class"]
                     ff.terms[ffterm]="LJ14" if ptype=="pair14" else "LJPair"
-                    check_add(ff.params,ffterm,params["sigma"],elem,val)
-                    check_add(ff.params,ffterm,params["epsilon"],elem,ep)
+                    check_add(ff.params,ffterm,params["sigma"],elem,[val])
+                    check_add(ff.params,ffterm,params["epsilon"],elem,[ep])
     return ff
 
 
@@ -165,28 +165,42 @@ def main():
     f.write("//Owing to GCC's trouble with initializer lists we avoid using\n")
     f.write("//them to initialize our const objects\n\n")
     f.write("#include<ForceManII/FManII.hpp>\n")
-    f.write("FManII::ForceField make_ff(){\n")
+    f.write("static FManII::ForceField make_ff(){\n")
     f.write("FManII::ForceField ff;\n")
+    new_terms={}
+    for i,key in enumerate(ff.terms.items()):
+        new_terms[key[0]]="___FFTERM"+str(i)+"___"
+        f.write("const FManII::FFTerm_t "+new_terms[key[0]]+"=std::make_pair("+key[0][0]+","+key[0][1]+");\n")
+    for i,it in enumerate(params.items()):
+        new_terms[it[1]]="___PARAM"+str(i)+"___"
+        f.write("const std::string& "+new_terms[it[1]]+"="+it[1]+";\n")
     for ct,rest in ff.params.items():
         for pt,rest1 in rest.items():
             for atoms,value in rest1.items():
-                f.write("ff.params[std::make_pair("+ct[0]+","+ct[1]+")]["+pt+"][{")
-                for ai in atoms:f.write(str(ai)+",")
-                f.write("}]={")
-                for pi in value:f.write(str(pi)+",")
-                f.write("};\n")
+                f.write("ff.params.add_param("+new_terms[ct]+","+new_terms[pt]+",")
+                if(len(atoms)>1):
+                    f.write("std::vector<size_t>({")
+                    for ai in atoms:f.write(str(ai)+",")
+                    f.write("}),")
+                else: f.write(str(atoms[0])+",")
+                if(len(value)>1):
+                    f.write("std::vector<double>({")
+                    for pi in value:f.write(str(pi)+",")
+                    f.write("})")
+                else:f.write(str(value[0]))
+                f.write(");\n")
     for key,value in ff.type2class.items():
         f.write("ff.type2class["+str(key)+"]="+str(value)+";\n")
     for key,value in ff.terms.items():
-        f.write("ff.terms.emplace(std::make_pair("+key[0]+","+key[1]+"),std::move(FManII::"+value+"()));\n")
+        f.write("ff.terms.emplace("+new_terms[key]+",std::move(FManII::"+value+"()));\n")
     for key,value in ff.orderrules.items():
-        f.write("ff.orderrules[std::make_pair("+key[0]+","+key[1]+")]=FManII::"+value+";\n")
+        f.write("ff.orderrules["+new_terms[key]+"]=FManII::"+value+";\n")
     for key,value in ff.paramtypes.items():
-        f.write("ff.paramtypes[std::make_pair("+key[0]+","+key[1]+")]="+value+";\n")
+        f.write("ff.paramtypes["+new_terms[key]+"]="+value+";\n")
     for key,value in ff.combrules.items():
         f.write("ff.combrules[std::make_pair("+key[0]+","+key[1]+")]="+value+";\n")
     for key,value in ff.scale_factors.items():
-        f.write("ff.scale_factors[std::make_pair("+key[0]+","+key[1]+")]="+value+";\n")
+        f.write("ff.scale_factors["+new_terms[key]+"]="+value+";\n")
     f.write("return ff;\n}\n")
     f.write("const FManII::ForceField FManII::"+ff_name+"=make_ff();\n")
     f.close()
