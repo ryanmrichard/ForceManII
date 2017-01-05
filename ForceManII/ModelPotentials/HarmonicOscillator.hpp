@@ -31,7 +31,8 @@ namespace FManII {
  */
 struct HarmonicOscillator: public ModelPotential{
 
-    HarmonicOscillator():ModelPotential({Param_t::K,Param_t::r0}){}
+    HarmonicOscillator():
+        ModelPotential({Param_t::K,Param_t::r0},Model_t::HARMONICOSCILLATOR){}
 
     /** Computes the derivative of the energy of a Harmonic Oscillator
      * 

@@ -28,8 +28,8 @@ namespace FManII {
 ///See [Torsion Class](@ref torsion) for more detail.
 class Torsion: public InternalCoordinates {
 public:
-    Torsion(cSharedVector Carts):
-        InternalCoordinates(Carts){}
+    Torsion(cSharedVector Carts, const std::string& namein=IntCoord_t::TORSION):
+        InternalCoordinates(Carts,namein){}
 protected:
     Vector compute_value_(size_t deriv_i,const IVector& coord_i)const;
 };

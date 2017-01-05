@@ -34,6 +34,9 @@ public:
     ///Returns the model
     const ModelPotential& model()const{return *model_;}
 
+    ///Returns the key for the term
+    FFTerm_t name()const{return {model_->name,coords[0]};}
+
     const std::vector<std::string> coords;///<Coordinates this term depends on
 
     ///Given the parameters for this term and a set of internal coordinates

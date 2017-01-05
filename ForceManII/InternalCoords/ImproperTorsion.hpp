@@ -28,7 +28,7 @@ namespace FManII {
 ///See [Torsion Class](@ref torsion) for more detail.
 class ImproperTorsion: public Torsion {
 public:
-    ImproperTorsion(cSharedVector Carts):Torsion(Carts){}
+    ImproperTorsion(cSharedVector Carts):Torsion(Carts,IntCoord_t::IMPTORSION){}
 protected:
     Vector compute_value_(size_t deriv_i,const IVector& coord_i)const;
 };

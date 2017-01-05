@@ -133,11 +133,11 @@ inline void parse_lj(const std::vector<std::string>& tokens,
                      bool isradius){
     const std::vector<size_t> types({stoul(tokens[1])});
     const double scale=ang2au*(isradius?2.0:1.0)*(isRMin?1.0:std::pow(2.0,1.0/6.0));
+    ff.params.add_param(Terms_t::LJ,Param_t::sigma,types,{stod(tokens[2])*scale});
+    ff.params.add_param(Terms_t::LJ,Param_t::epsilon,types,{stod(tokens[3])*kcalmol2au});
     for(const auto& ci:{IntCoord_t::PAIR,IntCoord_t::PAIR14}){
         FFTerm_t ffterm=std::make_pair(Model_t::LENNARD_JONES,ci);
         if(!ff.paramtypes.count(ffterm))ff.paramtypes[ffterm]=TypeTypes_t::CLASS;
-        ff.params.add_param(ffterm,Param_t::sigma,types,{stod(tokens[2])*scale});
-        ff.params.add_param(ffterm,Param_t::epsilon,types,{stod(tokens[3])*kcalmol2au});
         if(!ff.terms.count(ffterm)&&ci==IntCoord_t::PAIR14)
             ff.terms.emplace(ffterm,std::move(LJ14()));
         else if(!ff.terms.count(ffterm))
@@ -149,10 +149,10 @@ inline void parse_lj(const std::vector<std::string>& tokens,
 inline void parse_chg(const std::vector<std::string>& tokens,
                       ForceField& ff){
     const std::vector<size_t> types({stoul(tokens[1])});
+    ff.params.add_param(Terms_t::CL,Param_t::q,types,{stod(tokens[2])});
     for(const auto& ci:{IntCoord_t::PAIR,IntCoord_t::PAIR14}){
         FFTerm_t ffterm=std::make_pair(Model_t::ELECTROSTATICS,ci);
         ff.paramtypes[ffterm]=TypeTypes_t::TYPE;
-        ff.params.add_param(ffterm,Param_t::q,types,{stod(tokens[2])});
         if(!ff.terms.count(ffterm)&&ci==IntCoord_t::PAIR14)
             ff.terms.emplace(ffterm,std::move(Electrostatics14()));
         else if(!ff.terms.count(ffterm))
@@ -166,22 +166,22 @@ ForceField parse_file(std::istream&& file,
                       double deg2rad){
     using std::stoi;using std::stod;
     const double k2au=kcalmol2au/(ang2au*ang2au);
-    ForceField ff;
     std::string line;
     bool isRMin=true,isradius=true;
+    ForceField ff;
     while(std::getline(file,line)){
         if(line.size()==1)continue;
         auto tokens=tokenize(line);
         if(s_comp(tokens[0],"radiusrule"))
             set_mean({Model_t::LENNARD_JONES,Param_t::sigma},tokens[1],ff);
         else if(s_comp(tokens[0],"torsionunit"))
-            ff.scale_factors[std::make_pair(Model_t::FOURIERSERIES,IntCoord_t::TORSION)]=stod(tokens[1]);
+            ff.scale_factors[Terms_t::FS_TORSION]=stod(tokens[1]);
         else if(s_comp(tokens[0],"imptorunit"))
-            ff.scale_factors[std::make_pair(Model_t::FOURIERSERIES,IntCoord_t::IMPTORSION)]=stod(tokens[1]);
+            ff.scale_factors[Terms_t::FS_IMP]=stod(tokens[1]);
         else if(s_comp(tokens[0],"vdwindex")){
             const auto& type=s_comp(tokens[1],"type")?TypeTypes_t::TYPE:TypeTypes_t::CLASS;
-            ff.paramtypes[std::make_pair(Model_t::LENNARD_JONES,IntCoord_t::PAIR14)]=type;
-            ff.paramtypes[std::make_pair(Model_t::LENNARD_JONES,IntCoord_t::PAIR)]=type;
+            ff.paramtypes[Terms_t::LJ]=type;
+            ff.paramtypes[Terms_t::LJ14]=type;
         }
         else if(s_comp(tokens[0],"radiustype"))
             isRMin=s_comp(tokens[1],"R-MIN");
@@ -190,9 +190,9 @@ ForceField parse_file(std::istream&& file,
         else if(s_comp(tokens[0],"epsilonrule"))
             set_mean({Model_t::LENNARD_JONES,Param_t::epsilon},tokens[1],ff);
         else if(s_comp(tokens[0],"vdw-14-scale"))
-            ff.scale_factors[std::make_pair(Model_t::LENNARD_JONES,IntCoord_t::PAIR14)]=1.0/stod(tokens[1]);
+            ff.scale_factors[Terms_t::LJ14]=1.0/stod(tokens[1]);
         else if(s_comp(tokens[0],"chg-14-scale"))
-            ff.scale_factors[std::make_pair(Model_t::ELECTROSTATICS,IntCoord_t::PAIR14)]=1.0/stod(tokens[1]);
+            ff.scale_factors[Terms_t::CL14]=1.0/stod(tokens[1]);
         else if(s_comp(tokens[0],"atom"))
             ff.type2class[stoi(tokens[1])]=stoi(tokens[2]);
         else if(s_comp(tokens[0],"bond"))
@@ -208,6 +208,8 @@ ForceField parse_file(std::istream&& file,
         else if(s_comp(tokens[0],"vdw"))
             parse_lj(tokens,ff,kcalmol2au,ang2au,isRMin,isradius);
     }
+    ff.link_terms(Terms_t::LJ14,Terms_t::LJ);
+    ff.link_terms(Terms_t::CL14,Terms_t::CL);
     for(const auto& pi:{IntCoord_t::PAIR,IntCoord_t::PAIR14}){
         auto ffterm=std::make_pair(Model_t::ELECTROSTATICS,pi);
         auto pterm=std::make_pair(Model_t::ELECTROSTATICS,Param_t::q);

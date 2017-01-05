@@ -30,7 +30,8 @@ namespace FManII {
  */
 struct FourierSeries: public ModelPotential{
 
-    FourierSeries():ModelPotential({Param_t::amp,Param_t::phi,Param_t::n}){}
+    FourierSeries():
+     ModelPotential({Param_t::amp,Param_t::phi,Param_t::n},Model_t::FOURIERSERIES){}
 
 
     /** Computes the derivative of the energy of a FourierSeries

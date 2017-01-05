@@ -27,7 +27,8 @@ namespace FManII {
 ///See [Angle Class](@ref angle) for more detail.
 class Angle: public InternalCoordinates {
 public:
-    Angle(cSharedVector Carts):InternalCoordinates(Carts){}
+    Angle(cSharedVector Carts):
+        InternalCoordinates(Carts,IntCoord_t::ANGLE){}
 protected:
     Vector compute_value_(size_t deriv_i,const IVector& coord_i)const;
 };

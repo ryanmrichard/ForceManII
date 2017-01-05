@@ -27,7 +27,7 @@
 
 ///Namespace for all code associated with ForceManII
 namespace FManII {
-
+namespace detail{class FFImpl;}
 
 /** \brief  A struct to hold the details about a force field
  *
@@ -35,8 +35,11 @@ namespace FManII {
  * force field applied to a molecule.  See [Force Fields in FManII](@ref ffdef)
  * for more details.
  *
+ * \todo Fully hide implementation in pimpl member
+ *
  */
-struct ForceField{
+class ForceField{
+public:
     ///Type of a function that can order atoms
     typedef std::vector<size_t>(*orderer)(const std::vector<size_t>&);
 
@@ -45,8 +48,33 @@ struct ForceField{
 
     using PTerm_t=std::pair<std::string,std::string>;
 
-    ///Value of a parameter matching any type or class
-    size_t wild_card=0;
+    ///Makes a force field that uses \p wildcard as the value for a wild_card
+    ForceField(size_t wildcard=0);
+
+    ///Frees memory associated with pimpl_
+    ~ForceField();
+
+    ///Deep copies other
+    ForceField(const ForceField& other);
+
+    ///Assigns this to a deep copy of other
+    const ForceField& operator=(ForceField other);
+
+    /** \brief Establishes that two force field terms are linked
+     *
+     *  Take for example the fact that we consider the van Der Waals 1-4
+     *  interactions to be different than those of all other pairs.  Typically,
+     *  one does not define parameters for say the 1-5 pairs, the 1-6 pairs, ...
+     *  instead parameters are shared among these pairs.  We call this linking
+     *  terms.  More specifically, if term 1 is linked to term 2, then when a
+     *  user requests a parameter for term 1, the FF will first check parameters
+     *  regestered under term 1, if it does not find it there it will then look
+     *  for the parameter within term 2's set.
+     *
+     *  \param[in] term1 The parameter set to link
+     *  \param[in] term2 The parameter set term1 is linked to
+     */
+    void link_terms(const FFTerm_t& term1,const FFTerm_t& term2);
 
     ParameterSet params;///<The complete set of parameters
     std::unordered_map<size_t,size_t> type2class;///<Map of atom type 2 atom class
@@ -73,22 +101,17 @@ struct ForceField{
                         bool skip_missing)const;
 
     ///Checks for exact equality of all members
-    bool operator==(const ForceField& other)const{
-        return (type2class==other.type2class &&
-                orderrules==other.orderrules &&
-                paramtypes==other.paramtypes &&
-                combrules==other.combrules &&
-                scale_factors==other.scale_factors &&
-                terms==other.terms &&
-                params==other.params);
-    }
+    bool operator==(const ForceField& other)const;
 
     ///Checks for inequality of any member
-    bool operator!=(const ForceField& other)const{
-        return !(*this==other);
-    }
+    bool operator!=(const ForceField& other)const{return !(*this==other);}
+
+private:
+    std::unique_ptr<detail::FFImpl> pimpl_;
 };
 
+///Functions for combining parameters
+///@{
 inline double mean(const Vector& params){
     return std::accumulate(params.begin(),params.end(),0.0)/params.size();
 }
@@ -100,8 +123,10 @@ inline double product(const Vector& params){
 inline double geometric(const Vector& params){
     return std::pow(product(params),1.0/params.size());
 }
+///@}
 
 ///Some pre-defined order-er functions
+///@{
 inline std::vector<size_t> pair_order(const std::vector<size_t>& atoms){
     return {std::min(atoms[0],atoms[1]),std::max(atoms[0],atoms[1])};
 }
@@ -121,6 +146,7 @@ inline std::vector<size_t> imp_order(const std::vector<size_t>& atoms){
     std::sort(types.begin(),types.end());
     return {types[0],atoms[1],types[1],types[2]};
 }
+///@}
 
 } //End namespace FManII
 

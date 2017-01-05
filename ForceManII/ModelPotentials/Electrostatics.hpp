@@ -30,7 +30,7 @@ namespace FManII {
  */
 struct Electrostatics: public ModelPotential {
 
-    Electrostatics():ModelPotential({Param_t::q}){}
+    Electrostatics():ModelPotential({Param_t::q},Model_t::ELECTROSTATICS){}
 
     /** Computes the derivative of the energy of according to Coulomb's law
      * 

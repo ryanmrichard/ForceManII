@@ -27,12 +27,31 @@ namespace FManII {
 ///See [Distance Class](@ref distance) for more detail.
 class Distance: public InternalCoordinates {
 public:
-    Distance(cSharedVector Carts):
-        InternalCoordinates(Carts){}
+    Distance(cSharedVector Carts,const std::string& namein):
+        InternalCoordinates(Carts,namein){}
 protected:
     Vector compute_value_(size_t deriv_i,const IVector& coord_i)const;
 };
 
+class Bond:public Distance{
+public:
+    Bond(cSharedVector Carts):Distance(Carts,IntCoord_t::BOND){}
+};
+
+class Pair:public Distance{
+public:
+    Pair(cSharedVector Carts):Distance(Carts,IntCoord_t::PAIR){}
+};
+
+class Pair13: public Distance{
+public:
+    Pair13(cSharedVector Carts):Distance(Carts,IntCoord_t::PAIR13){}
+};
+
+class Pair14: public Distance{
+public:
+    Pair14(cSharedVector Carts):Distance(Carts,IntCoord_t::PAIR14){}
+};
 
 } //End namespace FManII
 

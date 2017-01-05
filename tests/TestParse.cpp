@@ -27,7 +27,7 @@ int main(int argc, char** argv){
         FManII::ForceField ff=FManII::parse_file(std::move(file));
         FManII::ForceField corr_ff=
                 ffname=="amber99"?FManII::amber99:FManII::oplsaa;
-        for(auto pi: ff.params){//Compare each parameter in the FF
+        for(auto pi: corr_ff.params){//Compare each parameter in the FF
             const std::string fname=std::get<0>(pi).first,//FFTerm
                               cname=std::get<0>(pi).second;//IntCoord
             const std::string pname=std::get<1>(pi);//Parameter type
@@ -35,9 +35,9 @@ int main(int argc, char** argv){
             std::string stypes="";
             for(size_t s : types)stypes+=std::to_string(s)+" ";
             std::string msg=ffname+" "+fname+" "+cname+" "+stypes+" "+pname;
-            const auto& corr_param=
-                    corr_ff.params.get_param(std::get<0>(pi),pname,types);
-            compare_vectors(std::get<3>(pi),corr_param,1e-10,msg);
+            const auto& da_param=
+                    ff.params.get_param(std::get<0>(pi),pname,types);
+            compare_vectors(std::get<3>(pi),da_param,1e-10,msg);
         }
         test_value(ff.type2class,corr_ff.type2class,ffname+" Type2Class");
         test_value(ff.terms,corr_ff.terms,ffname+" terms");

@@ -35,13 +35,13 @@ CoordArray get_coords(const Vector& Carts,
     auto Sys=std::make_shared<Vector>(Carts);
     
     CoordArray FoundCoords;
-    FoundCoords.emplace(IntCoord_t::BOND,std::move(make_unique<Distance>(Sys)));
+    FoundCoords.emplace(IntCoord_t::BOND,std::move(make_unique<Bond>(Sys)));
     FoundCoords.emplace(IntCoord_t::ANGLE,std::move(make_unique<Angle>(Sys)));
     FoundCoords.emplace(IntCoord_t::TORSION,std::move(make_unique<Torsion>(Sys)));
     FoundCoords.emplace(IntCoord_t::IMPTORSION,std::move(make_unique<ImproperTorsion>(Sys)));
-    FoundCoords.emplace(IntCoord_t::PAIR,std::move(make_unique<Distance>(Sys)));
-    FoundCoords.emplace(IntCoord_t::PAIR13,std::move(make_unique<Distance>(Sys)));
-    FoundCoords.emplace(IntCoord_t::PAIR14,std::move(make_unique<Distance>(Sys)));
+    FoundCoords.emplace(IntCoord_t::PAIR,std::move(make_unique<Pair>(Sys)));
+    FoundCoords.emplace(IntCoord_t::PAIR13,std::move(make_unique<Pair13>(Sys)));
+    FoundCoords.emplace(IntCoord_t::PAIR14,std::move(make_unique<Pair14>(Sys)));
     std::set<std::pair<size_t,size_t>> pair14,pair13,pair12;
     for(size_t AtomI=0;AtomI<NAtoms;++AtomI){
         for(size_t AtomJ : Conns[AtomI]){

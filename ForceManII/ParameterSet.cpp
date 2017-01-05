@@ -67,16 +67,27 @@ struct ParameterSetImpl{
 };
 
 struct ParameterSetItrImpl{
-    typename Term2Type_t::const_iterator outer_itr;
-    typename Type2Index_t::const_iterator middle_itr;
-    typename IndexedParam::const_iterator inner_itr;
+    using OuterItr=typename Term2Type_t::const_iterator;
+    OuterItr outer_itr;
+    using MiddleItr=typename Type2Index_t::const_iterator;
+    MiddleItr middle_itr;
+    using InnerItr=typename IndexedParam::const_iterator;
+    InnerItr inner_itr;
     const ParameterSetImpl* ps;
+
+    void reset(){
+        auto itr1=ps->params.begin();
+        bool is_good=itr1!=ps->params.end();
+        middle_itr=(is_good?itr1->second.begin():MiddleItr());
+        is_good=is_good && itr1->second.begin()!=itr1->second.end();
+        inner_itr=(is_good?itr1->second.begin()->second.begin():InnerItr());
+    }
 
     ParameterSetItrImpl(const ParameterSetImpl* psin,bool begin):
         outer_itr(begin? psin->params.begin():psin->params.end()),
-        middle_itr(psin->params.begin()->second.begin()),
-        inner_itr(psin->params.begin()->second.begin()->second.begin()),
-        ps(psin){}
+        ps(psin){
+        reset();
+    }
 
     void next(){
         if(++inner_itr!=middle_itr->second.end())return;
@@ -90,10 +101,7 @@ struct ParameterSetItrImpl{
                 middle_itr=outer_itr->second.begin();
                 inner_itr=middle_itr->second.begin();
             }
-            else{
-                middle_itr=ps->params.begin()->second.begin();
-                inner_itr=ps->params.begin()->second.begin()->second.begin();
-            }
+            else reset();
             return;
         }
     }
@@ -190,9 +198,10 @@ void ParameterSet::add_param(const FFTerm_t& term,const string& type,
 
 Vector ParameterSet::get_param(const FFTerm_t& term, const string& type,
                                const IVector& atoms)const{
-    const auto& pset=pimpl_->params.at(term).at(type);
-    if(pset.count(atoms))
-        return pset.at(atoms);
+    if(pimpl_->params.count(term))
+        if(pimpl_->params.at(term).count(type))
+            if(pimpl_->params.at(term).at(type).count(atoms))
+                return pimpl_->params.at(term).at(type).at(atoms);
     return {};
 }
 

@@ -66,6 +66,20 @@ namespace TypeTypes_t{
 namespace Terms_t{
     constexpr auto HO_BOND=std::make_pair(Model_t::HARMONICOSCILLATOR,
                                           IntCoord_t::BOND);
+    constexpr auto HO_ANGLE=std::make_pair(Model_t::HARMONICOSCILLATOR,
+                                           IntCoord_t::ANGLE);
+    constexpr auto FS_TORSION=std::make_pair(Model_t::FOURIERSERIES,
+                                             IntCoord_t::TORSION);
+    constexpr auto FS_IMP=std::make_pair(Model_t::FOURIERSERIES,
+                                         IntCoord_t::IMPTORSION);
+    constexpr auto CL14=std::make_pair(Model_t::ELECTROSTATICS,
+                                       IntCoord_t::PAIR14);
+    constexpr auto CL=std::make_pair(Model_t::ELECTROSTATICS,
+                                     IntCoord_t::PAIR);
+    constexpr auto LJ14=std::make_pair(Model_t::LENNARD_JONES,
+                                       IntCoord_t::PAIR14);
+    constexpr auto LJ=std::make_pair(Model_t::LENNARD_JONES,
+                                     IntCoord_t::PAIR);
 }
 
 ///Type of a FFTerm

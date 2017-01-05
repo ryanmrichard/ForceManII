@@ -106,7 +106,6 @@ def read_ff(ff_file):
                 ffterm=(models["cl"],intcoords["pair14"])
                 ff.paramtypes[ffterm]=typetypes["type"]
                 ff.terms[ffterm]="Electrostatics14"
-                check_add(ff.params,ffterm,params["q"],elem,[float(da_line[2])])
                 ffterm=(models["cl"],intcoords["pair"])
                 ff.paramtypes[ffterm]=typetypes["type"]
                 ff.terms[ffterm]="ElectrostaticsPair"
@@ -119,13 +118,24 @@ def read_ff(ff_file):
                 if ff.rad_size=="RADIUS":val*=2.0
                 if ff.rad_type=="SIGMA":val*=(2.0**(1/6))
                 ep=float(da_line[3])*kcalmol2au
+                check_add(ff.params,ffterms["lj"],params["sigma"],elem,[val])
+                check_add(ff.params,ffterms["lj"],params["epsilon"],elem,[ep])
                 for ptype in ["pair14","pair"]:
                     ffterm=(models["lj"],intcoords[ptype])
                     if ffterm not in ff.paramtypes:
                         ff.paramtypes[ffterm]=typetypes["class"]
                     ff.terms[ffterm]="LJ14" if ptype=="pair14" else "LJPair"
-                    check_add(ff.params,ffterm,params["sigma"],elem,[val])
-                    check_add(ff.params,ffterm,params["epsilon"],elem,[ep])
+            if da_line[0]=="vdw14":
+                i=int(da_line[1])
+                elem=(i,)
+                val=float(da_line[2])*ang2au
+                if ff.rad_size=="RADIUS":val*=2.0
+                if ff.rad_type=="SIGMA":val*=(2.0**(1/6))
+                ep=float(da_line[3])*kcalmol2au
+                check_add(ff.params,ffterms["lj14"],params["sigma"],elem,[val])
+                check_add(ff.params,ffterms["lj14"],params["epsilon"],elem,[ep])
+
+
     return ff
 
 
@@ -201,6 +211,10 @@ def main():
         f.write("ff.combrules[std::make_pair("+key[0]+","+key[1]+")]="+value+";\n")
     for key,value in ff.scale_factors.items():
         f.write("ff.scale_factors["+new_terms[key]+"]="+value+";\n")
+    f.write("ff.link_terms("+new_terms[ffterms["lj14"]]+
+            ","+new_terms[ffterms["lj"]]+");\n")
+    f.write("ff.link_terms("+new_terms[ffterms["cl14"]]+","+
+            new_terms[ffterms["cl"]]+");\n")
     f.write("return ff;\n}\n")
     f.write("const FManII::ForceField FManII::"+ff_name+"=make_ff();\n")
     f.close()

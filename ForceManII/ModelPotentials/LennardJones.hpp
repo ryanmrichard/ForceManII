@@ -29,7 +29,8 @@ namespace FManII {
  *
  */
 struct LennardJones: public ModelPotential{
-        LennardJones(): ModelPotential({Param_t::sigma,Param_t::epsilon}){}
+        LennardJones():
+            ModelPotential({Param_t::sigma,Param_t::epsilon},Model_t::LENNARD_JONES){}
 
         /** Computes the derivative of the energy of the LennardJones potential
          *

@@ -28,11 +28,15 @@ namespace FManII {
 struct ModelPotential{
     using ParamInput_t=std::map<std::string,Vector>;
     using CoordInput_t=std::vector<Vector>;
-    ModelPotential(const std::vector<std::string>& ps):
-        params(ps){}
+    ModelPotential(const std::vector<std::string>& ps,
+                   const std::string& namein):
+        params(ps),name(namein){}
 
     ///The types of the parameters
     const std::vector<std::string> params;
+
+    ///A tag identifying the model
+    const std::string name;
 
     bool operator==(const ModelPotential& other)const{
         return params==other.params;
