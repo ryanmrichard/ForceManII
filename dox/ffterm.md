@@ -49,7 +49,26 @@ the Lennard-Jones terms depend on the distance between two points).
 
 ## Class Design
 
-\TODO Describe why members go where they are and why they are the types they are
+### Decision not to use templates
+At first it seems logical to define FFTerm something like:
+~~~.cpp
+template<typename Model,typename IntCoord>
+class FFTerm{
+...
+};
+~~~
+as, afterall, we know at compile time that a harmonic bond stretching term
+will use a `Model=HarmonicOscillator` and `IntCoord=Distance`.  This works fine
+for hard-coded force fields where we know the terms at compile time.  The
+problem is when we have to assemble a force field at runtime.  In this case we
+do not know what terms the force field has.  We thus need runtime polymorphism,
+which excludes the use of templates (without going to something like CRTP, which
+I avoid as it complicates the API).
+
+### Shared vs. Unique Pointers
+The original motivation for this was I wanted to ensure the FFTerm was usable
+in an initializer list (and I couldn't seem to get unique_ptrs to work in these
+lists as the lists seem to use copying).
 
 
 ## Extending ForceManII
@@ -66,15 +85,14 @@ class HarmonicOscillator : public FManII::ModelPotential
 {
 public:
     //Define a default constructor that passes a list of parameter names to the
-    //base classs.  Parameter names will be namespace protected by the potential
-    //so generic names are fine.  In this example "K" will be our force constant
+    //base classs.  In this example "K" will be our force constant
     //and "R0" will be the equilibrium bond length
     HarmonicOscillator():
         ModelPotential({Param_t::k,Param_t::r0}){}
 
     //Implment the deriv function (Vector is a typedef of std::vector<double>)
     FManII::Vector deriv(size_t order,
-                         const std::map<FManII::Param_t,FManII::Vector>& in_params,
+                         const std::map<std::string,FManII::Vector>& in_params,
                          const std::vector<FManII::Vector>& in_coords)
     {
         //Normally this would be implemented in a .cpp file, but for brevity we

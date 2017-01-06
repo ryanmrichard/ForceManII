@@ -22,33 +22,35 @@
 #include "TestMacros.hpp"
 #include "testdata/ubiquitin.hpp"
 #include <cmath>
+using namespace std;
+using namespace FManII;
 
 int main(int argc, char** argv){
     test_header("Testing FourierSeries force-field term");
-    FManII::FourierSeries FS;
-    
+    FourierSeries FS;
+    Vector theta({2.0,3.10,0.6}),d;
+    map<string,Vector> ps={
+        {Param_t::amp,{0.0}},
+        {Param_t::phi,{0.0}},
+        {Param_t::n,{0.0}}};
 #ifndef NDEBUG
-std::vector<double> a(2,0.0),d;
-std::map<std::string,std::vector<double>> ps={
-    {FManII::Param_t::amp,{0.0}},
-    {FManII::Param_t::phi,{0.0}},
-    {FManII::Param_t::n,{0.0}}};
-TEST_THROW(d=FS.deriv(0,ps,{a}),"Qs.size()!=Vs.size()");
-ps[FManII::Param_t::amp].push_back(0.0);
-TEST_THROW(d=FS.deriv(0,ps,{a}),"Qs.size()!=phis.size()");
-ps[FManII::Param_t::phi].push_back(0.0);
-TEST_THROW(d=FS.deriv(0,ps,{a}),"Qs.size()!=ns.size()");
+TEST_THROW(d=FS.deriv(0,ps,{theta}),"thetas.size()!=amps.size()");
+ps[Param_t::amp]=Vector({3.2,2.2,1.2});
+TEST_THROW(d=FS.deriv(0,ps,{theta}),"theta.size()!=phis.size()");
+ps[Param_t::phi]=Vector({6.0,7.0,8.0});
+TEST_THROW(d=FS.deriv(0,ps,{theta}),"thetas.size()!=ns.size()");
 #endif
-    FManII::DerivType deriv=FManII::run_forcemanii(0,ubiquitin,ubiquitin_conns,
-                                           FManII::amber99,ubiquitin_FF_types);
-
-    for(auto term:{FManII::IntCoord_t::TORSION,FManII::IntCoord_t::IMPTORSION}){
-        const FManII::FFTerm_t term_type=
-                std::make_pair(FManII::Model_t::FOURIERSERIES,term);
-        const double tol=term==FManII::IntCoord_t::TORSION?1e-5:3e-4;
-        test_value(deriv.at(term_type)[0],ubiquitin_egys.at(term_type),tol,"Torsion Energy");
-    }
+    ps[Param_t::amp]=Vector({3.2,2.2,1.2});
+    ps[Param_t::phi]=Vector({M_PI/2.0,M_PI,M_PI/4});
+    ps[Param_t::n]=Vector({2.0,3.0,4.0});
+    const Vector egy({6.308577929519}),
+        grad({-4.18331917,0.8213992,-4.79539532}),
+        hess({9.687071941,0.0,0.0,0.0,-19.64606144,0.0,0.0,0.0,0.84079682});
     
+    compare_vectors(FS.deriv(0,ps,{theta}),egy,1e-5,"Fourier series energy");
+    compare_vectors(FS.deriv(1,ps,{theta}),grad,1e-5,"Fourier series gradient");
+    compare_vectors(FS.deriv(2,ps,{theta}),hess,1e-5,"Fourier series Hessian");
+
     test_footer();
     return 0;
 } //End main

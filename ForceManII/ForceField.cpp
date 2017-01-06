@@ -147,12 +147,12 @@ inline Vector handle_other(const FFTerm_t& term_type,
 
 Vector ForceField::assign_param(const FFTerm_t& term_type,
                                 const string& parami,
-                                const InternalCoordinates& coord,
+                                const vector<IVector>& atom_numbers,
                                 const IVector& atom2type,
                                 bool skip_missing)const{
     const bool use_class=paramtypes.at(term_type)==TypeTypes_t::CLASS;
     Vector rv;
-    for(auto typei:coord.get_types()){//Loop over types of coords in term
+    for(auto typei:atom_numbers){//Loop over types of coords in term
         IVector types;
         transform(typei.begin(),typei.end(),back_inserter(types),
             [&](size_t t){t=atom2type[t];return use_class?type2class.at(t):t;}

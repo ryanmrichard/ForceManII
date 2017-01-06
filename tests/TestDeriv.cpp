@@ -47,7 +47,8 @@ int main(int argc, char** argv){
             if(ffterm.first==Model_t::ELECTROSTATICS||ffterm==imp)tol=4e-4;
             if(ff.second=="AMBER99")
                 test_value(derivi.second[0],ubiquitin_egys.at(ffterm),tol,msg);
-            else if(ff.second=="OPLSAA")
+            //OPLSAA only defines a Pair13 term for water, and we don't have water
+            else if(ff.second=="OPLSAA" && derivi.first.second!=IntCoord_t::PAIR13)
                 test_value(derivi.second[0],peptide_egys.at(ffterm),tol,msg);
         }
     }

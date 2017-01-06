@@ -37,7 +37,7 @@ int main(int argc, char** argv){
             std::string msg=ffname+" "+fname+" "+cname+" "+stypes+" "+pname;
             const auto& da_param=
                     ff.params.get_param(std::get<0>(pi),pname,types);
-            compare_vectors(std::get<3>(pi),da_param,1e-10,msg);
+            compare_vectors(da_param,std::get<3>(pi),1e-10,msg);
         }
         test_value(ff.type2class,corr_ff.type2class,ffname+" Type2Class");
         test_value(ff.terms,corr_ff.terms,ffname+" terms");

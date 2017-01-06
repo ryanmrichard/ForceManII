@@ -19,7 +19,7 @@
 
 #include "ForceManII/ModelPotentials/Electrostatics.hpp"
 #include "ForceManII/Common.hpp"
-
+#include <cmath>
 namespace FManII{
 
 Vector Electrostatics::deriv(size_t order,
@@ -27,10 +27,17 @@ Vector Electrostatics::deriv(size_t order,
                              const CoordInput_t &in_coords)const
 {
     const Vector &Qs=in_coords[0],&qs=in_params.at(Param_t::q);
-    DEBUG_CHECK(Qs.size()==qs.size(),"Qs must be same length as qs");
-    Vector d(1,0.0);
+    const size_t n=Qs.size();
+    DEBUG_CHECK(n==qs.size(),"Qs must be same length as qs");
+    DEBUG_CHECK(order<=2,"Derivatives larger than order 2 are not coded");
+
+    Vector d(static_cast<size_t>(std::pow(n,order)),0.0);
     if(order==0)
-        for(size_t i=0;i<Qs.size();++i)d[0]+=qs[i]/Qs[i];
+        for(size_t i=0;i<n;++i)d[0]+=qs[i]/Qs[i];
+    else if(order==1)
+        for(size_t i=0;i<n;++i)d[i]=-qs[i]/(Qs[i]*Qs[i]);
+    else if(order==2)
+        for(size_t i=0;i<n;++i)d[i*n+i]=2.0*qs[i]/(Qs[i]*Qs[i]*Qs[i]);
     return d;
 }
 

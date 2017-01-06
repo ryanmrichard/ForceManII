@@ -25,12 +25,10 @@ namespace FManII {
 
 ///Implements derivatives for angle among three points.  
 ///See [Angle Class](@ref angle) for more detail.
-class Angle: public InternalCoordinates {
-public:
-    Angle(cSharedVector Carts):
-        InternalCoordinates(Carts,IntCoord_t::ANGLE){}
-protected:
-    Vector compute_value_(size_t deriv_i,const IVector& coord_i)const;
+struct Angle: public InternalCoordinates {
+    Angle():InternalCoordinates(IntCoord_t::ANGLE){}
+
+    Vector deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const;
 };
 
 } //End namespace FManII

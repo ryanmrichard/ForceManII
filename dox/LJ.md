@@ -38,7 +38,16 @@ Rewriting the potential in terms of \f$sigma^\prime\f$:
 E=\epsilon\left[\left(\frac{\sigma^\prime}{r}\right)^{12}-
                 2*\left(\frac{\sigma^\prime}{r}\right)^{6}\right]
 \f]
-
+The derivative of this with respect to \f$r\f$ is:
+\f[
+\frac{\partial E}{\partial r}=\epsilon\left[-\frac{12\left(\sigma^\prime\right)^{12}}{r^{13}}+
+\frac{12\left(\sigma^\prime\right)^6}{r^7}\right]
+\f]
+The second derivative is:
+\f[
+\frac{\partial^2 E}{\partial r^2}=\epsilon\left[\frac{156\left(\sigma^\prime\right)^{12}}{r^{14}}-
+\frac{84\left(\sigma^\prime\right)^6}{r^8}\right]
+\f]
 
 Force fields usually list \f$\epsilon\f$ and \f$\sigma\f$ individually for each
 atom and then use a combining rule to to form the final value.  The combining

@@ -20,31 +20,31 @@
 #include <ForceManII/ModelPotentials/LennardJones.hpp>
 #include "TestMacros.hpp"
 #include "testdata/ubiquitin.hpp"
-#include <cmath>
+
+
+using namespace std;
+using namespace FManII;
 
 int main(int argc, char** argv){
     test_header("Testing 6-12 force-field term");
-    FManII::LennardJones lj;
-
+    LennardJones lj;
+    map<string,Vector> ps={
+        {Param_t::sigma,{0.0}},
+        {Param_t::epsilon,{0.0}}};
+    Vector qs({3.2,2.2,1.2}),c;
 #ifndef NDEBUG
-std::map<std::string,std::vector<double>> ps={
-    {FManII::Param_t::sigma,{0.0}},
-    {FManII::Param_t::epsilon,{0.0}}};
-std::vector<double> a(2,0.0),c;
-TEST_THROW(c=lj.deriv(0,ps,{a}),"Wrong number of parameters");
-TEST_THROW(c=lj.deriv(0,ps,{a,a}),"Wrong number of coordinates");
-TEST_THROW(c=lj.deriv(0,ps,{a}),"sigmas.size()==dist.size()");
-ps[FManII::Param_t::sigma].push_back(0.0);
-TEST_THROW(c=lj.deriv(0,ps,{a}),"epsilons.size()==dist.size()");
+TEST_THROW(c=lj.deriv(0,ps,{qs}),"sigmas.size()==dist.size()");
+ps[FManII::Param_t::sigma]=Vector({M_PI/2.0,M_PI,M_PI/4.0});
+TEST_THROW(c=lj.deriv(0,ps,{qs}),"epsilons.size()==dist.size()");
 #endif
-
-    FManII::DerivType deriv=
-        FManII::run_forcemanii(0,ubiquitin,ubiquitin_conns,
-                                   FManII::amber99,ubiquitin_FF_types);
-    for(auto param:{FManII::IntCoord_t::PAIR,FManII::IntCoord_t::PAIR14}){
-        auto term_type=std::make_pair(FManII::Model_t::LENNARD_JONES,param);
-        test_value(deriv.at(term_type)[0],ubiquitin_egys.at(term_type),1e-5,"LJ Energy");
-    }
+    ps[FManII::Param_t::sigma]=Vector({M_PI/2.0,M_PI,M_PI/4.0});
+    ps[FManII::Param_t::epsilon]=Vector({2.0,3.0,4.0});
+    const Vector egy({164.162849653}),
+                 grad({1.03457493e-01,-1.03778526e+03,2.89706016e+00}),
+        hess({-2.23560931e-01,0.0,0.0,0.0,6.51078520e+03,0.0,0.0,0.0,-1.56637591e+01});
+    compare_vectors(lj.deriv(0,ps,{qs}),egy,1e-5,"Lennard-Jones Energy");
+    compare_vectors(lj.deriv(1,ps,{qs}),grad,1e-5,"Lennard-Jones Gradient");
+    compare_vectors(lj.deriv(2,ps,{qs}),hess,1e-5,"Lennard-Jones Hessian");
 
     test_footer();
     return 0;

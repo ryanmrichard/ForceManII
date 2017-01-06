@@ -36,5 +36,20 @@ We can get around this by defining a new parameter, \f$t_{ij}=q_iq_j\f$, for
 each distance.  Consequentially, charge-charge interactions used as input in
 ForceManII should be \f$t_{ij}\f$.  This can be handled in an automated fashion
 by defining the combining rule of your force field's charge parameters to be
-their product.
+their product.  Thus our final energy expression is:
+\f[
+E(\vec{r};\vec{q})=\sum_{i<j}\frac{t_{ij}}{|\vec{r}_i-\vec{r}_j|}
+\f]
+the derivative with respect to \f$r_{ij}\f$ is:
+\f[
+\frac{\partial E}{\partial r_{ij}}=\frac{-t_{ij}}{|\vec{r}_i-\vec{r}_j|^2}
+\f]
+and the second derivative is:
+\f[
+\frac{\partial^2 E}{\partial r_{ij}^2}=\frac{2t_{ij}}{|\vec{r}_i-\vec{r}_j|^3}
+\f]
+the \f$n\f$-th derivative is:
+\f[
+\frac{\partial^n E}{\partial r_{ij}^n}=\frac{(-1)^n n!t_{ij}}{|\vec{r}_i-\vec{r}_j|^{n+1}}
+\f]
 

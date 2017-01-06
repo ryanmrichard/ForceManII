@@ -19,6 +19,7 @@
 
 #include "ForceManII/ModelPotentials/LennardJones.hpp"
 #include "ForceManII/Common.hpp"
+#include <cmath>
 
 namespace FManII{
 
@@ -29,15 +30,30 @@ Vector LennardJones::deriv(size_t order,
     const Vector &Qs=in_coords[0],
                  &ss=in_params.at(FManII::Param_t::sigma),
                  &es=in_params.at(FManII::Param_t::epsilon);
-    DEBUG_CHECK(ss.size()==Qs.size(),"len(Qs) != len(sigmas)");
-    DEBUG_CHECK(es.size()==Qs.size(),"len(Qs) != len(epsilons)");
-    std::vector<double> d(1,0.0);
+    const size_t n=Qs.size();
+    DEBUG_CHECK(ss.size()==n,"len(Qs) != len(sigmas)");
+    DEBUG_CHECK(es.size()==n,"len(Qs) != len(epsilons)");
+    std::vector<double> d(static_cast<size_t>(std::pow(n,order)),0.0);
     if(order==0)
-        for(size_t i=0;i<Qs.size();++i){
+        for(size_t i=0;i<n;++i){
             const double term=ss[i]/Qs[i];
             const double term2=term*term;
             const double term6=term2*term2*term2;
-            d[0]+=es[i]*(term6*term6-2.0*term6);
+            d[0]+=es[i]*term6*(term6-2.0);
+        }
+    else if(order==1)
+        for(size_t i=0;i<n;++i){
+            const double term=ss[i]/Qs[i];
+            const double term2=term*term;
+            const double term6=term2*term2*term2;
+            d[i]+=12.0*es[i]*term6/Qs[i]*(1.0-term6);
+        }
+    else if(order==2)
+        for(size_t i=0;i<n;++i){
+            const double term=ss[i]/Qs[i];
+            const double term2=term*term;
+            const double term6=term2*term2*term2;
+            d[i*n+i]+=12.0*es[i]*term6/(Qs[i]*Qs[i])*(13.0*term6-7.0);
         }
     return d;
 }

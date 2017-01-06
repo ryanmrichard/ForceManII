@@ -42,7 +42,8 @@ Vector FourierSeries::deriv(size_t order,
 {
     DEBUG_CHECK(order<3,"Despite knowing the form for derivs higher than 2,"
                         " I haven't coded them up");
-    const Vector &Qs=in_coords[0],&Vs=in_params.at(Param_t::amp),
+    const Vector &Qs=in_coords[0],
+                 &Vs=in_params.at(Param_t::amp),
                  &phis=in_params.at(Param_t::phi),
                  &ns=in_params.at(Param_t::n);
     const size_t N=Qs.size(),Nps=Vs.size();
@@ -60,22 +61,14 @@ Vector FourierSeries::deriv(size_t order,
                 return_value[0]+=Vs[idx]+
                         detail::even_deriv_(0,Qs[i],phis[idx],Vs[idx],ns[idx]);
             else if(order==1)
-                return_value[i]=
+                return_value[i]+=
                         detail::odd_deriv_(1,Qs[i],phis[idx],Vs[idx],ns[idx]);
-            else if(order==2){
-                return_value[i*N+i]=
+            else if(order==2)
+                return_value[i*N+i]+=
                         detail::even_deriv_(2,Qs[i],phis[idx],Vs[idx],ns[idx]);
-                for(size_t k=0;k<i;++k)
-                    for(size_t l=0;l<dim;++l){
-                        const size_t idx2=k*dim+l;
-                        return_value[i*N+k]=return_value[k*N+i]=
-                                detail::odd_deriv_(1,Qs[i],phis[idx],Vs[idx],ns[idx])+
-                                detail::odd_deriv_(1,Qs[k],phis[idx2],Vs[idx2],ns[idx2]);
-                    }
-            }
         }
-
     }
     return return_value;
 }
+
 }//End namespace

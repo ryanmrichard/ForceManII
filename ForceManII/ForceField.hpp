@@ -88,7 +88,7 @@ public:
      *
      *  \param[in] term_type The model and intcoordinate of the term
      *  \param[in] parmi The type of parameter
-     *  \param[in] coord The found internal coordinates
+     *  \param[in] atom_numbers A vector of the ordered sets of atom numbers in each coordinate
      *  \param[in] atom2type A mapping from atom number to atom type
      *  \param[in] skip_missing If true missing parameters will be ignored
      *
@@ -96,7 +96,7 @@ public:
      */
     Vector assign_param(const FFTerm_t& term_type,
                         const std::string& parmi,
-                        const InternalCoordinates& coord,
+                        const std::vector<IVector>& atom_numbers,
                         const IVector& atom2type,
                         bool skip_missing)const;
 

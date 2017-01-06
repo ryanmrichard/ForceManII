@@ -27,30 +27,34 @@ namespace FManII {
 ///See [Distance Class](@ref distance) for more detail.
 class Distance: public InternalCoordinates {
 public:
-    Distance(cSharedVector Carts,const std::string& namein):
-        InternalCoordinates(Carts,namein){}
-protected:
-    Vector compute_value_(size_t deriv_i,const IVector& coord_i)const;
+    Distance(const std::string& namein):
+        InternalCoordinates(namein){}
+    Vector deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const;
 };
 
 class Bond:public Distance{
 public:
-    Bond(cSharedVector Carts):Distance(Carts,IntCoord_t::BOND){}
+    Bond():Distance(IntCoord_t::BOND){}
 };
 
 class Pair:public Distance{
 public:
-    Pair(cSharedVector Carts):Distance(Carts,IntCoord_t::PAIR){}
+    Pair():Distance(IntCoord_t::PAIR){}
 };
 
+///We assume that this is being used in a Urey-Bradley term *i.e* that the
+///vertex of the angle is being given to us as well
 class Pair13: public Distance{
 public:
-    Pair13(cSharedVector Carts):Distance(Carts,IntCoord_t::PAIR13){}
+    Pair13():Distance(IntCoord_t::PAIR13){}
+    Vector deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const{
+        return Distance::deriv(deriv_i,sys,{coord_i[0],coord_i[1]});
+    }
 };
 
 class Pair14: public Distance{
 public:
-    Pair14(cSharedVector Carts):Distance(Carts,IntCoord_t::PAIR14){}
+    Pair14():Distance(IntCoord_t::PAIR14){}
 };
 
 } //End namespace FManII

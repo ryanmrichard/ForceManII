@@ -20,7 +20,127 @@ def check_add(p,t,pt,k,v):
     if pt not in p[t]:p[t][pt]={}
     p[t][pt][k]=v
 
-def read_ff(ff_file):
+def parse_bond(da_line,ff):
+    i=int(da_line[1]);j=int(da_line[2])
+    pair=(i,j) if i<=j else (j,i)
+    ffterm=(models["ho"],intcoords["bond"])
+    ff.orderrules[ffterm]="pair_order"
+    ff.paramtypes[ffterm]=typetypes["class"]
+    ff.terms[ffterm]="HarmonicBond"
+    #Tinker bakes the 1/2 into k already
+    k,r0=2*float(da_line[3])*k2au,float(da_line[4])*ang2au
+    check_add(ff.params,ffterm,params["k"],pair,[k])
+    check_add(ff.params,ffterm,params["r0"],pair,[r0])
+
+def parse_angle(da_line,ff):
+    i=int(da_line[1]);j=int(da_line[2]);k=int(da_line[3])
+    triple=(i,j,k) if i<=k else (k,j,i)
+    ff.orderrules[ffterms["ha"]]="angle_order"
+    ff.paramtypes[ffterms["ha"]]=typetypes["class"]
+    ff.terms[ffterms["ha"]]="HarmonicAngle"
+    k,r0=2*float(da_line[4])*anglek2au,float(da_line[5])*deg2rad
+    check_add(ff.params,ffterms["ha"],params["k"],triple,[k])
+    check_add(ff.params,ffterms["ha"],params["r0"],triple,[r0])
+
+def parse_torsion(da_line,ff):
+    i,j,k,l=int(da_line[1]),int(da_line[2]),\
+            int(da_line[3]),int(da_line[4])
+    quad=(i,j,k,l) if (j<k or (j==k and i<l)) else (l,k,j,i)
+    ffterm=(models["fs"],intcoords["torsion"])
+    ff.orderrules[ffterm]="torsion_order"
+    ff.paramtypes[ffterm]=typetypes["class"]
+    ff.terms[ffterm]="FourierTorsion"
+    v,phi,n=[],[],[]
+    for ti in range(3):
+        if len(da_line)<(6+3*ti):break
+        v.append(float(da_line[5+3*ti])*kcalmol2au)
+        phi.append(float(da_line[6+3*ti])*deg2rad)
+        n.append(float(da_line[7+3*ti]))
+    if len(v)==0:return
+    check_add(ff.params,ffterm,params["v"],quad,v)
+    check_add(ff.params,ffterm,params["phi"],quad,phi)
+    check_add(ff.params,ffterm,params["n"],quad,n)
+
+def parse_imp(da_line,ff,is_charmm):
+    imp_types=[int(da_line[1]),int(da_line[2]),
+               int(da_line[3]),int(da_line[4])]
+    center=0 if is_charmm else 2
+    jkp=[]
+    for impti,impt in enumerate(imp_types):
+        if not impti==center:
+            jkp.append(impt)
+    jkp.sort()
+    quad=(jkp[0],imp_types[center],jkp[1],jkp[2])
+    is_harmonic=True
+    v=float(da_line[5])*kcalmol2au #or k if harmonic
+    phi=180*deg2rad if is_charmm else float(da_line[6])*deg2rad
+    if(len(da_line)>=8):
+        is_harmonic=False
+        n=float(da_line[7])
+    if is_harmonic:
+        ffterm=ffterms['hi']
+        ff.paramtypes[ffterm]=typetypes["class"]
+        ff.orderrules[ffterm]="imp_order"
+        ff.terms[ffterm]="HarmonicImproperTorsion"
+        check_add(ff.params,ffterm,params["k"],quad,[v])
+        check_add(ff.params,ffterm,params["r0"],quad,[phi])
+    else:
+        ffterm=ffterms['fi']
+        ff.paramtypes[ffterm]=typetypes["class"]
+        ff.orderrules[ffterm]="imp_order"
+        ff.terms[ffterm]="FourierImproperTorsion"
+        check_add(ff.params,ffterm,params["v"],quad,[v])
+        check_add(ff.params,ffterm,params["phi"],quad,[phi])
+        check_add(ff.params,ffterm,params["n"],quad,[n])
+
+def parse_chg(da_line,ff):
+    i=int(da_line[1])
+    elem=(i,)
+    ffterm=(models["cl"],intcoords["pair14"])
+    ff.paramtypes[ffterm]=typetypes["type"]
+    ff.terms[ffterm]="Electrostatics14"
+    ffterm=(models["cl"],intcoords["pair"])
+    ff.paramtypes[ffterm]=typetypes["type"]
+    ff.terms[ffterm]="ElectrostaticsPair"
+    check_add(ff.params,ffterm,params["q"],elem,[float(da_line[2])])
+    ff.combrules[(models["cl"],params["q"])]=comb_rules["PRODUCT"]
+
+def parse_vdw(da_line,ff):
+    i=int(da_line[1])
+    elem=(i,)
+    val=float(da_line[2])*ang2au
+    if ff.rad_size=="RADIUS":val*=2.0
+    if ff.rad_type=="SIGMA":val*=(2.0**(1/6))
+    ep=float(da_line[3])*kcalmol2au
+    check_add(ff.params,ffterms["lj"],params["sigma"],elem,[val])
+    check_add(ff.params,ffterms["lj"],params["epsilon"],elem,[ep])
+    for ptype in ["pair14","pair"]:
+        ffterm=(models["lj"],intcoords[ptype])
+        if ffterm not in ff.paramtypes:
+            ff.paramtypes[ffterm]=typetypes["class"]
+        ff.terms[ffterm]="LJ14" if ptype=="pair14" else "LJPair"
+
+def parse_vdw14(da_line,ff):
+    i=int(da_line[1])
+    elem=(i,)
+    val=float(da_line[2])*ang2au
+    if ff.rad_size=="RADIUS":val*=2.0
+    if ff.rad_type=="SIGMA":val*=(2.0**(1/6))
+    ep=float(da_line[3])*kcalmol2au
+    check_add(ff.params,ffterms["lj14"],params["sigma"],elem,[val])
+    check_add(ff.params,ffterms["lj14"],params["epsilon"],elem,[ep])
+
+def parse_ub(da_line,ff):
+    i,j,k=int(da_line[1]),int(da_line[2]),int(da_line[3])
+    elem=(min(i,k),j,max(i,k))
+    k,r0=2*float(da_line[4])*k2au,float(da_line[5])*ang2au
+    ff.terms[ffterms["ub"]]="HarmonicPair13"
+    ff.orderrules[ffterms["ub"]]="angle_order"
+    ff.paramtypes[ffterms["ub"]]=typetypes["class"]
+    check_add(ff.params,ffterms["ub"],params["k"],elem,[k])
+    check_add(ff.params,ffterms["ub"],params["r0"],elem,[r0])
+
+def read_ff(ff_file,is_charmm):
     """Parses a tinker style force field file"""
     ff=ForceField()
     with open(ff_file,"r") as f:
@@ -48,94 +168,14 @@ def read_ff(ff_file):
             elif da_line[0]=="electric":ff.electric=da_line[1]
             elif da_line[0]=="dielectric":ff.dielectric=da_line[1]
             elif da_line[0]=="atom":ff.type2class[int(da_line[1])]=int(da_line[2])
-            if da_line[0]=="bond":
-                i=int(da_line[1]);j=int(da_line[2])
-                pair=(i,j) if i<=j else (j,i)
-                ffterm=(models["ho"],intcoords["bond"])
-                ff.orderrules[ffterm]="pair_order"
-                ff.paramtypes[ffterm]=typetypes["class"]
-                ff.terms[ffterm]="HarmonicBond"
-                #Tinker bakes the 1/2 into k already
-                k,r0=2*float(da_line[3])*k2au,float(da_line[4])*ang2au
-                check_add(ff.params,ffterm,params["k"],pair,[k])
-                check_add(ff.params,ffterm,params["r0"],pair,[r0])
-            if da_line[0]=="angle":
-                i=int(da_line[1]);j=int(da_line[2]);k=int(da_line[3])
-                triple=(i,j,k) if i<=k else (k,j,i)
-                ff.orderrules[ffterms["ha"]]="angle_order"
-                ff.paramtypes[ffterms["ha"]]=typetypes["class"]
-                ff.terms[ffterms["ha"]]="HarmonicAngle"
-                k,r0=2*float(da_line[4])*anglek2au,float(da_line[5])*deg2rad
-                check_add(ff.params,ffterms["ha"],params["k"],triple,[k])
-                check_add(ff.params,ffterms["ha"],params["r0"],triple,[r0])
-            if da_line[0]=="torsion":
-                i,j,k,l=int(da_line[1]),int(da_line[2]),\
-                        int(da_line[3]),int(da_line[4])
-                quad=(i,j,k,l) if (j<k or (j==k and i<l)) else (l,k,j,i)
-                ffterm=(models["fs"],intcoords["torsion"])
-                ff.orderrules[ffterm]="torsion_order"
-                ff.paramtypes[ffterm]=typetypes["class"]
-                ff.terms[ffterm]="FourierTorsion"
-                v,phi,n=[],[],[]
-                for ti in range(3):
-                    if len(da_line)<(6+3*ti):break
-                    v.append(float(da_line[5+3*ti])*kcalmol2au)
-                    phi.append(float(da_line[6+3*ti])*deg2rad)
-                    n.append(float(da_line[7+3*ti]))
-                check_add(ff.params,ffterm,params["v"],quad,v)
-                check_add(ff.params,ffterm,params["phi"],quad,phi)
-                check_add(ff.params,ffterm,params["n"],quad,n)
-            if da_line[0]=="imptors":
-                i,j,k,l=int(da_line[1]),int(da_line[2]),int(da_line[3]),int(da_line[4])
-                jkp=[i,j,l]
-                jkp.sort()
-                quad=(jkp[0],k,jkp[1],jkp[2])
-                v,phi,n=float(da_line[5])*kcalmol2au,\
-                        float(da_line[6])*deg2rad,\
-                        float(da_line[7])
-                ffterm=(models["fs"],intcoords["imp"])
-                ff.paramtypes[ffterm]=typetypes["class"]
-                ff.orderrules[ffterm]="imp_order"
-                ff.terms[ffterm]="FourierImproperTorsion"
-                check_add(ff.params,ffterm,params["v"],quad,[v])
-                check_add(ff.params,ffterm,params["phi"],quad,[phi])
-                check_add(ff.params,ffterm,params["n"],quad,[n])
-            if da_line[0]=="charge":
-                i=int(da_line[1])
-                elem=(i,)
-                ffterm=(models["cl"],intcoords["pair14"])
-                ff.paramtypes[ffterm]=typetypes["type"]
-                ff.terms[ffterm]="Electrostatics14"
-                ffterm=(models["cl"],intcoords["pair"])
-                ff.paramtypes[ffterm]=typetypes["type"]
-                ff.terms[ffterm]="ElectrostaticsPair"
-                check_add(ff.params,ffterm,params["q"],elem,[float(da_line[2])])
-                ff.combrules[(models["cl"],params["q"])]=comb_rules["PRODUCT"]
-            if da_line[0]=="vdw":
-                i=int(da_line[1])
-                elem=(i,)
-                val=float(da_line[2])*ang2au
-                if ff.rad_size=="RADIUS":val*=2.0
-                if ff.rad_type=="SIGMA":val*=(2.0**(1/6))
-                ep=float(da_line[3])*kcalmol2au
-                check_add(ff.params,ffterms["lj"],params["sigma"],elem,[val])
-                check_add(ff.params,ffterms["lj"],params["epsilon"],elem,[ep])
-                for ptype in ["pair14","pair"]:
-                    ffterm=(models["lj"],intcoords[ptype])
-                    if ffterm not in ff.paramtypes:
-                        ff.paramtypes[ffterm]=typetypes["class"]
-                    ff.terms[ffterm]="LJ14" if ptype=="pair14" else "LJPair"
-            if da_line[0]=="vdw14":
-                i=int(da_line[1])
-                elem=(i,)
-                val=float(da_line[2])*ang2au
-                if ff.rad_size=="RADIUS":val*=2.0
-                if ff.rad_type=="SIGMA":val*=(2.0**(1/6))
-                ep=float(da_line[3])*kcalmol2au
-                check_add(ff.params,ffterms["lj14"],params["sigma"],elem,[val])
-                check_add(ff.params,ffterms["lj14"],params["epsilon"],elem,[ep])
-
-
+            elif da_line[0]=="bond":parse_bond(da_line,ff)
+            elif da_line[0]=="angle":parse_angle(da_line,ff)
+            elif da_line[0]=="torsion":parse_torsion(da_line,ff)
+            elif da_line[0]=="imptors":parse_imp(da_line,ff,is_charmm)
+            elif da_line[0]=="charge":parse_chg(da_line,ff)
+            elif da_line[0]=="vdw":parse_vdw(da_line,ff)
+            elif da_line[0]=="vdw14":parse_vdw14(da_line,ff)
+            elif da_line[0]=="ureybrad":parse_ub(da_line,ff)
     return ff
 
 
@@ -161,12 +201,13 @@ def print_parms(f,mol_name,parms):
 
 ##################################### Actual Script ############################
 def main():
-    if len(sys.argv) !=2:
-        raise RuntimeError("Usage: python3 ParseFF.py <param_file>")
-    ff_file=sys.argv[1];
+    if len(sys.argv) !=3:
+        raise RuntimeError("Usage: python3 ParseFF.py <param_file> <is_charmm>")
+    ff_file=sys.argv[1]
+    is_charmm=sys.argv[2]=="True"
     if not os.path.isfile(ff_file):
         raise RuntimeError("Parameter file does not exist")
-    ff=read_ff(ff_file)
+    ff=read_ff(ff_file,is_charmm)
     ff_name=os.path.splitext(ff_file)[0]
 
     f=open(ff_name+".cpp","w")
@@ -197,12 +238,13 @@ def main():
                     f.write("std::vector<double>({")
                     for pi in value:f.write(str(pi)+",")
                     f.write("})")
-                else:f.write(str(value[0]))
+                else:
+                    f.write(str(value[0]))
                 f.write(");\n")
     for key,value in ff.type2class.items():
         f.write("ff.type2class["+str(key)+"]="+str(value)+";\n")
     for key,value in ff.terms.items():
-        f.write("ff.terms.emplace("+new_terms[key]+",std::move(FManII::"+value+"()));\n")
+        f.write("ff.terms.emplace("+new_terms[key]+",std::move(FManII::get_term("+new_terms[key]+")));\n")
     for key,value in ff.orderrules.items():
         f.write("ff.orderrules["+new_terms[key]+"]=FManII::"+value+";\n")
     for key,value in ff.paramtypes.items():

@@ -24,13 +24,13 @@
 namespace FManII {
 
 
-Vector ImproperTorsion::compute_value_(size_t deriv_i,const IVector& coord_i)const{
+Vector ImproperTorsion::deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const{
     std::array<size_t,3> atoms={coord_i[0],coord_i[2],coord_i[3]};
     size_t NDims=(size_t)std::pow(12.0,deriv_i);
     Vector phi(NDims,0.0);
     do{
         Vector temp=
-        Torsion::compute_value_(deriv_i,{atoms[0],coord_i[1],atoms[1],atoms[2]});
+        Torsion::deriv(deriv_i,sys,{atoms[0],coord_i[1],atoms[1],atoms[2]});
         for(size_t i=0;i<NDims;++i)phi[i]+=(1.0/3.0)*temp[i];
         std::rotate(atoms.begin(),atoms.begin()+1,atoms.end());
     }while(*atoms.begin()!=coord_i[0]);

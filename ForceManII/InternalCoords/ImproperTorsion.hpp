@@ -26,11 +26,9 @@ namespace FManII {
 
 ///Implements derivatives for torsion angles.
 ///See [Torsion Class](@ref torsion) for more detail.
-class ImproperTorsion: public Torsion {
-public:
-    ImproperTorsion(cSharedVector Carts):Torsion(Carts,IntCoord_t::IMPTORSION){}
-protected:
-    Vector compute_value_(size_t deriv_i,const IVector& coord_i)const;
+struct ImproperTorsion: public Torsion {
+    ImproperTorsion():Torsion(IntCoord_t::IMPTORSION){}
+    Vector deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const;
 };
 
 

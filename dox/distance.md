@@ -4,6 +4,7 @@ Distance Class                                                       {#distance}
 The Distance class is responsible for storing internal coordinates that only
 depend on the distance between two points in space.  This includes:
 - Bond terms
+- Urey-Bradley terms (angle-bond cross terms)
 - Charge-charge electrostatic terms
 - Dispersion terms
 - Exchange terms
@@ -25,3 +26,7 @@ The first derivative is:
    =\frac{\pm \left(q_{1j}-q_{2j}\right)}{r_{12}}
  \f]
 where the plus is for \f$i=1\f$ and the minus for \f$i=2\f$.
+
+Note that in the case of the angle-bond cross term the internal coordinate that
+is usually used is the distance between the ends of the angle.  This does not
+depend on the vertex atom, although the parameters do.

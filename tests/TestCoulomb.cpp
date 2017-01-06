@@ -22,25 +22,24 @@
 #include "testdata/ubiquitin.hpp"
 #include <cmath>
 
+using namespace std;
+using namespace FManII;
+
 int main(int argc, char** argv){
     test_header("Testing charge-charge force-field term");
-    FManII::Electrostatics ct;
-    
+    Electrostatics ct;
+    Vector Qs({3.0,2.0,1.0}),c;
+    map<string,Vector> qs({{Param_t::q,{0.0}}});
 #ifndef NDEBUG
-std::vector<double> a(3,0.0),b(2,0.0),c;
-TEST_THROW(c=ct.deriv(0,{{FManII::Param_t::q,a}},{b}),
-           "charges.size()==dist.size()");
+TEST_THROW(c=ct.deriv(0,qs,{Qs}),"charges.size()==dist.size()");
+TEST_THROW(c=ct.deriv(4,qs,{Qs}),"Derivative higher than 2 requested");
 #endif
-
-    FManII::DerivType deriv=FManII::run_forcemanii(0,
-                  ubiquitin,ubiquitin_conns,FManII::amber99,ubiquitin_FF_types);
-    for(auto param:{FManII::IntCoord_t::PAIR,FManII::IntCoord_t::PAIR14}){
-         const FManII::FFTerm_t term_type=
-                std::make_pair(FManII::Model_t::ELECTROSTATICS,param);
-        //There appears to be a slight loss in precision for this term...
-        test_value(deriv.at(term_type)[0],ubiquitin_egys.at(term_type),4e-4,"Charge-Charge Energy");
-     }
-
+    qs[Param_t::q]=Vector({6.0,7.0,8.0});
+    const Vector egy={13.5},grad={-0.66666667,-1.75,-8.},
+          hess={0.44444444,0.0,0.0,0.0,1.75,0.0,0.0,0.0,16.0};
+    compare_vectors(ct.deriv(0,qs,{Qs}),egy,1e-5,"Coulomb's law energy");
+    compare_vectors(ct.deriv(1,qs,{Qs}),grad,1e-5,"Gradient of Coulomb's law");
+    compare_vectors(ct.deriv(2,qs,{Qs}),hess,1e-5,"Hessian of Coulomb's law");
         
     test_footer();
     return 0;

@@ -6,8 +6,8 @@ is not quite the same as the more prevelant standard version seen in
 electronic structure theory).  This page explains the two file formats and
 represents what we expect them to look like.
 
-- [Tinker Parameter File](#file_tinker_param)
-- [Tinker .xyz File](#file_tinker_xyz)
+- [Tinker Parameter File](@ref file_tinker_param)
+- [Tinker .xyz File](@ref file_tinker_xyz)
 
 
 ## The Tinker Parameter File {#file_tinker_param}
@@ -94,6 +94,9 @@ atom <atom type> <class type> <symbol> <description> <atomic number> <mass>
 
 \note If you specify a parameter more than once the last value will be used
 
+\note It appears that Tinker sometimes lists a set of types/classes, but no
+parameters for them.  I'm treating this as missing parameters.
+
 #### Harmonic Bond Stretching Potential
 
 ```
@@ -170,6 +173,12 @@ is less than or equal to end 2.  ForceManII will enforce this while parsing.
 imptors <class type 1> <class type 2> <central class type> <class type 3> <V>
 <gamma> <n>
 ```
+or in the case of the CHARMM force fields:
+
+```
+imptors <central class type> <class type 1> <class type 2>  <class type 3> <k>
+<gamma>
+```
 
 - `imptors` : a flag specifying these are parameters for an improper torsion
 - `atom type 1` : the atom type of one of the orbital atoms
@@ -177,8 +186,13 @@ imptors <class type 1> <class type 2> <central class type> <class type 3> <V>
 - `central atom type` : the atom type of the central atom
 - `atom type 3` : the atom type of the last orbital atom
 - `V` : the amplitude of the Fourier Series component in kcal/mol
+- `k` : the force constant in kcal/(mol radian\f$^2\f$)
 - `gamma` : the equlibrium value of the torsion in degrees
 - `n` : the periodicity of the Fourier Series component
+
+As you can see the same keyword is used for both the treatment of fourier series
+and harmonic improper torsion angles.  The only distinguishing difference is
+whether or not there is two or three parameters listed.
 
 Tinker appears to follow the convention that the class types 1, 2, and 3 are
 listed in ascending order.  Upon parsing ForceManII will enforce this and switch

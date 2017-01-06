@@ -26,10 +26,10 @@ inline Vector dist(const double* q1, const double* q2){
     return {mag(diff(q1,q2))};
 }
 
-Vector Distance::compute_value_(size_t deriv_i,const IVector& coord_i)const{
+Vector Distance::deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const{
     CHECK(deriv_i<1,"Higher order derivatives are not yet implemented!!!");
     const size_t atomi=coord_i[0],atomj=coord_i[1];
-    const double* q1=&((*carts_)[atomi*3]), *q2=&((*carts_)[atomj*3]);
+    const double* q1=&(sys[atomi*3]), *q2=&(sys[atomj*3]);
     if(deriv_i==0) return dist(q1,q2);
 }
 

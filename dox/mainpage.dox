@@ -26,6 +26,9 @@ Welcome to the ForceManII user/developer manual.  This is a work in progress.
   - [FFTerm](@ref force_field_terms)
   = [ForceField](@ref ffdef)
 
+\section todos Planned Changes and Features
+
+- Fully pimpl-ify ForceField class
 
 \section Authors
 

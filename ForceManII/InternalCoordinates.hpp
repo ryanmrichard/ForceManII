@@ -24,37 +24,14 @@
 
 namespace FManII {
 
-class InternalCoordinates{
-public:
-    void add_coord(const IVector& atoms){
-        atoms_.push_back(atoms);
-        coords_->push_back(compute_value_(0,atoms)[0]);
-    }
+struct InternalCoordinates{
+    InternalCoordinates(const std::string& name_):
+        name(name_){}
 
-    const Vector& get_coords()const{return *coords_;}
-    const std::vector<IVector>& get_types()const{return atoms_;}
+    virtual Vector deriv(size_t order,const Vector& sys,const IVector& atoms)const=0;
 
     ///The name of this internal coordinate
     const std::string name;
-
-protected:
-    ///A vector such that element i is the value of the i-th coord
-    SharedVector coords_;
-
-    ///The Cartesian coordinates of the system
-    cSharedVector carts_;
-
-    ///A list such that element i is the NAtoms associated with the i-th coord
-    std::vector<IVector> atoms_;
-
-    InternalCoordinates(cSharedVector system,const std::string& namein):
-        name(namein),coords_(std::make_shared<Vector>()),carts_(system){}
-
-    ///Override in derived classes so that it returns the deriv of the coord
-    virtual Vector compute_value_(size_t,const IVector&)const=0;
-
-
 };
-
 }//End namespace FManII
 

@@ -19,39 +19,42 @@
 
 #pragma once
 #include "ForceManII/ModelPotential.hpp"
+#include "ForceManII/InternalCoordinates.hpp"
 
 ///Namespace for all code associated with ForceManII
 namespace FManII {
 
 class FFTerm{
     std::shared_ptr<const ModelPotential> model_;///< The model to use
+    std::shared_ptr<const InternalCoordinates> coord_;///<The coordinate
 public:
     ///Makes a new FF term given the model and coordinates it depends on
     FFTerm(std::shared_ptr<const ModelPotential> m,
-           const std::vector<std::string>& cs):
-        model_(std::move(m)),coords(cs){}
+           std::shared_ptr<const InternalCoordinates> c):
+        model_(std::move(m)),coord_(std::move(c)){}
 
     ///Returns the model
     const ModelPotential& model()const{return *model_;}
 
-    ///Returns the key for the term
-    FFTerm_t name()const{return {model_->name,coords[0]};}
+    ///Returns the coordinate
+    const InternalCoordinates& coords()const{return *coord_;}
 
-    const std::vector<std::string> coords;///<Coordinates this term depends on
+    ///Returns the key for the term
+    FFTerm_t name()const{return {model_->name,coord_->name};}
 
     ///Given the parameters for this term and a set of internal coordinates
     ///computes the derivative
     Vector deriv(size_t order,const std::map<std::string,Vector>& ps,
-                              const CoordArray& cs)const{
+                              const Molecule& cs)const{
         std::vector<Vector> incoords;
-        for(auto ci:coords)incoords.push_back(cs.at(ci)->get_coords());
+        incoords.push_back(cs.coords.at(coord_->name));
         return model_->deriv(order,ps,incoords);
     }
 
     ///True if both terms have the same model and type of coordinates
     bool operator==(const FFTerm& other)const{
         return(*model_==*other.model_ &&
-               coords==other.coords);
+               coord_->name==other.coord_->name);
     }
 
     ///True if either term has a different model or type of coordinates

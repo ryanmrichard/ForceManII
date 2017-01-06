@@ -20,7 +20,7 @@
 
 #include <map>
 #include <vector>
-#include <array>
+#include <set>
 #include <memory>
 
 namespace FManII {
@@ -68,6 +68,10 @@ namespace Terms_t{
                                           IntCoord_t::BOND);
     constexpr auto HO_ANGLE=std::make_pair(Model_t::HARMONICOSCILLATOR,
                                            IntCoord_t::ANGLE);
+    constexpr auto HO_PAIR13=std::make_pair(Model_t::HARMONICOSCILLATOR,
+                                            IntCoord_t::PAIR13);
+    constexpr auto HO_IMP=std::make_pair(Model_t::HARMONICOSCILLATOR,
+                                            IntCoord_t::IMPTORSION);
     constexpr auto FS_TORSION=std::make_pair(Model_t::FOURIERSERIES,
                                              IntCoord_t::TORSION);
     constexpr auto FS_IMP=std::make_pair(Model_t::FOURIERSERIES,
@@ -98,14 +102,20 @@ using cSharedVector=std::shared_ptr<const Vector>;
 ///Array of unsigned long integers
 using IVector=std::vector<size_t>;
 
-///Type of the internal coordinate base class
-class InternalCoordinates;
+///Structure to hold the details of the molecular system
+struct Molecule{
+    ///The internal coordinates arranged by type
+    std::map<std::string,Vector> coords;
 
-///An array of internal coordinates arranged by type
-using CoordArray=std::map<std::string,std::unique_ptr<InternalCoordinates>>;
+    ///The Cartesian coordinates of the system
+    cSharedVector carts;
+
+    ///A list such that element i is the NAtoms associated with the i-th coord
+    std::map<std::string,std::vector<IVector>> atom_numbers;
+};
 
 ///Array such that element i is a vector of the atoms bonded to atom i
-using ConnData=std::vector<IVector>;
+using ConnData=std::vector<std::set<size_t>>;
 
 ///Map from a ff term to its set of parameters
 using ParamSet=std::map<FFTerm_t,std::map<std::string,Vector>>;

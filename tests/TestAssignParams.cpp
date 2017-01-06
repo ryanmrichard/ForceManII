@@ -22,13 +22,13 @@
 #include "testdata/ubiquitin.hpp"
 #include "testdata/ubiquitin_params.hpp"
 
+using namespace FManII;
+
 int main(int argc, char** argv){
     test_header("Testing force field parameter assignment function");
 
-    FManII::CoordArray coords=
-            FManII::get_coords(ubiquitin,ubiquitin_conns);
-    FManII::ParamSet params=
-            FManII::assign_params(coords,FManII::amber99,ubiquitin_FF_types);
+    Molecule coords=get_coords(ubiquitin,ubiquitin_conns);
+    ParamSet params=assign_params(coords,amber99,ubiquitin_FF_types);
     for(auto pseti: ubiquitin_params)
     {
         test_value(params.at(pseti.first),pseti.second,"Params");

@@ -26,12 +26,10 @@ namespace FManII {
 
 ///Implements derivatives for torsion angles.  
 ///See [Torsion Class](@ref torsion) for more detail.
-class Torsion: public InternalCoordinates {
-public:
-    Torsion(cSharedVector Carts, const std::string& namein=IntCoord_t::TORSION):
-        InternalCoordinates(Carts,namein){}
-protected:
-    Vector compute_value_(size_t deriv_i,const IVector& coord_i)const;
+struct Torsion: public InternalCoordinates {
+    Torsion(const std::string& namein=IntCoord_t::TORSION):
+        InternalCoordinates(namein){}
+    Vector deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const;
 };
 
 
