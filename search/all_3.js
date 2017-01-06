@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['deriv',['deriv',['../structFManII_1_1ModelPotential.html#a839c8a5ddcb9a4a610004fe03dd36f91',1,'FManII::ModelPotential']]],
+  ['deriv',['deriv',['../classFManII_1_1FFTerm.html#ac3096173f4d1bda8e91e37b6b5a9858c',1,'FManII::FFTerm::deriv()'],['../structFManII_1_1ModelPotential.html#a13355762cbaf9fd6994047b524b7a863',1,'FManII::ModelPotential::deriv()']]],
   ['derivtype',['DerivType',['../namespaceFManII.html#ab5a4c0f29cf8f746759b478035be42a9',1,'FManII']]],
   ['diff',['diff',['../namespaceFManII.html#a67d2288b51cdc78b0569812bbbe7603c',1,'FManII']]],
   ['distance_20class',['Distance Class',['../distance.html',1,'']]],

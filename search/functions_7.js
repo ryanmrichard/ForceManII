@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['operator_21_3d',['operator!=',['../structFManII_1_1ForceField.html#ac44c5a93c16a2ca898c948a189c1a19b',1,'FManII::ForceField']]],
-  ['operator_3d_3d',['operator==',['../structFManII_1_1ForceField.html#ae427e501cdb755fb0e16dd7649b4d1cf',1,'FManII::ForceField']]]
+  ['mag',['mag',['../namespaceFManII.html#a88126c99fc2140b9a3c37d695337fd6a',1,'FManII']]],
+  ['make_5funique',['make_unique',['../namespaceFManII.html#a57e9a715666f24e78bd0025020e2c08e',1,'FManII']]],
+  ['mean',['mean',['../namespaceFManII.html#ad426d2c27fe83771450c44f9d6f75ad7',1,'FManII']]],
+  ['model',['model',['../classFManII_1_1FFTerm.html#ad826326c9289fcc575cf00ce0ee2d428',1,'FManII::FFTerm']]]
 ];

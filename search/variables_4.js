@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['scale_5ffactors',['scale_factors',['../structFManII_1_1ForceField.html#ae43224df4e9afe5a544293c162e5fe49',1,'FManII::ForceField']]]
+  ['imptorsion',['IMPTORSION',['../namespaceFManII_1_1IntCoord__t.html#a5e6070488f36b081082acc1f78d4c595',1,'FManII::IntCoord_t']]]
 ];

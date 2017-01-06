@@ -132,3 +132,15 @@
 \form#131:\[ E(\vec{q};\vec{k},\vec{q}_0)=\sum_{i=1}^N\frac{1}{2}k_i \left(q_i-\left[q_0\right]_i\right)^2, \]
 \form#132:\[ \frac{\partial E(\vec{q};\vec{k},\vec{q}_0)}{\partial q_i}= k_i\left(q_i-\left[q_0\right]_i\right), \]
 \form#133:$\pm 0.25$
+\form#134:\[ E(\vec{r};\vec{q})=\sum_{i<j}\frac{t_{ij}}{|\vec{r}_i-\vec{r}_j|} \]
+\form#135:$r_{ij}$
+\form#136:\[ \frac{\partial E}{\partial r_{ij}}=\frac{-t_{ij}}{|\vec{r}_i-\vec{r}_j|^2} \]
+\form#137:\[ \frac{\partial^2 E}{\partial r_{ij}^2}=\frac{2t_{ij}}{|\vec{r}_i-\vec{r}_j|^3} \]
+\form#138:\[ \frac{\partial^n E}{\partial r_{ij}^n}=\frac{(-1)^n n!t_{ij}}{|\vec{r}_i-\vec{r}_j|^{n+1}} \]
+\form#139:\[ \frac{\partial E}{\partial r}=\epsilon\left[-\frac{12\left(\sigma^\prime\right)^{12}}{r^{13}}+ \frac{12\left(\sigma^\prime\right)^6}{r^7}\right] \]
+\form#140:\[ \frac{\partial^2 E}{\partial r^2}=\epsilon\left[\frac{156\left(\sigma^\prime\right)^{12}}{r^{14}}- \frac{84\left(\sigma^\prime\right)^6}{r^8}\right] \]
+\form#141:$\frac{1}{4\pi\epsilon_0}$
+\form#142:$\epsilon_0$
+\form#143:$\frac{mol}{kcal\ \AA}$
+\form#144:$\pi\pm$
+\form#145:$\pi$

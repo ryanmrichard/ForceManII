@@ -66,7 +66,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -103,45 +102,46 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 Collaboration diagram for FManII::ModelPotential:</div>
 <div class="dyncontent">
 <div class="center"><img src="structFManII_1_1ModelPotential__coll__graph.png" border="0" usemap="#FManII_1_1ModelPotential_coll__map" alt="Collaboration graph"/></div>
-<map name="FManII_1_1ModelPotential_coll__map" id="FManII_1_1ModelPotential_coll__map">
-</map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a830b6e08390b4acd8e88f5455c78668d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a830b6e08390b4acd8e88f5455c78668d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ParamInput_t</b> = std::map&lt; <a class="el" href="namespaceFManII.html#ab331802fde4c5f2564443f1704c25363">Param_t</a>, <a class="el" href="namespaceFManII.html#aa967833d4468e3e3b264dc76116b5891">Vector</a> &gt;</td></tr>
-<tr class="separator:a830b6e08390b4acd8e88f5455c78668d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61397cf754d55d8dd0cab5676281916c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a61397cf754d55d8dd0cab5676281916c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ParamInput_t</b> = std::map&lt; std::string, <a class="el" href="namespaceFManII.html#aa967833d4468e3e3b264dc76116b5891">Vector</a> &gt;</td></tr>
+<tr class="separator:a61397cf754d55d8dd0cab5676281916c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92d2e224869851f54ad823584081cb33"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a92d2e224869851f54ad823584081cb33"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>CoordInput_t</b> = std::vector&lt; <a class="el" href="namespaceFManII.html#aa967833d4468e3e3b264dc76116b5891">Vector</a> &gt;</td></tr>
 <tr class="separator:a92d2e224869851f54ad823584081cb33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a05c755640a7199aad0a089c16bd2481b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a05c755640a7199aad0a089c16bd2481b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ModelPotential</b> (const std::vector&lt; <a class="el" href="namespaceFManII.html#ab331802fde4c5f2564443f1704c25363">Param_t</a> &gt; &amp;ps)</td></tr>
-<tr class="separator:a05c755640a7199aad0a089c16bd2481b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cab2f6bc85784fcff69e71a608a3c8f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1cab2f6bc85784fcff69e71a608a3c8f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ModelPotential</b> (const std::vector&lt; std::string &gt; &amp;ps, const std::string &amp;namein)</td></tr>
+<tr class="separator:a1cab2f6bc85784fcff69e71a608a3c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a839d27364436b7226306a4184a5cfa0c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a839d27364436b7226306a4184a5cfa0c"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="structFManII_1_1ModelPotential.html">ModelPotential</a> &amp;other) const </td></tr>
 <tr class="separator:a839d27364436b7226306a4184a5cfa0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f535440afb5d41571c50c60ce728254"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0f535440afb5d41571c50c60ce728254"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="structFManII_1_1ModelPotential.html">ModelPotential</a> &amp;other) const </td></tr>
 <tr class="separator:a0f535440afb5d41571c50c60ce728254"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a839c8a5ddcb9a4a610004fe03dd36f91"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a839c8a5ddcb9a4a610004fe03dd36f91"></a>
-virtual <a class="el" href="namespaceFManII.html#aa967833d4468e3e3b264dc76116b5891">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ModelPotential.html#a839c8a5ddcb9a4a610004fe03dd36f91">deriv</a> (size_t order, const ParamInput_t &amp;in_params, const CoordInput_t &amp;in_coords) const =0</td></tr>
-<tr class="memdesc:a839c8a5ddcb9a4a610004fe03dd36f91"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function to override so it returns your derivative. <br /></td></tr>
-<tr class="separator:a839c8a5ddcb9a4a610004fe03dd36f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13355762cbaf9fd6994047b524b7a863"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a13355762cbaf9fd6994047b524b7a863"></a>
+virtual <a class="el" href="namespaceFManII.html#aa967833d4468e3e3b264dc76116b5891">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ModelPotential.html#a13355762cbaf9fd6994047b524b7a863">deriv</a> (size_t order, const ParamInput_t &amp;in_params, const CoordInput_t &amp;in_coords) const =0</td></tr>
+<tr class="memdesc:a13355762cbaf9fd6994047b524b7a863"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function to override so it returns your derivative. <br /></td></tr>
+<tr class="separator:a13355762cbaf9fd6994047b524b7a863"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a847067af501a52c81b9871cd52fafc9b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a847067af501a52c81b9871cd52fafc9b"></a>
-const std::vector&lt; <a class="el" href="namespaceFManII.html#ab331802fde4c5f2564443f1704c25363">Param_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ModelPotential.html#a847067af501a52c81b9871cd52fafc9b">params</a></td></tr>
-<tr class="memdesc:a847067af501a52c81b9871cd52fafc9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The types of the parameters. <br /></td></tr>
-<tr class="separator:a847067af501a52c81b9871cd52fafc9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24af6fd9dfa125a6de73ba7746045596"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a24af6fd9dfa125a6de73ba7746045596"></a>
+const std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ModelPotential.html#a24af6fd9dfa125a6de73ba7746045596">params</a></td></tr>
+<tr class="memdesc:a24af6fd9dfa125a6de73ba7746045596"><td class="mdescLeft">&#160;</td><td class="mdescRight">The types of the parameters. <br /></td></tr>
+<tr class="separator:a24af6fd9dfa125a6de73ba7746045596"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa06580afbae017048b4156aca7e76245"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa06580afbae017048b4156aca7e76245"></a>
+const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFManII_1_1ModelPotential.html#aa06580afbae017048b4156aca7e76245">name</a></td></tr>
+<tr class="memdesc:aa06580afbae017048b4156aca7e76245"><td class="mdescLeft">&#160;</td><td class="mdescRight">A tag identifying the model. <br /></td></tr>
+<tr class="separator:aa06580afbae017048b4156aca7e76245"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following files:<ul>
+<hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="ModelPotential_8hpp_source.html">ModelPotential.hpp</a></li>
-<li>ModelPotential.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

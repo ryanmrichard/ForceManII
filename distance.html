@@ -84,6 +84,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <div class="textblock"><p>The Distance class is responsible for storing internal coordinates that only depend on the distance between two points in space. This includes:</p><ul>
 <li>Bond terms</li>
+<li>Urey-Bradley terms (angle-bond cross terms)</li>
 <li>Charge-charge electrostatic terms</li>
 <li>Dispersion terms</li>
 <li>Exchange terms</li>
@@ -96,7 +97,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>The first derivative is: </p><p class="formulaDsp">
 <img class="formulaDsp" alt="\[ \frac{\partial r_{12}}{\partial q_{ij}}=\frac{1}{2r_{12}} \frac{\partial \sum_{k=1}^3\left(q_{1k}-q_{2k}\right)^2}{\partial q_{ij}} =\frac{\pm \left(q_{1j}-q_{2j}\right)}{r_{12}} \]" src="form_26.png"/>
 </p>
-<p> where the plus is for <img class="formulaInl" alt="$i=1$" src="form_27.png"/> and the minus for <img class="formulaInl" alt="$i=2$" src="form_28.png"/>. </p>
+<p> where the plus is for <img class="formulaInl" alt="$i=1$" src="form_27.png"/> and the minus for <img class="formulaInl" alt="$i=2$" src="form_28.png"/>.</p>
+<p>Note that in the case of the angle-bond cross term the internal coordinate that is usually used is the distance between the ends of the angle. This does not depend on the vertex atom, although the parameters do. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
