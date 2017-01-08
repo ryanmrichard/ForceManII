@@ -170,20 +170,32 @@ It appears that Tinker sometimes lists a set of types/classes, but no parameters
 <li>Other values of <code>V</code>, <code>gamma</code>, and <code>n</code> can optionally be repeated up to another two times to specify additional terms in the Fourier Series for this interaction</li>
 </ul>
 <p>Tinker appears to follow the convention that center 1 is less than or equal to center 2, in the event that they are equal, ordering continues by ensuring end 1 is less than or equal to end 2. ForceManII will enforce this while parsing.</p>
-<p>#### Improper Torsion Fourier-Series Parameters </p><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;imptors &lt;class type 1&gt; &lt;class type 2&gt; &lt;central class type&gt; &lt;class type 3&gt; &lt;V&gt;</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;&lt;gamma&gt; &lt;n&gt;</div></div><!-- fragment --><p> or in the case of the CHARMM force fields:</p>
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;imptors &lt;central class type&gt; &lt;class type 1&gt; &lt;class type 2&gt;  &lt;class type 3&gt; &lt;k&gt;</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;&lt;gamma&gt;</div></div><!-- fragment --><ul>
+<h4>Improper Torsion Fourier-Series Parameters</h4>
+<dl class="section note"><dt>Note</dt><dd>The difference between a Fourier-Series and a harmonic oscillator is the flag (imptors vs. improper resepctively)</dd></dl>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;imptors &lt;class type 1&gt; &lt;class type 2&gt; &lt;central class type&gt; &lt;class type 3&gt; &lt;V&gt;</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;&lt;gamma&gt; &lt;n&gt;</div></div><!-- fragment --><p> or in the case of CHARMM ordering force fields:</p>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;imptors &lt;central class type&gt; &lt;class type 1&gt; &lt;class type 2&gt;  &lt;class type 3&gt; &lt;V&gt;</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;&lt;gamma&gt; &lt;n&gt;</div></div><!-- fragment --><ul>
 <li><code>imptors</code> : a flag specifying these are parameters for an improper torsion</li>
 <li><code>atom type 1</code> : the atom type of one of the orbital atoms</li>
 <li><code>atom type 2</code> : the atom type of one of the other orbital atoms</li>
 <li><code>central atom type</code> : the atom type of the central atom</li>
 <li><code>atom type 3</code> : the atom type of the last orbital atom</li>
 <li><code>V</code> : the amplitude of the Fourier Series component in kcal/mol</li>
-<li><code>k</code> : the force constant in kcal/(mol radian <img class="formulaInl" alt="$^2$" src="form_84.png"/>)</li>
 <li><code>gamma</code> : the equlibrium value of the torsion in degrees</li>
 <li><code>n</code> : the periodicity of the Fourier Series component</li>
 </ul>
-<p>As you can see the same keyword is used for both the treatment of fourier series and harmonic improper torsion angles. The only distinguishing difference is whether or not there is two or three parameters listed.</p>
 <p>Tinker appears to follow the convention that the class types 1, 2, and 3 are listed in ascending order. Upon parsing ForceManII will enforce this and switch the central atom to the second value in the ordered pair as described <a class="el" href="torsion.html">here</a>.</p>
+<p>#### Improper Torsion Harmonic-Oscillator Parameters </p><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;improper &lt;class type 1&gt; &lt;class type 2&gt; &lt;central class type&gt; &lt;class type 3&gt; &lt;k&gt;</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;&lt;gamma&gt;</div></div><!-- fragment --><p> or in the case of CHARMM ordering force fields:</p>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;improper &lt;central class type&gt; &lt;class type 1&gt; &lt;class type 2&gt;  &lt;class type 3&gt; &lt;K&gt;</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;&lt;gamma&gt;</div></div><!-- fragment --><ul>
+<li><code>improper</code> : a flag specifying these are parameters for an improper torsion</li>
+<li><code>atom type 1</code> : the atom type of one of the orbital atoms</li>
+<li><code>atom type 2</code> : the atom type of one of the other orbital atoms</li>
+<li><code>central atom type</code> : the atom type of the central atom</li>
+<li><code>atom type 3</code> : the atom type of the last orbital atom</li>
+<li><code>K</code> : the force consant in kcal/(mol radians <img class="formulaInl" alt="$^2$" src="form_84.png"/>)</li>
+<li><code>gamma</code> : the equlibrium value of the torsion in degrees</li>
+</ul>
+<p>Tinker appears to follow the convention that the class types 1, 2, and 3 are listed in ascending order. Upon parsing ForceManII will enforce this and switch the central atom to the second value in the ordered pair as described <a class="el" href="torsion.html">here</a>.</p>
+<p>Tinker also has another annoying feature for CHARMM. Recall how people can't agree on how to compute improper dihedrals (see <a class="el" href="torsion.html">here</a> for more details). It turns out CHARMM</p>
 <h4>Charge-Charge Potential Parameters</h4>
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;charge &lt;vdw type&gt; &lt;q&gt;</div></div><!-- fragment --><ul>
 <li><code>charge</code> : a flag specifying these parameters are for a charge</li>
