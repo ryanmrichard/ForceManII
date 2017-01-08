@@ -71,27 +71,36 @@ def parse_imp(da_line,ff,is_charmm):
             jkp.append(impt)
     jkp.sort()
     quad=(jkp[0],imp_types[center],jkp[1],jkp[2])
-    is_harmonic=True
-    v=float(da_line[5])*kcalmol2au #or k if harmonic
+    v=float(da_line[5])*kcalmol2au
     phi=180*deg2rad if is_charmm else float(da_line[6])*deg2rad
-    if(len(da_line)>=8):
-        is_harmonic=False
-        n=float(da_line[7])
-    if is_harmonic:
-        ffterm=ffterms['hi']
-        ff.paramtypes[ffterm]=typetypes["class"]
-        ff.orderrules[ffterm]="imp_order"
-        ff.terms[ffterm]="HarmonicImproperTorsion"
-        check_add(ff.params,ffterm,params["k"],quad,[v])
-        check_add(ff.params,ffterm,params["r0"],quad,[phi])
-    else:
-        ffterm=ffterms['fi']
-        ff.paramtypes[ffterm]=typetypes["class"]
-        ff.orderrules[ffterm]="imp_order"
-        ff.terms[ffterm]="FourierImproperTorsion"
-        check_add(ff.params,ffterm,params["v"],quad,[v])
-        check_add(ff.params,ffterm,params["phi"],quad,[phi])
-        check_add(ff.params,ffterm,params["n"],quad,[n])
+    n=float(da_line[7])
+    ffterm=ffterms['fi']
+    ff.paramtypes[ffterm]=typetypes["class"]
+    ff.orderrules[ffterm]="imp_order"
+    ff.terms[ffterm]="FourierImproperTorsion"
+    check_add(ff.params,ffterm,params["v"],quad,[v])
+    check_add(ff.params,ffterm,params["phi"],quad,[phi])
+    check_add(ff.params,ffterm,params["n"],quad,[n])
+
+def parse_himp(da_line,ff,is_charmm):
+    imp_types=[int(da_line[1]),int(da_line[2]),
+               int(da_line[3]),int(da_line[4])]
+    center=0 if is_charmm else 2
+    jkp=[]
+    for impti,impt in enumerate(imp_types):
+        if not impti==center:
+            jkp.append(impt)
+    jkp.sort()
+    quad=(jkp[0],imp_types[center],jkp[1],jkp[2])
+    #RMR I need the 0.5 to agree with Tinker, but do not fully understand why
+    k=0.5*float(da_line[5])*kcalmol2au
+    phi=180*deg2rad if is_charmm else float(da_line[6])*deg2rad
+    ffterm=ffterms['hi']
+    ff.paramtypes[ffterm]=typetypes["class"]
+    ff.orderrules[ffterm]="imp_order"
+    ff.terms[ffterm]="HarmonicImproperTorsion"
+    check_add(ff.params,ffterm,params["k"],quad,[k])
+    check_add(ff.params,ffterm,params["r0"],quad,[phi])
 
 def parse_chg(da_line,ff):
     i=int(da_line[1])
@@ -172,6 +181,7 @@ def read_ff(ff_file,is_charmm):
             elif da_line[0]=="angle":parse_angle(da_line,ff)
             elif da_line[0]=="torsion":parse_torsion(da_line,ff)
             elif da_line[0]=="imptors":parse_imp(da_line,ff,is_charmm)
+            elif da_line[0]=="improper":parse_himp(da_line,ff,is_charmm)
             elif da_line[0]=="charge":parse_chg(da_line,ff)
             elif da_line[0]=="vdw":parse_vdw(da_line,ff)
             elif da_line[0]=="vdw14":parse_vdw14(da_line,ff)

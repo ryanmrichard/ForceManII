@@ -169,15 +169,19 @@ center 2, in the event that they are equal, ordering continues by ensuring end 1
 is less than or equal to end 2.  ForceManII will enforce this while parsing.
 
 #### Improper Torsion Fourier-Series Parameters
+
+\note The difference between a Fourier-Series and a harmonic oscillator is the
+flag (imptors vs. improper resepctively)
+
 ```
 imptors <class type 1> <class type 2> <central class type> <class type 3> <V>
 <gamma> <n>
 ```
-or in the case of the CHARMM force fields:
+or in the case of CHARMM ordering force fields:
 
 ```
-imptors <central class type> <class type 1> <class type 2>  <class type 3> <k>
-<gamma>
+imptors <central class type> <class type 1> <class type 2>  <class type 3> <V>
+<gamma> <n>
 ```
 
 - `imptors` : a flag specifying these are parameters for an improper torsion
@@ -186,18 +190,43 @@ imptors <central class type> <class type 1> <class type 2>  <class type 3> <k>
 - `central atom type` : the atom type of the central atom
 - `atom type 3` : the atom type of the last orbital atom
 - `V` : the amplitude of the Fourier Series component in kcal/mol
-- `k` : the force constant in kcal/(mol radian\f$^2\f$)
 - `gamma` : the equlibrium value of the torsion in degrees
 - `n` : the periodicity of the Fourier Series component
-
-As you can see the same keyword is used for both the treatment of fourier series
-and harmonic improper torsion angles.  The only distinguishing difference is
-whether or not there is two or three parameters listed.
 
 Tinker appears to follow the convention that the class types 1, 2, and 3 are
 listed in ascending order.  Upon parsing ForceManII will enforce this and switch
 the central atom to the second value in the ordered pair as described
 [here](@ref torsion).
+
+#### Improper Torsion Harmonic-Oscillator Parameters
+```
+improper <class type 1> <class type 2> <central class type> <class type 3> <k>
+<gamma>
+```
+or in the case of CHARMM ordering force fields:
+
+```
+improper <central class type> <class type 1> <class type 2>  <class type 3> <K>
+<gamma>
+```
+
+- `improper` : a flag specifying these are parameters for an improper torsion
+- `atom type 1` : the atom type of one of the orbital atoms
+- `atom type 2` : the atom type of one of the other orbital atoms
+- `central atom type` : the atom type of the central atom
+- `atom type 3` : the atom type of the last orbital atom
+- `K` : the force consant in kcal/(mol radians\f$^2\f$)
+- `gamma` : the equlibrium value of the torsion in degrees
+
+Tinker appears to follow the convention that the class types 1, 2, and 3 are
+listed in ascending order.  Upon parsing ForceManII will enforce this and switch
+the central atom to the second value in the ordered pair as described
+[here](@ref torsion).
+
+Tinker also has another annoying feature for CHARMM.  Recall how people can't
+agree on how to compute improper dihedrals (see [here](@ref torsion) for more
+details).  It turns out CHARMM
+
 
 #### Charge-Charge Potential Parameters
 

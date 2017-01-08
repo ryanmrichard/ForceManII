@@ -34,9 +34,8 @@ inline void add_coord(Molecule& FoundCoords,
                       const IVector& atoms)
 {
     FoundCoords.atom_numbers[name].push_back(atoms);
-    FoundCoords.coords[name].push_back(
-            get_intcoord(name)->deriv(0,*FoundCoords.carts,atoms)[0]);
-
+    const double value=get_intcoord(name)->deriv(0,*FoundCoords.carts,atoms)[0];
+    FoundCoords.coords[name].push_back(value);
 }
 
 

@@ -21,6 +21,7 @@
 #include "TestMacros.hpp"
 #include "testdata/ubiquitin.hpp"
 #include "testdata/peptide.hpp"
+#include "testdata/crambin.hpp"
 #include <cmath>
 
 using namespace FManII;
@@ -29,14 +30,15 @@ using namespace std;
 int main(int argc, char** argv){
 
     test_header("Testing derivatives of pre-packaged force-fields");
-    auto imp=make_pair<string,string>(Model_t::FOURIERSERIES,
-                                      IntCoord_t::IMPTORSION);
+
 
     auto ub_amber=make_pair(run_forcemanii(0,ubiquitin,ubiquitin_conns,amber99,
                                            ubiquitin_FF_types),"AMBER99");
     auto pep_oplsaa=make_pair(run_forcemanii(0,peptide,peptide_conns,oplsaa,
                                            peptide_FF_types), "OPLSAA");
-    for(auto ff:{ub_amber,pep_oplsaa})
+    auto cram_charmm=make_pair(run_forcemanii(0,crambin,crambin_conns,charmm22,
+                                           crambin_FF_types), "CHARMM22");
+    for(auto ff:{ub_amber,pep_oplsaa,cram_charmm})
     {
         for(auto derivi : ff.first)
         {
@@ -44,12 +46,18 @@ int main(int argc, char** argv){
             const string msg=string(ff.second)+" "+ffterm.first+" "+
                                   ffterm.second+" energy";
             double tol=1e-5;
-            if(ffterm.first==Model_t::ELECTROSTATICS||ffterm==imp)tol=4e-4;
+            if(ffterm.first==Model_t::ELECTROSTATICS||
+               ffterm.second==IntCoord_t::IMPTORSION)tol=6e-4;
             if(ff.second=="AMBER99")
                 test_value(derivi.second[0],ubiquitin_egys.at(ffterm),tol,msg);
             //OPLSAA only defines a Pair13 term for water, and we don't have water
-            else if(ff.second=="OPLSAA" && derivi.first.second!=IntCoord_t::PAIR13)
-                test_value(derivi.second[0],peptide_egys.at(ffterm),tol,msg);
+            else if(ff.second=="OPLSAA")
+            {
+                if(derivi.first.second==IntCoord_t::PAIR13)continue;
+                else test_value(derivi.second[0],peptide_egys.at(ffterm),tol,msg);
+            }
+            else
+                test_value(derivi.second[0],crambin_egys.at(ffterm),tol,msg);
         }
     }
 

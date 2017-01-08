@@ -64,7 +64,7 @@ def compute_imp_torsions(carts,connect):
                     ]
 
 
-                    torsions.append(sum(phis)/3.0)
+                    torsions.append(abs(sum(phis)/3.0))
     return torsions
 
 def compute_pairs(carts,connect):

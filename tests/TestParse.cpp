@@ -20,24 +20,29 @@
 #include <fstream>
 #include "TestMacros.hpp"
 
+using namespace std;
+using namespace FManII;
+const map<string,ForceField> name2ff({{"amber99",amber99},
+                                      {"oplsaa",oplsaa},
+                                      {"charmm22",charmm22}});
+
 int main(int argc, char** argv){
     test_header("Testing force field parsing function");
-    for(std::string ffname:{"amber99","oplsaa"}){
-        std::ifstream file("../../ForceFields/"+ffname+".prm");
-        FManII::ForceField ff=FManII::parse_file(std::move(file));
-        FManII::ForceField corr_ff=
-                ffname=="amber99"?FManII::amber99:FManII::oplsaa;
+    for(auto ffs:name2ff){
+        const string &ffname=ffs.first;
+        ifstream file("../../ForceFields/"+ffname+".prm");
+        ForceField ff=parse_file(move(file),ffs.first=="charmm22");
+        ForceField corr_ff=ffs.second;
         for(auto pi: corr_ff.params){//Compare each parameter in the FF
-            const std::string fname=std::get<0>(pi).first,//FFTerm
-                              cname=std::get<0>(pi).second;//IntCoord
-            const std::string pname=std::get<1>(pi);//Parameter type
-            FManII::IVector types=std::get<2>(pi);
-            std::string stypes="";
-            for(size_t s : types)stypes+=std::to_string(s)+" ";
-            std::string msg=ffname+" "+fname+" "+cname+" "+stypes+" "+pname;
-            const auto& da_param=
-                    ff.params.get_param(std::get<0>(pi),pname,types);
-            compare_vectors(da_param,std::get<3>(pi),1e-10,msg);
+            const string &fname=get<0>(pi).first,//FFTerm
+                         &cname=get<0>(pi).second,//IntCoord
+                         &pname=get<1>(pi);//Parameter type
+            const IVector &types=get<2>(pi);
+            string stypes="";
+            for(size_t s : types)stypes+=to_string(s)+" ";
+            string msg=ffname+" "+fname+" "+cname+" "+stypes+" "+pname;
+            const auto& da_param=ff.params.get_param(get<0>(pi),pname,types);
+            compare_vectors(da_param,get<3>(pi),1e-10,msg);
         }
         test_value(ff.type2class,corr_ff.type2class,ffname+" Type2Class");
         test_value(ff.terms,corr_ff.terms,ffname+" terms");

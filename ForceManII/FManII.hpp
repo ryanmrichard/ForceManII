@@ -39,6 +39,7 @@ namespace FManII {
 ///Available hard-coded force fields
 extern const ForceField amber99;
 extern const ForceField oplsaa;
+extern const ForceField charmm22;
 
 ///Convenience functions for making model potentials, internal coordinates, and
 ///force field terms

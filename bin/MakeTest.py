@@ -14,7 +14,7 @@ def parse_egy(da_line,Term,term,col,corr_answers):
     if da_line[0].decode('UTF-8')==Term:
         corr_answers[term]=float(da_line[col].decode('UTF-8'))*kcalmol2au
 
-def get_egys(anal_fp,xyz_fp,ff_fp):
+def get_egys(anal_fp,xyz_fp,ff_fp,imp_is_fs):
     corr_answers={}
     p=sub.Popen([anal_fp,xyz_fp,ff_fp,"E"],stdout=sub.PIPE)
     for line in p.stdout:
@@ -23,9 +23,10 @@ def get_egys(anal_fp,xyz_fp,ff_fp):
         parse_egy(da_line,"Bond",ffterms["hb"],2,corr_answers)
         parse_egy(da_line,"Angle",ffterms["ha"],2,corr_answers)
         parse_egy(da_line,"Torsional",ffterms["ft"],2,corr_answers)
-        parse_egy(da_line,"Improper",ffterms["fi"],2,corr_answers)
+        parse_egy(da_line,"Improper",ffterms["fi"] if imp_is_fs else ffterms["hi"],2,corr_answers)
         parse_egy(da_line,"Van",ffterms["lj14"],3,corr_answers)
         parse_egy(da_line,"Charge-Charge",ffterms["cl14"],1,corr_answers)
+        parse_egy(da_line,"Urey-Bradley",ffterms["ub"],1,corr_answers)
     key_file=os.path.splitext(os.path.basename(xyz_fp))[0]+".key"
     f=open(key_file,"w")
     f.write("vdw-14-scale 0.0\nchg-14-scale 0.0\n")
@@ -41,19 +42,20 @@ def get_egys(anal_fp,xyz_fp,ff_fp):
     os.remove(key_file)
     return corr_answers
 
-if len(sys.argv)!=4:
-    raise RuntimeException("Usage: MakeTest.py <xyz> <prm> <path/2/analyze>")
+if len(sys.argv)!=5:
+    raise RuntimeException("Usage: MakeTest.py <xyz> <prm> <path/2/analyze> <imp is fs>")
 xyz_file=sys.argv[1];ff_file=sys.argv[2]
 xyz_fp=os.path.abspath(sys.argv[1])
 ff_fp=os.path.abspath(sys.argv[2])
 anal_fp=os.path.abspath(sys.argv[3])
+imp_is_fs=sys.argv[3]=="True"
 if not os.path.isfile(xyz_file):
     raise RuntimeException("XYZ file does not exist")
 if not os.path.isfile(ff_file):
     raise RuntimeException("Param file does not exit")
 if not (os.path.isfile(anal_fp) and os.access(anal_fp,os.X_OK)):
     raise RuntimeException("analyze does note exist or is not executable")
-corr_answers=get_egys(anal_fp,xyz_fp,ff_fp)
+corr_answers=get_egys(anal_fp,xyz_fp,ff_fp,imp_is_fs)
 carts=[];connect=[];param_num=[]
 mol_name=os.path.splitext(os.path.basename(xyz_file))[0]
 with open(xyz_file,"r") as f:

@@ -28,8 +28,12 @@ Vector ImproperTorsion::deriv(size_t deriv_i,const Vector& sys,const IVector& co
     std::array<size_t,3> atoms={coord_i[0],coord_i[2],coord_i[3]};
     size_t NDims=(size_t)std::pow(12.0,deriv_i);
     Vector phi(NDims,0.0);
+    Vector temp=
+    Torsion::deriv(deriv_i,sys,{atoms[0],coord_i[1],atoms[1],atoms[2]});
+    if(temp[0]<0)//Take our angle to be positive (matters for harmonic description)
+        std::swap(atoms[1],atoms[2]);
     do{
-        Vector temp=
+        temp=
         Torsion::deriv(deriv_i,sys,{atoms[0],coord_i[1],atoms[1],atoms[2]});
         for(size_t i=0;i<NDims;++i)phi[i]+=(1.0/3.0)*temp[i];
         std::rotate(atoms.begin(),atoms.begin()+1,atoms.end());

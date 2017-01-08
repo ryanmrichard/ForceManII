@@ -8,11 +8,13 @@ enable_testing()
 
 #These are the correct answers
 add_library(molecules SHARED
-                             testdata/peptide.cpp
-                             testdata/peptide_intcoords.cpp
-                             testdata/ubiquitin.cpp
-                             testdata/ubiquitin_intcoords.cpp
-                             testdata/ubiquitin_params.cpp
+    testdata/crambin.cpp
+    testdata/crambin_intcoords.cpp
+    testdata/peptide.cpp
+    testdata/peptide_intcoords.cpp
+    testdata/ubiquitin.cpp
+    testdata/ubiquitin_intcoords.cpp
+    testdata/ubiquitin_params.cpp
 )
 target_include_directories(molecules PRIVATE ${PROJECT_SOURCE_DIR})
 add_dependencies(molecules fmanii)

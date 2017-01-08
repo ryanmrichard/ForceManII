@@ -152,7 +152,7 @@ Vector ForceField::assign_param(const FFTerm_t& term_type,
                                 bool skip_missing)const{
     const bool use_class=paramtypes.at(term_type)==TypeTypes_t::CLASS;
     Vector rv;
-    for(auto typei:atom_numbers){//Loop over types of coords in term
+    for(auto typei:atom_numbers){
         IVector types;
         transform(typei.begin(),typei.end(),back_inserter(types),
             [&](size_t t){t=atom2type[t];return use_class?type2class.at(t):t;}

@@ -18,6 +18,8 @@
  */
 #include <ForceManII/FManII.hpp>
 #include "TestMacros.hpp"
+#include "testdata/crambin.hpp"
+#include "testdata/crambin_intcoords.hpp"
 #include "testdata/ubiquitin.hpp"
 #include "testdata/ubiquitin_intcoords.hpp"
 #include "testdata/peptide.hpp"
@@ -28,9 +30,10 @@ using namespace FManII;
 
 int main(int argc, char** argv){
     test_header("Testing the determination of the internal coordinates");
-
-    for(auto mol:{make_tuple(ubiquitin,ubiquitin_conns,ubiquitin_qs,"ubiquitin"),
-                  make_tuple(peptide,peptide_conns,peptide_qs,"peptide")})
+    auto ub=make_tuple(ubiquitin,ubiquitin_conns,ubiquitin_qs,"ubiquitin");
+    auto pep= make_tuple(peptide,peptide_conns,peptide_qs,"peptide");
+    auto cram= make_tuple(crambin,crambin_conns,crambin_qs,"crambin");
+    for(auto mol:{ub,pep,cram})
     {
         Molecule Coords=get_coords(get<0>(mol),get<1>(mol));
         for(auto qi:{IntCoord_t::BOND,IntCoord_t::ANGLE,
