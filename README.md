@@ -139,6 +139,7 @@ A couple of notes on the above to hopefully fill in the missing details:
     element vector, the gradient is a 3 by natoms long vector, and the Hessian
     is a 3 times natoms by 3 times natoms matrix flattened into a vector)
   - For example to print the energies try:
+  
     ~~~.cpp
     for(auto name_deriv:deriv){
         std::string &model_name=name_deriv.first.first;
