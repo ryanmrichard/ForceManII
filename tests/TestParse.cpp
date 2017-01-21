@@ -22,12 +22,13 @@
 
 using namespace std;
 using namespace FManII;
-const map<string,ForceField> name2ff({{"amber99",amber99},
-                                      {"oplsaa",oplsaa},
-                                      {"charmm22",charmm22}});
 
 int main(int argc, char** argv){
     test_header("Testing force field parsing function");
+    const map<string,ForceField> name2ff({{"amber99",amber99},
+                                          {"oplsaa",oplsaa},
+                                          {"charmm22",charmm22}});
+
     for(auto ffs:name2ff){
         const string &ffname=ffs.first;
         ifstream file("../../ForceFields/"+ffname+".prm");

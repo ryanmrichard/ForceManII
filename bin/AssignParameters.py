@@ -107,15 +107,29 @@ def compute_pairs(carts,atom2tink,connect,param_num,parms):
             is13=(i,j) in all_13_pairs
             is14=(i,j) in all_14_pairs
             if is12 or is13:continue
+            c14type=(models["cl"],intcoords["pair14"])
+            v14type=(models["lj"],intcoords["pair14"])
+            c12type=(models["cl"],intcoords["pair"])
+            v12type=(models["lj"],intcoords["pair"])
             itype="pair14" if is14 else "pair"
-            ctype=(models["cl"],intcoords[itype])
-            vtype=(models["lj"],intcoords[itype])
-            qi=parms[ctype][params["q"]][(param_num[i],)][0]
-            si=parms[vtype][params["sigma"]][(atom2tink[param_num[i]],)][0]
-            ei=parms[vtype][params["epsilon"]][(atom2tink[param_num[i]],)][0]
-            qj=parms[ctype][params["q"]][(param_num[j],)][0]
-            sj=parms[vtype][params["sigma"]][(atom2tink[param_num[j]],)][0]
-            ej=parms[vtype][params["epsilon"]][(atom2tink[param_num[j]],)][0]
+            ctype=c14type if is14 else c12type
+            vtype=v14type if is14 else v12type
+            if ctype in parms:
+                qi=parms[ctype][params["q"]][(param_num[i],)][0]
+                qj=parms[ctype][params["q"]][(param_num[j],)][0]
+            elif is14 and c12type in parms:
+                qi=parms[c12type][params["q"]][(param_num[i],)][0]
+                qj=parms[c12type][params["q"]][(param_num[j],)][0]
+            if vtype in parms:
+                si=parms[vtype][params["sigma"]][(atom2tink[param_num[i]],)][0]
+                ei=parms[vtype][params["epsilon"]][(atom2tink[param_num[i]],)][0]
+                sj=parms[vtype][params["sigma"]][(atom2tink[param_num[j]],)][0]
+                ej=parms[vtype][params["epsilon"]][(atom2tink[param_num[j]],)][0]
+            elif is14 and v12type in parms:
+                si=parms[v12type][params["sigma"]][(atom2tink[param_num[i]],)][0]
+                ei=parms[v12type][params["epsilon"]][(atom2tink[param_num[i]],)][0]
+                sj=parms[v12type][params["sigma"]][(atom2tink[param_num[j]],)][0]
+                ej=parms[v12type][params["epsilon"]][(atom2tink[param_num[j]],)][0]
             ps[0][itype].append(qi*qj)
             ps[1][itype].append(math.sqrt(ei*ej))
             ps[2][itype].append(0.5*(si+sj))
@@ -125,15 +139,15 @@ def compute_pairs(carts,atom2tink,connect,param_num,parms):
 ######################## The main script is below ##############################
 
 def main():
-    if len(sys.argv) !=3:
-        raise RuntimeError("Usage: python3 AssignParameters.py <xyz_file> <param_file>")
-    xyz_file,ff_file=sys.argv[1],sys.argv[2]
+    if len(sys.argv) !=4:
+        raise RuntimeError("Usage: python3 AssignParameters.py <xyz_file> <param_file> <is_charmm>")
+    xyz_file,ff_file,is_charmm=sys.argv[1],sys.argv[2],sys.argv[3]
     if not os.path.isfile(ff_file):
         raise RuntimeError("Parameter file does not exist")
     if not os.path.isfile(xyz_file):
         raise RuntimeError("XYZ file does not exist")
     carts,connect,param_num=read_sys(xyz_file)
-    ff=read_ff(ff_file)
+    ff=read_ff(ff_file,is_charmm)
     ff_name=os.path.splitext(ff_file)[0]
     mol_name=os.path.splitext(xyz_file)[0]
     foundparams={}

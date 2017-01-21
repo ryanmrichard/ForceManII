@@ -1,4 +1,6 @@
-include_directories(${PROJECT_SOURCE_DIR})
+cmake_minimum_required(VERSION 3.0)
+project(fmanii CXX)
+include_directories(${FMANII_ROOT})
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_subdirectory(ForceFields)
 add_subdirectory(InternalCoords)
@@ -10,14 +12,15 @@ set(FMANII_SRC $<TARGET_OBJECTS:force_fields>
                ForceField.cpp
                ParameterSet.cpp
                ParseFile.cpp
-
 )
-
 add_library(fmanii ${FMANII_SRC})
 
-
-
+install(TARGETS fmanii
+        DESTINATION lib)
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" 
-        DESTINATION ForceManII/include 
+        DESTINATION include
         FILES_MATCHING PATTERN "*.hpp"
 )
+configure_file("fmaniiConfig.cmake.in" fmaniiConfig.cmake @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/fmaniiConfig.cmake
+        DESTINATION share/cmake/fmanii)

@@ -1,0 +1,20 @@
+# Modules are created without a prefix
+set(CMAKE_SHARED_MODULE_PREFIX "")
+
+# Find the dependencies for pulsar
+# Add the install path for pulsar to the search path
+set(FMANII_PREFIX "${CMAKE_CURRENT_LIST_DIR}")
+get_filename_component(FMANII_PREFIX "${FMANII_PREFIX}" DIRECTORY)
+get_filename_component(FMANII_PREFIX "${FMANII_PREFIX}" DIRECTORY)
+get_filename_component(FMANII_PREFIX "${FMANII_PREFIX}" DIRECTORY)
+
+find_library(FMANII_LIBRARY fmanii
+             HINTS ${FMANII_PREFIX}/lib)
+find_path(FMANII_INCLUDES ForceManII/FManII.hpp
+          HINTS ${FMANII_PREFIX}/include)
+add_library(fmanii INTERFACE IMPORTED)
+set_target_properties(fmanii PROPERTIES
+INTERFACE_LINK_LIBRARIES "${FMANII_LIBRARY}")
+set_target_properties(fmanii PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${FMANII_INCLUDES}")
+
