@@ -7,13 +7,13 @@ def run(mm):
     wfn=psr.Wavefunction()
     wfn.system=psr.make_system("""
     0 1
-    O     -2.217302    2.805476    2.146856
-    H     -2.260473    3.658861    2.578259
-    H     -2.256339    3.006951    1.211915
+    O     0.0 0.0 0.0
+    H     1.0 0.0 0.0
+    H     0.0 1.0 0.0
     """)
     atom_types=[2001,2002,2002]
     ff="AMBER99"
-    model="HARMONIC_OSCILLATOR"
+    model="HARMONICOSCILLATOR"
     coord="BOND"
     mod_key="H.O."
     mm.load_module("fmanii","FFTerm",mod_key)

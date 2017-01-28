@@ -29,6 +29,14 @@
 using namespace std;
 namespace FManII {
 
+const ForceField& get_ff(const string& name)
+{
+    if(name=="AMBER99")return amber99;
+    if(name=="CHARMM22")return charmm22;
+    if(name=="OPLSAA")return oplsaa;
+    throw runtime_error("Unrecognized hard-coded force field requested.");
+}
+
 inline void add_coord(Molecule& FoundCoords,
                       const std::string& name,
                       const IVector& atoms)
@@ -106,8 +114,12 @@ ParamSet assign_params(const Molecule& sys,
         const FFTerm_t term_type=termi.first;
         //for(const auto& coordi:termi.second.coords){
             for(auto parami:termi.second.model().params){
+                const auto& intcoord_name=term_type.second;
+                if(!sys.atom_numbers.count(intcoord_name))
+                    continue;//Not all systems contain all intcoords a ff knows
                 ps[term_type][parami]=
-                    ff.assign_param(term_type,parami,sys.atom_numbers.at(term_type.second),Types,skip_missing);
+                    ff.assign_param(term_type,parami,
+                         sys.atom_numbers.at(intcoord_name),Types,skip_missing);
             }
         //}
     }

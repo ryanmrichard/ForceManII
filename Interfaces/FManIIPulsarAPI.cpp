@@ -18,8 +18,8 @@
  */
 
 #include "FManIIPulsarAPI.hpp"
-#include "ForceManII/FManIIDefs.hpp"
-
+#include "ForceManII/FManII.hpp"
+#include <iostream>
 using namespace FManII;
 using namespace std;
 using namespace pulsar;
@@ -36,12 +36,22 @@ DerivReturnType FFTermPulsar::deriv_(size_t Order,const Wavefunction& wfn)
     unordered_map<Atom,size_t> atom2index;
     for(auto atomi:*wfn.system)
     {
+        atom2index[atomi]=index2atom.size();
         index2atom.push_back(atomi);
-        atom2index[atomi]=atom2index.size();
     }
     ConnData conns(index2atom.size());
+    Vector Carts;
     for(size_t i=0;i<index2atom.size();++i)
+    {
+        for(size_t j=0;j<3;j++)
+            Carts.push_back(index2atom[i][j]);
         for(auto atomj:temp_conns.at(index2atom[i]))
             conns[i].insert(atom2index.at(atomj));
-    return {wfn,{0.0}};
+    }
+    auto ffterm=make_pair(model_name,intcoord_name);
+    auto term=get_term(ffterm);
+    Molecule mol=get_coords(Carts,conns);
+    ParamSet params=assign_params(mol,get_ff(ff_name),types);
+    auto deriv=term.deriv(Order,params.at(ffterm),mol);
+    return {wfn,{deriv}};
 }

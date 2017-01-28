@@ -55,6 +55,9 @@ std::shared_ptr<InternalCoordinates> get_intcoord(const std::string& name);
 inline FFTerm get_term(const FFTerm_t& name){
     return FFTerm(get_potential(name.first),get_intcoord(name.second));
 }
+
+///Returns the instance of built-in force fields
+const ForceField& get_ff(const std::string& name);
 ///@}
 
 /**\brief Given a force field file in Tinker format makes a ForceField object

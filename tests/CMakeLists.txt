@@ -28,6 +28,7 @@ endfunction()
 
 NEW_TEST(TestAssignParams)
 NEW_TEST(TestDeriv)
+NEW_TEST(TestDistance)
 NEW_TEST(TestCoulomb)
 NEW_TEST(TestFourierSeries)
 NEW_TEST(TestHO)

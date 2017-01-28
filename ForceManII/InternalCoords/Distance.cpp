@@ -26,11 +26,19 @@ inline Vector dist(const double* q1, const double* q2){
     return {mag(diff(q1,q2))};
 }
 
+inline Vector d1_dist(const double* q1,const double* q2)
+{
+    const double d=dist(q1,q2)[0];
+    const auto dq=diff(q1,q2);
+    return {dq[0]/d,dq[1]/d,dq[2]/d,-dq[0]/d,-dq[1]/d,-dq[2]/d};
+}
+
 Vector Distance::deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const{
-    CHECK(deriv_i<1,"Higher order derivatives are not yet implemented!!!");
+    CHECK(deriv_i<2,"Higher order derivatives are not yet implemented!!!");
     const size_t atomi=coord_i[0],atomj=coord_i[1];
     const double* q1=&(sys[atomi*3]), *q2=&(sys[atomj*3]);
     if(deriv_i==0) return dist(q1,q2);
+    if(deriv_i==1) return d1_dist(q1,q2);
 }
 
 } //End namespace FManII
