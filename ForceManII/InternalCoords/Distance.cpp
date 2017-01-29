@@ -28,17 +28,34 @@ inline Vector dist(const double* q1, const double* q2){
 
 inline Vector d1_dist(const double* q1,const double* q2)
 {
-    const double d=dist(q1,q2)[0];
+    const double d=1.0/dist(q1,q2)[0];
     const auto dq=diff(q1,q2);
-    return {dq[0]/d,dq[1]/d,dq[2]/d,-dq[0]/d,-dq[1]/d,-dq[2]/d};
+    return {dq[0]*d,dq[1]*d,dq[2]*d,-dq[0]*d,-dq[1]*d,-dq[2]*d};
+}
+
+inline Vector d2_dist(const double* q1,const double* q2)
+{
+    const double d=1/dist(q1,q2)[0];
+    const auto dq=diff(q1,q2);
+    const Vector dqdr=d1_dist(q1,q2);
+    Vector deriv(36,0.0);
+    for(size_t i=0;i<6;++i)
+        for(size_t j=0;j<6;++j)
+        {
+            deriv[i*6+j]=-d*dqdr[i]*dqdr[j];
+            if(i==j)deriv[i*6+i]+=d;
+            else if(i+3==j||j+3==i)deriv[i*6+j]-=d;
+        }
+    return deriv;
 }
 
 Vector Distance::deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const{
-    CHECK(deriv_i<2,"Higher order derivatives are not yet implemented!!!");
+    CHECK(deriv_i<3,"Higher order derivatives are not yet implemented!!!");
     const size_t atomi=coord_i[0],atomj=coord_i[1];
     const double* q1=&(sys[atomi*3]), *q2=&(sys[atomj*3]);
     if(deriv_i==0) return dist(q1,q2);
     if(deriv_i==1) return d1_dist(q1,q2);
+    if(deriv_i==2) return d2_dist(q1,q2);
 }
 
 } //End namespace FManII
