@@ -27,7 +27,7 @@ inline Vector torsion(const double* q1, const double* q2,
         const double* q3, const double* q4){
     const DArray r21=diff(q1,q2),r32=diff(q2,q3),r34=diff(q4,q3);
     const DArray n1=cross(r21,r32),n2=cross(r34,r32);
-    return {angle(n1,n2,r32)};
+    return {angle(n1,n2)};
 }
 
 Vector Torsion::deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const{

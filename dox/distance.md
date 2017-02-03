@@ -17,32 +17,40 @@ Given a pair of atoms, the distance \f$r_{12}\f$ between them is:
            \sqrt{\sum_{i=1}^3\left(q_{1i}-q_{2i}\right)^2},
 \f]
 where \f$\mathbf{r_i}\f$ is the position of atom \f$i\f$ and \f$q_{ij}\f$ is
-the \f$j\f$-th Cartesian coordinate of that atom.
+the \f$j\f$-th Cartesian coordinate of that atom.  In vector format this is:
+\f[
+r_{12}=\sqrt{\vec{r}_{1}^2-2\vec{r}_1\cdot\vec{r}_2+\vec{r}_2^2}
+\f]
  
-The first derivative is:
+The derivative with respect to \f$r_1\f$ is:
 \f[
-    \frac{\partial r_{12}}{\partial q_{ij}}=\frac{1}{2r_{12}}
-       \frac{\partial \sum_{k=1}^3\left(q_{1k}-q_{2k}\right)^2}{\partial q_{ij}}
-   =\frac{\delta_{i,1}q_{1j}-\delta_{i,2}q_{2j}}{r_{12}}
- \f]
-
-In vector form we have:
+\frac{\partial r_{12}}{\partial \vec{r}_1}=
+\frac{1}{2r_{12}}2\vec{r}_1-2\vec{r}_2=\frac{\vec{r}_{12}}{r_{12}}
+\f]
+and the derivative with respect to \f$r_2\f$ is the negative of this.  Therefore
+the gradient is:
 \f[
-    \frac{\partial r_{12}}{\partial \vec{r}}=
-    \left\lbrace\frac{\vec{q}}{r_{12}},\frac{-\vec{q}}{r_{12}}\right\rbrace
+\bigtriangledown r_{12}=\frac{1}{r_{12}}
+   \begin{bmatrix}\vec{r}_{12} & -\vec{r}_{12}\end{bmatrix}
 \f]
 
-Note that in the case of the angle-bond cross term the internal coordinate that
+The gradient of the gradient is:
+\f[
+\bigtriangledown^2 r_{12}=\bigtriangledown (\bigtriangledown r_{12})^T=
+\bigtriangledown\frac{1}{r_{12}}
+   \begin{bmatrix}\vec{r}_{12}\\-\vec{r}_{12}\end{bmatrix}=
+   \frac{-\left(\bigtriangledown r_{12}\right)^T}
+        {r_{12}}\cdot\left(\bigtriangledown r_{12}\right)+
+   \frac{1}{r_{12}}
+        \bigtriangledown\begin{bmatrix}\vec{r}_{12}\\-\vec{r}_{12}\end{bmatrix}=
+   \frac{1}{r_{12}}\left(\begin{bmatrix}\mathbf{1}&-\mathbf{1}\\
+   -\mathbf{1}&\mathbf{1}\end{bmatrix}-
+   \left(\bigtriangledown r_{12}\right)^T\cdot\bigtriangledown r_{12}\right)
+\f]
+
+where a superscript \f$T\f$ denotes a transpose and \f$\mathbf{1}\f$ is the 3 by
+3 identity matrix.
+
+\note In the case of the angle-bond cross term the internal coordinate that
 is usually used is the distance between the ends of the angle.  This does not
 depend on the vertex atom, although the parameters do.
-
-The second derivative is:
-\f[
-    \frac{\partial^2 r_{12}}{\partial q_{ij}\partial q_{kl}}
-   =\frac{\partial}{\partial q_{kl}}\frac{\delta_{i,1}q_{1j}-\delta_{i,2}q_{2j}}{r_{12}}
-   =\frac{\delta_{l,j}\left(\delta_{i,1}\delta_{k,1}-\delta_{i,2}\delta_{k,2}\right)}{r_{12}}-
-    \frac{\delta_{i,1}q_{1j}-\delta_{i,2}q_{2j}}{r_{12}^2}\frac{\partial r_{12}}{\partial q_{kl}}
-    =\frac{\delta_{l,j}\left(\delta_{i,1}\delta_{k,1}-\delta_{i,2}\delta_{k,2}\right)}{r_{12}}-
-     \frac{\left(\delta_{i,1}q_{1j}-\delta_{i,2}q_{2j}\right)
-           \left(\delta_{k,1}q_{1l}-\delta_{k,2}q_{2l}\right)}{r_{12}^3}
- \f]

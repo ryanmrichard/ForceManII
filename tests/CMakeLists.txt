@@ -26,6 +26,7 @@ function(NEW_TEST test_name)
    install(TARGETS ${test_name} DESTINATION .)
 endfunction()
 
+NEW_TEST(TestAngle)
 NEW_TEST(TestAssignParams)
 NEW_TEST(TestDeriv)
 NEW_TEST(TestDistance)
