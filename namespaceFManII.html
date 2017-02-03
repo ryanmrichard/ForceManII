@@ -265,9 +265,15 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="na
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFManII.html#a88126c99fc2140b9a3c37d695337fd6a">mag</a> (const std::array&lt; double, 3 &gt; &amp;v1)</td></tr>
 <tr class="memdesc:a88126c99fc2140b9a3c37d695337fd6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the magnitude of a vector. <br /></td></tr>
 <tr class="separator:a88126c99fc2140b9a3c37d695337fd6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45ace6891d8e67f7e4b679300533e0ac"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFManII.html#a45ace6891d8e67f7e4b679300533e0ac">angle</a> (const std::array&lt; double, 3 &gt; &amp;v1, const std::array&lt; double, 3 &gt; &amp;v2, const std::array&lt; double, 3 &gt; &amp;n)</td></tr>
-<tr class="separator:a45ace6891d8e67f7e4b679300533e0ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdce89aa0d5496edeedcdcd57ff95113"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acdce89aa0d5496edeedcdcd57ff95113"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFManII.html#acdce89aa0d5496edeedcdcd57ff95113">angle</a> (const std::array&lt; double, 3 &gt; &amp;v1, const std::array&lt; double, 3 &gt; &amp;v2)</td></tr>
+<tr class="memdesc:acdce89aa0d5496edeedcdcd57ff95113"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the angle between two vectors given the vectors <code>v1</code>, <code>v2</code>) <br /></td></tr>
+<tr class="separator:acdce89aa0d5496edeedcdcd57ff95113"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr class="memitem:a2d06d9e8ab349eb7fa5bc7db05cb1a41"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2d06d9e8ab349eb7fa5bc7db05cb1a41"></a>
+const <a class="el" href="classFManII_1_1ForceField.html">ForceField</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFManII.html#a2d06d9e8ab349eb7fa5bc7db05cb1a41">get_ff</a> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a2d06d9e8ab349eb7fa5bc7db05cb1a41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the instance of built-in force fields. <br /></td></tr>
+<tr class="separator:a2d06d9e8ab349eb7fa5bc7db05cb1a41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a502515982d91b5974edbd89eff9ae439"><td class="memItemLeft" align="right" valign="top">shared_ptr&lt; <a class="el" href="structFManII_1_1ModelPotential.html">ModelPotential</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFManII.html#a502515982d91b5974edbd89eff9ae439">get_potential</a> (const std::string &amp;name)</td></tr>
 <tr class="memdesc:a502515982d91b5974edbd89eff9ae439"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the model potential associated with the given key.  <a href="#a502515982d91b5974edbd89eff9ae439">More...</a><br /></td></tr>
 <tr class="separator:a502515982d91b5974edbd89eff9ae439"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -315,47 +321,6 @@ const <a class="el" href="classFManII_1_1ForceField.html">ForceField</a>&#160;</
 <tr class="separator:a20e12525e616e213a615d4f87e68da53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a45ace6891d8e67f7e4b679300533e0ac"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double FManII::angle </td>
-          <td>(</td>
-          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
-          <td class="paramname"><em>v1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
-          <td class="paramname"><em>v2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
-          <td class="paramname"><em>n</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns the angle between two vectors given the vectors <code>v1</code>, <code>v2</code> and a normal to them <code>n</code> (vectors need not be units already) </p>
-
-</div>
-</div>
 <a class="anchor" id="a600222697d2121a0b6d54927f629f312"></a>
 <div class="memitem">
 <div class="memproto">

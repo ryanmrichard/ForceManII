@@ -93,12 +93,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Given a pair of atoms, the distance <img class="formulaInl" alt="$r_{12}$" src="form_21.png"/> between them is: </p><p class="formulaDsp">
 <img class="formulaDsp" alt="\[ r_{12}=|\mathbf{r_1}-\mathbf{r_2}|= \sqrt{\sum_{i=1}^3\left(q_{1i}-q_{2i}\right)^2}, \]" src="form_22.png"/>
 </p>
-<p> where <img class="formulaInl" alt="$\mathbf{r_i}$" src="form_23.png"/> is the position of atom <img class="formulaInl" alt="$i$" src="form_10.png"/> and <img class="formulaInl" alt="$q_{ij}$" src="form_24.png"/> is the <img class="formulaInl" alt="$j$" src="form_25.png"/>-th Cartesian coordinate of that atom.</p>
-<p>The first derivative is: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \frac{\partial r_{12}}{\partial q_{ij}}=\frac{1}{2r_{12}} \frac{\partial \sum_{k=1}^3\left(q_{1k}-q_{2k}\right)^2}{\partial q_{ij}} =\frac{\pm \left(q_{1j}-q_{2j}\right)}{r_{12}} \]" src="form_26.png"/>
+<p> where <img class="formulaInl" alt="$\mathbf{r_i}$" src="form_23.png"/> is the position of atom <img class="formulaInl" alt="$i$" src="form_10.png"/> and <img class="formulaInl" alt="$q_{ij}$" src="form_24.png"/> is the <img class="formulaInl" alt="$j$" src="form_25.png"/>-th Cartesian coordinate of that atom. In vector format this is: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ r_{12}=\sqrt{\vec{r}_{1}^2-2\vec{r}_1\cdot\vec{r}_2+\vec{r}_2^2} \]" src="form_155.png"/>
 </p>
-<p> where the plus is for <img class="formulaInl" alt="$i=1$" src="form_27.png"/> and the minus for <img class="formulaInl" alt="$i=2$" src="form_28.png"/>.</p>
-<p>Note that in the case of the angle-bond cross term the internal coordinate that is usually used is the distance between the ends of the angle. This does not depend on the vertex atom, although the parameters do. </p>
+<p>The derivative with respect to <img class="formulaInl" alt="$r_1$" src="form_156.png"/> is: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \frac{\partial r_{12}}{\partial \vec{r}_1}= \frac{1}{2r_{12}}2\vec{r}_1-2\vec{r}_2=\frac{\vec{r}_{12}}{r_{12}} \]" src="form_157.png"/>
+</p>
+<p> and the derivative with respect to <img class="formulaInl" alt="$r_2$" src="form_158.png"/> is the negative of this. Therefore the gradient is: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \bigtriangledown r_{12}=\frac{1}{r_{12}} \begin{bmatrix}\vec{r}_{12} &amp; -\vec{r}_{12}\end{bmatrix} \]" src="form_167.png"/>
+</p>
+<p>The gradient of the gradient is: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \bigtriangledown^2 r_{12}=\bigtriangledown (\bigtriangledown r_{12})^T= \bigtriangledown\frac{1}{r_{12}} \begin{bmatrix}\vec{r}_{12}\\-\vec{r}_{12}\end{bmatrix}= \frac{-\left(\bigtriangledown r_{12}\right)^T} {r_{12}}\cdot\left(\bigtriangledown r_{12}\right)+ \frac{1}{r_{12}} \bigtriangledown\begin{bmatrix}\vec{r}_{12}\\-\vec{r}_{12}\end{bmatrix}= \frac{1}{r_{12}}\left(\begin{bmatrix}\mathbf{1}&amp;-\mathbf{1}\\ -\mathbf{1}&amp;\mathbf{1}\end{bmatrix}- \left(\bigtriangledown r_{12}\right)^T\cdot\bigtriangledown r_{12}\right) \]" src="form_174.png"/>
+</p>
+<p>where a superscript <img class="formulaInl" alt="$T$" src="form_169.png"/> denotes a transpose and <img class="formulaInl" alt="$\mathbf{1}$" src="form_170.png"/> is the 3 by 3 identity matrix.</p>
+<dl class="section note"><dt>Note</dt><dd>In the case of the angle-bond cross term the internal coordinate that is usually used is the distance between the ends of the angle. This does not depend on the vertex atom, although the parameters do. </dd></dl>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -82,18 +82,43 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Angle Class </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The angle class is responsible for normal angle bending terms (i.e. those among three bonded atoms). Assuming the vectors <img class="formulaInl" alt="$\vec{r_{12}}$" src="form_11.png"/> and <img class="formulaInl" alt="$\vec{r_{32}}$" src="form_12.png"/> are vectors parallel to the bond between atoms 1 and 2 and the bond between atoms 2 and 3 respectively the cosine of the angle between these vectors, <img class="formulaInl" alt="$\cos\theta$" src="form_13.png"/> is given by:</p>
+<div class="textblock"><p>The Angle class is responsible for normal angle bending terms (i.e. those among three bonded atoms). This page describes the mathematical theory behind the guts of the Angle class.</p>
+<h2>Mathematical Background </h2>
+<h3>0-th Derivative</h3>
+<p>Assuming the vectors <img class="formulaInl" alt="$\vec{r_{12}}$" src="form_11.png"/> and <img class="formulaInl" alt="$\vec{r_{32}}$" src="form_12.png"/> are vectors parallel to the bond between atoms 1 and 2 and the bond between atoms 2 and 3 respectively the cosine of the angle between these vectors, <img class="formulaInl" alt="$\cos\theta$" src="form_13.png"/> is given by:</p>
 <p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \cos\theta=\frac{\vec{r_{12}}\cdot\vec{r_{32}}} {r_{12} r_{32}}, \]" src="form_14.png"/>
+<img class="formulaDsp" alt="\[ \cos\theta=\frac{\vec{r}_{12}\cdot\vec{r}_{32}} {r_{12} r_{32}}, \]" src="form_178.png"/>
 </p>
 <p> where <img class="formulaInl" alt="$r$" src="form_15.png"/> denotes the magnitude of <img class="formulaInl" alt="$\vec{r}$" src="form_16.png"/>. We can also express this in terms of the <img class="formulaInl" alt="$\sin\theta$" src="form_17.png"/>: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \sin\theta=\frac{\left(\vec{r_{12}}\times\vec{r_{32}}\right)\cdot\vec{n}} {r_{12} r_{32} n}, \]" src="form_18.png"/>
+<img class="formulaDsp" alt="\[ \sin\theta=\frac{||\vec{r}_{12}\times\vec{r}_{32}||} {r_{12} r_{32}}, \]" src="form_179.png"/>
 </p>
-<p> where <img class="formulaInl" alt="$\frac{\vec{n}}{n}$" src="form_19.png"/> is a unit vector perpendicular to both <img class="formulaInl" alt="$\vec{r_{12}}$" src="form_11.png"/> and <img class="formulaInl" alt="$\vec{r_{32}}$" src="form_12.png"/>. Consequentially, we can also use the tangent of the angle: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \tan\theta=\frac{\left(\vec{r_{12}}\times\vec{r_{32}}\right)\cdot\vec{n}} {\vec{r_{12}}\cdot\vec{r_{32}}n}. \]" src="form_20.png"/>
+<p> Consequentially, we can also use the tangent of the angle: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \tan\theta=\frac{||\vec{r}_{12}\times\vec{r}_{32}||} {\vec{r}_{12}\cdot\vec{r}_{32}}. \]" src="form_180.png"/>
 </p>
-<p>The use of the tangent of the angle is preferred numerically as in most coding languages, there exists a function (usually called <code>atan2</code>) that preserves the sign of the resulting angle and does not suffer from numerical issues at any angle value (90 degrees, which is not in arctangent's range is handled correctly, as is the nefarious angle of 180 degrees which is outside of arccosine's range). </p>
-</div></div><!-- contents -->
+<p>The use of the tangent of the angle is preferred numerically as in most coding languages, there exists a function (usually called <code>atan2</code>) that preserves the sign of the resulting angle and does not suffer from numerical issues at any angle value (90 degrees, which is not in arctangent's range, is handled correctly by deffering to cosine at that point). In particular this means we avoid the nefarious planar angle problem of most codes!!!!</p>
+<h3>Gradient of the Angle</h3>
+<p>Noting that (as well as defining <img class="formulaInl" alt="$x=\vec{r}_{12}\times\vec{r}_{32}$" src="form_199.png"/> and <img class="formulaInl" alt="$y=\vec{r}_{12}\cdot\vec{r}_{32}$" src="form_200.png"/>): </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ d\theta=d\arctan\left(\frac{x}{y}\right)=\frac{y}{y^2+x^2}dx-\frac{x}{y^2+x^2}dy, \]" src="form_197.png"/>
+</p>
+<p> means we we need two sets of derivatives to obtain <img class="formulaInl" alt="$\frac{\partial \theta}{\partial \vec{r}_i}$" src="form_202.png"/>. The easy one is: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{eqnarray*} \frac{\partial y}{\partial \vec{r}_1}=&amp;\vec{r}_{32}\\ \frac{\partial y}{\partial \vec{r}_2}=&amp;-\vec{r}_{12}-\vec{r}_{32}\\ \frac{\partial y}{\partial \vec{r}_3}=&amp;\vec{r}_{12} \end{eqnarray*}" src="form_238.png"/>
+</p>
+<p>Using the chain-rule on the cross product term we get: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \frac{\partial x}{\partial \vec{r}_i}= \frac{\partial ||\vec{r}_{12}\times\vec{r}_{32}||}{\partial \vec{r}_i}= \frac{1}{2||\vec{r}_{12}\times\vec{r}_{32}||} \frac{\partial \left(\vec{r}_{12}\times\vec{r}_{32}\right)^2} {\partial \vec{r}_i}= \frac{\left(\vec{r}_{12}\times\vec{r}_{32}\right)} {||\vec{r}_{12}\times\vec{r}_{32}||}\cdot \frac{\partial\vec{r}_{12}\times\vec{r}_{32}}{\partial \vec{r}_i} \]" src="form_228.png"/>
+</p>
+<p>The cross product can be thought of as a function that takes two vectors and returns a third vector. Consequentially, the Jacobian of the cross product is: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \frac{\partial \vec{r}_{12}\times\vec{r}_{32}}{\vec{r}_{i}}= \frac{\partial }{\vec{r}_{i}}\begin{bmatrix} \vec{r}_{12y}\vec{r}_{32z}-\vec{r}_{12z}\vec{r}_{32y}\\ \vec{r}_{12z}\vec{r}_{32x}-\vec{r}_{12x}\vec{r}_{32z}\\ \vec{r}_{12x}\vec{r}_{32y}-\vec{r}_{12y}\vec{r}_{32x} \end{bmatrix}= \begin{bmatrix} \vec{r}_{32z}\frac{\partial \vec{r}_{12y}}{\partial \vec{r}_i}+ \vec{r}_{12y}\frac{\partial \vec{r}_{32z}}{\partial \vec{r}_i}- \vec{r}_{32y}\frac{\partial \vec{r}_{12z}}{\partial \vec{r}_i}- \vec{r}_{12z}\frac{\partial \vec{r}_{32y}}{\partial \vec{r}_i}\\ \vec{r}_{32x}\frac{\partial \vec{r}_{12z}}{\partial \vec{r}_i}+ \vec{r}_{12z}\frac{\partial \vec{r}_{32x}}{\partial \vec{r}_i}- \vec{r}_{32z}\frac{\partial \vec{r}_{12x}}{\partial \vec{r}_i}- \vec{r}_{12x}\frac{\partial \vec{r}_{32z}}{\partial \vec{r}_i}\\ \vec{r}_{32y}\frac{\partial \vec{r}_{12x}}{\partial \vec{r}_i}+ \vec{r}_{12x}\frac{\partial \vec{r}_{32y}}{\partial \vec{r}_i}- \vec{r}_{32x}\frac{\partial \vec{r}_{12y}}{\partial \vec{r}_i}- \vec{r}_{12y}\frac{\partial \vec{r}_{32x}}{\partial \vec{r}_i}&amp; \end{bmatrix} \]" src="form_229.png"/>
+</p>
+<p>This cleans up nicely for our three vectors of interest: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{eqnarray*} \frac{\partial \vec{r}_{12}\times\vec{r}_{32}}{\vec{r}_{1}}=&amp; \begin{bmatrix} 0 &amp; \vec{r}_{32z} &amp; -\vec{r}_{32y}\\ -\vec{r}_{32z}&amp; 0 &amp; \vec{r}_{32x}\\ \vec{r}_{32y}&amp; -\vec{r}_{32x} &amp; 0 \end{bmatrix}\\ \frac{\partial \vec{r}_{12}\times\vec{r}_{32}}{\vec{r}_{2}}=&amp; \begin{bmatrix} 0 &amp;\vec{r}_{12z}-\vec{r}_{32z}&amp;\vec{r}_{32y}-\vec{r}_{12y}\\ \vec{r}_{32z}-\vec{r}_{12z}&amp;0 &amp;\vec{r}_{12x}-\vec{r}_{32x}\\ \vec{r}_{12y}-\vec{r}_{32y}&amp;\vec{r}_{32x}-\vec{r}_{12x}&amp;0 \end{bmatrix}\\ \frac{\partial \vec{r}_{12}\times\vec{r}_{32}}{\vec{r}_{3}}=&amp; \begin{bmatrix} 0 &amp; -\vec{r}_{12z} &amp; \vec{r}_{12y}\\ \vec{r}_{12z}&amp; 0 &amp; -\vec{r}_{12x}\\ -\vec{r}_{12y}&amp; \vec{r}_{12x} &amp; 0 \end{bmatrix}\\ \end{eqnarray*}" src="form_233.png"/>
+</p>
+<p>Defining <img class="formulaInl" alt="$\vec{n}=\vec{r}_{12}\times\vec{r}_{32}$" src="form_234.png"/> this gives: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{eqnarray*} \frac{\partial x}{\partial \vec{r}_1}=&amp; \frac{\vec{n}} {||\vec{r}_{12}\times\vec{r}_{32}||}\cdot\begin{bmatrix} 0 &amp; \vec{r}_{32z} &amp; -\vec{r}_{32y}\\ -\vec{r}_{32z}&amp; 0 &amp; \vec{r}_{32x}\\ \vec{r}_{32y}&amp; -\vec{r}_{32x} &amp; 0 \end{bmatrix}= \frac{1}{||\vec{r}_{12}\times\vec{r}_{32}||}\begin{bmatrix} \vec{n}_z\vec{r}_{32y}-\vec{n}_y\vec{r}_{32z}\\ \vec{n}_x\vec{r}_{32z}-\vec{n}_z\vec{r}_{32x}\\ \vec{n}_y\vec{r}_{32x}-\vec{n}_x\vec{r}_{32y}\end{bmatrix}\equiv \frac{\vec{A}}{||\vec{r}_{12}\times\vec{r}_{32}||}\\ \frac{\partial x}{\partial \vec{r}_2}=&amp; \frac{\vec{n}} {||\vec{r}_{12}\times\vec{r}_{32}||}\cdot\begin{bmatrix} 0 &amp; -\vec{r}_{31z} &amp; \vec{r}_{31y}\\ \vec{r}_{31z}&amp; 0 &amp; -\vec{r}_{31x}\\ -\vec{r}_{31y}&amp; \vec{r}_{31x} &amp; 0 \end{bmatrix}= \frac{1}{||\vec{r}_{12}\times\vec{r}_{32}||}\begin{bmatrix} \vec{n}_y\vec{r}_{31z}-\vec{n}_z\vec{r}_{31y}\\ \vec{n}_z\vec{r}_{31x}-\vec{n}_x\vec{r}_{31z}\\ \vec{n}_x\vec{r}_{31y}-\vec{n}_y\vec{r}_{31x}\end{bmatrix}\equiv \frac{\vec{B}}{||\vec{r}_{12}\times\vec{r}_{32}||}\\ \frac{\partial x}{\partial \vec{r}_3}=&amp; \frac{\vec{n}} {||\vec{r}_{12}\times\vec{r}_{32}||}\cdot\begin{bmatrix} 0 &amp; -\vec{r}_{32z} &amp; \vec{r}_{32y}\\ \vec{r}_{32z}&amp; 0 &amp; -\vec{r}_{32x}\\ -\vec{r}_{32y}&amp; \vec{r}_{32x} &amp; 0 \end{bmatrix}= \frac{1}{||\vec{r}_{12}\times\vec{r}_{32}||}\begin{bmatrix} \vec{n}_y\vec{r}_{32z}-\vec{n}_z\vec{r}_{32y}\\ \vec{n}_z\vec{r}_{32x}-\vec{n}_x\vec{r}_{32z}\\ \vec{n}_x\vec{r}_{32y}-\vec{n}_y\vec{r}_{32x}\end{bmatrix}\equiv \frac{\vec{C}}{||\vec{r}_{12}\times\vec{r}_{32}||} \end{eqnarray*}" src="form_243.png"/>
+</p>
+<p>Upon substitution: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \bigtriangledown\theta= \frac{1}{\left(||\vec{r}_{12}\times\vec{r}_{32}||\right)^2+ \left(\vec{r}_{12}\cdot\vec{r}_{32}\right)^2} \begin{bmatrix} \frac{\vec{A}}{\tan\theta}-\vec{r}_{32}||\vec{r}_{12}\times\vec{r}_{32}||&amp; \frac{\vec{B}}{\tan\theta}+\left(\vec{r}_{12}+\vec{r}_{32}\right)||\vec{r}_{12}\times\vec{r}_{32}||&amp; \frac{\vec{C}}{\tan\theta}-\vec{r}_{12}||\vec{r}_{12}\times\vec{r}_{32}|| \end{bmatrix} \]" src="form_245.png"/>
+</p>
+ </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
