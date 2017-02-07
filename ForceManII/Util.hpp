@@ -51,6 +51,11 @@ std::array<double,3> diff(const T& v1,const T& v2){
     return {v1[0]-v2[0],v1[1]-v2[1],v1[2]-v2[2]};
 }
 
+///Returns the sum of two vectors, v1+v2
+template<typename T>
+std::array<double,3> sum(const T& v1,const T& v2){
+    return {v1[0]+v2[0],v1[1]+v2[1],v1[2]+v2[2]};
+}
 
 ///Returns the dot product of two vectors
 inline double dot(const std::array<double,3>& v1,

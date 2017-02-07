@@ -39,25 +39,17 @@ inline Vector dangle(const double* r1,const double* r2, const double* r3)
     const double r12_d_r32=dot(r12,r32);
     const double magn=mag(n);
     const double tantheta=r12_d_r32/magn;//Actually 1 over tan(theta)
-    const array<double,3> A={tantheta*(n[2]*r32[1]-n[1]*r32[2]),
-                             tantheta*(n[0]*r32[2]-n[2]*r32[0]),
-                             tantheta*(n[1]*r32[0]-n[0]*r32[1])};
-    const array<double,3> B={tantheta*(n[1]*r31[2]-n[2]*r31[1]),
-                             tantheta*(n[2]*r31[0]-n[0]*r31[2]),
-                             tantheta*(n[0]*r12[1]-n[1]*r31[0])};
-    const array<double,3> C={tantheta*(n[1]*r12[2]-n[2]*r12[1]),
-                             tantheta*(n[2]*r12[0]-n[0]*r12[2]),
-                             tantheta*(n[0]*r12[1]-n[1]*r12[0])};
+    const array<double,3> A=cross(r32,n),B=cross(n,r31),C=cross(n,r12);
     const double prefactor=1/(std::pow(magn,2)+std::pow(r12_d_r32,2));
-    return {prefactor*(A[0]-r32[0]*magn),
-            prefactor*(A[1]-r32[1]*magn),
-            prefactor*(A[2]-r32[2]*magn),
-            prefactor*(B[0]+(r12[0]+r32[0])*magn),
-            prefactor*(B[1]+(r12[1]+r32[1])*magn),
-            prefactor*(B[2]+(r12[2]+r32[2])*magn),
-            prefactor*(C[0]-r12[0]*magn),
-            prefactor*(C[1]-r12[1]*magn),
-            prefactor*(C[2]-r12[2]*magn)
+    return {prefactor*(tantheta*A[0]-r32[0]*magn),
+            prefactor*(tantheta*A[1]-r32[1]*magn),
+            prefactor*(tantheta*A[2]-r32[2]*magn),
+            prefactor*(tantheta*B[0]+(r12[0]+r32[0])*magn),
+            prefactor*(tantheta*B[1]+(r12[1]+r32[1])*magn),
+            prefactor*(tantheta*B[2]+(r12[2]+r32[2])*magn),
+            prefactor*(tantheta*C[0]-r12[0]*magn),
+            prefactor*(tantheta*C[1]-r12[1]*magn),
+            prefactor*(tantheta*C[2]-r12[2]*magn)
     };
 }
 
