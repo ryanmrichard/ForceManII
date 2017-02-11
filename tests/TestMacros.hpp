@@ -16,22 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-/** \file TestMacros.hpp
- * 
- * \version 0.1
- * \date October 2, 2016 at 2:20 PM (EST)
- *  
- * Original Author: \author Ryan M. Richard (ryanmrichard1<at>gmail.com)
- * 
- * Additional contributions by:
- *
- */
 
-#ifndef FMANII_TESTMACROS_HPP
-#define FMANII_TESTMACROS_HPP
+#pragma once
 #include <sstream>
 #include <cmath>
 #include <iostream>
+#include <iomanip>
 
 inline void test_header(const std::string& Msg){
     const std::string stars(80,'*');
@@ -81,8 +71,8 @@ inline void test_value(double actual,double theory,
                        double tol,const std::string& Msg ,bool print=true){
     if(std::fabs(actual-theory)>tol){
         std::stringstream m;
-        m<<Msg<<": "<<actual<<" does not match "<<theory<<" to within "
-         <<tol<<std::endl;
+        m<<Msg<<": "<<std::setprecision(9)<<actual<<" does not match "<<
+           theory<<" to within "<<tol<<std::endl;
         throw std::runtime_error(m.str());
     }
     if(print)std::cout<<Msg<<": passed"<<std::endl;
@@ -96,7 +86,3 @@ inline void compare_vectors(const std::vector<double>& actual,
     for(size_t i=0;i<actual.size();++i)test_value(actual[i],theory[i],tol,msg,false);
     std::cout<<msg<<": passed"<<std::endl;    
 }
-        
-
-#endif /* End header guard */
-

@@ -9,6 +9,7 @@ set(FMANII_SRC $<TARGET_OBJECTS:force_fields>
                $<TARGET_OBJECTS:int_coords>
                $<TARGET_OBJECTS:mod_pots>
                FManII.cpp
+               FFTerm.cpp
                ForceField.cpp
                ParameterSet.cpp
                ParseFile.cpp

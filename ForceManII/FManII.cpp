@@ -132,10 +132,9 @@ DerivType deriv(size_t order,
                 const Molecule& coords)
 {
    DerivType rv;
-   for(const auto& i:ff.terms){
+   for(const auto& i:ps){
         const auto& term_type=i.first;
-        const FFTerm& ffterm=i.second;
-        Vector d=ffterm.deriv(order,ps.at(term_type),coords);
+        Vector d=ff.terms.at(term_type).deriv(order,i.second,coords);
         if(ff.scale_factors.count(term_type))
             for(double& di:d)di*=ff.scale_factors.at(term_type);
         rv.emplace(term_type,std::move(d));

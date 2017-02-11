@@ -45,11 +45,7 @@ public:
     ///Given the parameters for this term and a set of internal coordinates
     ///computes the derivative
     Vector deriv(size_t order,const std::map<std::string,Vector>& ps,
-                              const Molecule& cs)const{
-        std::vector<Vector> incoords;
-        incoords.push_back(cs.coords.at(coord_->name));
-        return model_->deriv(order,ps,incoords);
-    }
+                              const Molecule& cs)const;
 
     ///True if both terms have the same model and type of coordinates
     bool operator==(const FFTerm& other)const{
