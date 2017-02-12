@@ -6,7 +6,7 @@ throughout the manual and throughout the code.  I have tried to be consistent
 but let me know if you find exceptions.
 
 - atom number : Atoms in an input are listed in some order, whichever atom is
-  listed first is said to have atom number 1, the second is atom number 2, etc.
+  listed first is said to have atom number 0, the second is atom number 1, etc.
 - atom type: I don't know how standard this and the next terms are, but this
   is the language used by Tinker.  Forcefields usually map
   an atom in a particular chemical enviornment, say an \f$sp^2\f$ hybridized 

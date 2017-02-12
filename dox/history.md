@@ -51,6 +51,8 @@ features are:
 
 - Support for several force fields
   - AMBER99
+  - CHARMM22
+  - OPLS-AA
 - C++11 API that allows a high-level of flexibility on the user's part
   - Can use custom force fields and parameters
     - Either by manually filling in a `ForceField` class or by providing such a
@@ -73,4 +75,5 @@ features are:
   - Avoids the need for things like topology files, which are unfamiliar to QM
     people and replaces it with quantities that are commonly found in most QM
     packages (plus atom types)
+- Analytic gradients
 

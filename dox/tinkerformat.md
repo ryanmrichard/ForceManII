@@ -6,11 +6,9 @@ is not quite the same as the more prevelant standard version seen in
 electronic structure theory).  This page explains the two file formats and
 represents what we expect them to look like.
 
-- [Tinker Parameter File](@ref file_tinker_param)
-- [Tinker .xyz File](@ref file_tinker_xyz)
+[TOC]
 
-
-## The Tinker Parameter File {#file_tinker_param}
+# The Tinker Parameter File                                 {#file_tinker_param}
 
 Finding the actual criteria for the format of the Tiker parameter file is
 somewhat difficult.  What is listed here is reverse engineered from the

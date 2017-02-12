@@ -17,6 +17,7 @@ add_library(molecules SHARED
     testdata/peptide_deriv.cpp
     testdata/ubiquitin.cpp
     testdata/ubiquitin_params.cpp
+    testdata/ubiquitin_deriv.cpp
 )
 target_include_directories(molecules PRIVATE ${FMANII_ROOT})
 install(TARGETS molecules DESTINATION .)
