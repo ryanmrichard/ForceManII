@@ -1,6 +1,6 @@
 # ForceManII: An MM code for QM people
 
-TODO: CI integration
+[![Build Status](https://travis-ci.org/ryanmrichard/ForceManII.svg?branch=master)](https://travis-ci.org/ryanmrichard/ForceManII)
 
 User and Developer manual is available
 [here](https://ryanmrichard.github.io/ForceManII/) and is the primary source of
