@@ -2,22 +2,35 @@ language: cpp
 sudo: required
 matrix:
   include:
-   - os: linux
-     compiler: gcc
-     addons:
-       apt:
-         sources:
-         - ubuntu-toolchain-r-test
-         - george-edison55-precise-backports
-         packages:
-         - cmake
-         - cmake-data
-         - g++-4.9
-     env: CXX_COMPILER='g++-4.9'
+  - os: linux
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
+        packages:
+        - cmake
+        - cmake-data
+        - g++-4.9
+    env: CXX_COMPILER='g++-4.9'
+before_install:
+    - openssl aes-256-cbc
+      -K $encrypted_4d3c47dc5509_key
+      -iv $encrypted_4d3c47dc5509_iv
+      -in travisci_rsa.enc
+      -out travisci_rsa
+      -d
+      - chmod 0600 travisci_rsa
+      - cp travisci_rsa ~/.ssh/id_rsa
 install:
-  - cmake -version
+- cmake -version
+- sudo apt-get install --yes doxygen graphviz
 script:
-  - cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR} -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DCMAKE_BUILD_TYPE=Release
-  - cd build && make
-  - ctest
-  - cat Testing/Temporary/LastTest.log
+- cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR} -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
+  -DCMAKE_BUILD_TYPE=Release
+- cd build && make
+- ctest
+- cat Testing/Temporary/LastTest.log
+after_success:
+  - ./bin/publish-doxygen.sh
