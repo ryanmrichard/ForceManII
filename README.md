@@ -27,126 +27,111 @@ amounts to several important features in our opinion:
 - Minimal (currently no) dependencies
 
 
-## Compilation
-
-ForceManII has no dependencies other than a C++11 compliant compiler.  The
-following should thus be sufficient to compile it:
-
-~~~.sh
-#In the top-level directory of the ForceManII source you got from GitHub
-cmake -H. -Bbuild -DCMAKE_CXX_COMPILER=path/to/your/c++/compiler
-cd build && make
-
-#Optionally run the test suite (still in the build directory)
-ctest
-
-#Install (may require root depending on install location)
-make install
-~~~
-
-
-There are a couple of other useful CMake variables you may want to consider
-setting:
-
-- `CMAKE_INSTALL_PREFIX` : Sets the install location
-- `CMAKE_BUILD_TYPE` : Defaults to `release`, but set to `debug` if you want
-  debug symbols
-
-As usual these would be appended to your cmake command with the `-D` flag,
-*e.g.*, to change the install prefix your new CMake command would be:
-
-~~~.sh
-cmake -H. -Bbuild -DCMAKE_CXX_COMPILER=path/to/your/c++/compiler\
-                  -DCMAKE_INSTALL_PREFIX=where/you/want/ForceManII/installed
-~~~
-
-TODO: Make a CMake config file for ForceManII to facilitate adding it to other
-CMake projects
+This page is intended to help you quickly add the ForceManII project to your
+existing code.
 
 ## Quick-Start
+### Download and Compile
+The official repository for ForceManII is on  GitHub at:
+[https://github.com/ryanmrichard/ForceManII]
+(https://github.com/ryanmrichard/ForceManII).
+First you need to download the source using the normal git commands:
 
-If all you want to do is compute an MM energy for an existing force field this
-quick-start guide should give you all you need.  Assuming you have ForceManII
-compiled and ready to be used:
+```.sh
+git clone https://github.com/ryanmrichard/ForceManII.git <where_to_put_it>
+```
+The last argument is optional, if you don't use it the source will be downloaded
+into a subdirectory entitled `ForceManII` of the directory in which you ran git.
+For this tutorial we assume you maintained the default name.  Once it is done
+downloading:
 
-In the *.cpp* file you want to call ForceManII from:
+```.sh
+cd ForceManII
+#Configure the build
+cmake -H. -Bbuild -DCMAKE_CXX_COMILER=<path_to_your_c++_compiler> \
+                  -DCMAKE_INSTALL_PREFIX=<where_to_put_the_final_library>
+
+#Build the library
+cd build && make
+
+#Optionally test the library
+ctest
+
+#Install the library (may require sudo depending on install location)
+make install
+
+#Enjoy science
+```
+ForceManII has no dependencies aside from a C++11 compliant compiler and a
+relatively modern version of CMake (circa 2014 or later).  That being said on
+most systems you will not even have to specify the CXX compiler as CMake will
+detect one automatically.  As a CMake project,
+ForceManII strives to honor the usual CMake variables where appropriate;
+therefore power users should feel free to pass additional CMake variables for
+more fine-grained control.
+
+### Using the ForceManII API
+
+The absolute simplest call to ForceManII is:
+
+```.cpp
+#import <ForceManII/FManII.hpp>
+
+auto deriv=
+  FManII::run_forcemanii(order,carts,conns,FManII::get_ff(ff_name),types);
+```
+Here:
+
+- `order` is the derivative order you want (0=energy,1=gradient,2=Hessian,
+*etc.*).
+- `carts` is a 3 by number of atoms `std::vector<double>` where
+`carts[i*3+j]` is the \f$j\f$-th Cartesian component (\f$j\f$=0 is \f$x\f$,
+\f$j\f$=1 is \f$y\f$, \f$j\f$=2 is \f$z\f$) of the \f$i\f$-th atom.
+- `conns` is an `std::vector<std::vector<size_t>>` (basically a matrix where the
+rows have variable lengths) such that `conns[i][j]` is the index of the
+\f$j\f$-th atom connected to the \f$i\f$-th atom (order being the same as carts)
+- FManII::get_ff() is a helper function that will return any of the built-in
+force fields given...
+- `ff_name` the name of the force field as an `std::string` currently we support
+  - `AMBER99`
+  - `CHARMM22`
+  - `OPLSAA`
+- `types` is an `std::vector<size_t>` where `types[i]` is the atom type of atom
+\f$i\f$.  Numbering of atom types varies from force field to force field look in
+the ForceFields directory for more info
+- `deriv` will be an `std::map<std::string,std::vector<double>>` where the key
+  is a descriptive name of what derivative component you are looking at, *e.g.*
+  the harmonic bond stretching term, and the value is the derivative in C++
+  order, *i.e.* row-major
+
+Where applicable, all units are atomic units, *i.e.* derivatives are Hartrees
+over Bohrs to the derivative order, input Cartesian coordinates are in Bhors.
+
+The API to ForceManII is designed to be as flexible as possible while still
+maintaining simplicity.  Therefore much of the flow of the program can be
+controlled from outside the library.  For example, say you wanted to use a force
+field that is not included in ForceManII, you can do this by:
+
 ~~~.cpp
-#include<ForceManII/FManII.hpp>
-
-void my_fxn(){
-    //Step 1: Get some information that you should have laying around such as...
-
-    //...the Cartesian coordinates of your system, in bohr, such that
-    //my_carts[i*3+j] is the j-th Cartesian coordinate of atom i
-    std::vector<double> my_carts=magic_function_that_gets_coordinates();
-
-   //...a vector of each atom's atom type such that atom_types[i] is the
-   //atom type of atom i
-   std::vector<size_t> atom_types=magic_function_that_gets_types();
-
-   //...and the connectivity of your system, such that conns[i] is an
-   //std::set<size_t> of the atoms connected to atom i
-   std::vector<std::set<size_t>> conns=magic_function_that_gets_conns();
-
-   //Step 2: Obtain a ForceField instance either by...
-
-   //...parsing an existing Tinker-style parameter file
-   FManII::ForceField my_ff=FManII::parse_file
-    (
-        std::move(std::istream("path/to/.prm/file")),
-        your_kcalmol_2_hartree_conversion,
-        your_angstrom_2_bohr_conversion,
-        your_degree_2_radian_conversion
-    );
-
-    //...using one of the included, hard-coded force fields
-    //my_ff=FManII::amber99 //Uncomment this line for AMBER99
-
-    //...or filling one in yourself
-    //my_ff=magic_fucntion_that_makes_a_custom_force_field();
-
-    //Step 3: Get your requested derivative
-    FManII::DerivType deriv=
-        FManII::run_fmanii(0,my_carts,conns,my_ff,atom_types);
-
-    //Step 4: Do science!!!!
-}
+//Conversions are optional, default values exist
+FManII::ForceField my_ff=FManII::parse_file
+(
+    std::move(std::istream("path/to/.prm/file")),
+    your_kcalmol_2_hartree_conversion,
+    your_angstrom_2_bohr_conversion,
+    your_degree_2_radian_conversion
+);
 ~~~
 
-A couple of notes on the above to hopefully fill in the missing details:
-- All atoms must have a type
-  - It is our hope to automate this step based on the connectivity in an
-    upcoming release
-- A future release will be able of automatically computing the connectivity
-- `FManII::run_fmanii` is actually a wrapper around several functions:
-  - A function that finds the internal coordinates
-  - A function that assigns parameters
-  - And a function that computes the derivative using those coordinates and
-    derivatives
-  - The user can skip any of these functions and supply their own information
-    for an even more customizable experience
-- The type of `FManII::DerivType` is
-  `std::map<std::pair<std::string,std::string>,std::vector<double>>`.  I know
-  this looks scary, but it's really quite simple if we break it down.
-  - The key of the map is of type `std::pair<std::string,std::string>`,which is
-    a type we call FManII::FFTerm.  It is just a pair of names describing the
-    model (harmonic oscillator, Fourier series, etc.) and the internal
-    coordinate type (bond, angle, torsion, etc.)
-    - *e.g.* a harmonic-angle bending term is
-      `FFTerm({"HARMONICOSCILLATOR","ANGLE"})` and a harmonic-bond stretching
-       term is `FFTerm({"HARMONICOSCILLATOR","BOND"})`
-  - The value is the actual derivative as a vector (so the energy is a single
-    element vector, the gradient is a 3 by natoms long vector, and the Hessian
-    is a 3 times natoms by 3 times natoms matrix flattened into a vector)
-  - For example to print the energies try:
-  
-    ~~~.cpp
-    for(auto name_deriv:deriv){
-        std::string &model_name=name_deriv.first.first;
-        std::string &coord_name=name_deriv.first.second;
-        std::vector<double> &derivi=name_deriv.second;
-        std::cout<<"The energy of the "<<coord_name<<"s is "<<derivi[0]<<
-           " (a.u.) if we assume they are modeled with a "<<model_name<<
-           " potential."<<std::endl;
-    }
-    ~~~
+You would now replace FManII::get_ff()`with `my_ff` in the call to
+FManII::run_forcemanii().
+
+The FManII::ForceField object is relatively simple, so if you wanted to make
+your own ForceField all you would need to do is set the membere appropriately
+and use the resulting instance.
+
+The FManII::run_forcemanii() function is actually a thin wrapper around a series
+of steps: compute internal coordinates, assign parameters, and compute the
+derivative.  The ForceManII API allows you to call each of those functions
+manually so you can further customize the command, or bypass a command
+completely and just use your own objects.
