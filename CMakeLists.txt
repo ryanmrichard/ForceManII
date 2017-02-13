@@ -26,18 +26,24 @@ ExternalProject_Add(fmanii
 set(STAGE_INSTALL_PREFIX "${STAGE_DIR}${CMAKE_INSTALL_PREFIX}")
 list(APPEND FMANII_PREFIX_PATH ${STAGE_INSTALL_PREFIX} ${CMAKE_PREFIX_PATH})
 
-ExternalProject_Add(pulsar_api
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Interfaces
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-               -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-               -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-    BUILD_ALWAYS 1
-    INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install DESTDIR=${STAGE_DIR}
-    CMAKE_CACHE_ARGS -DCMAKE_PREFIX_PATH:LIST=${FMANII_PREFIX_PATH}
-                     -DCMAKE_INSTALL_RPATH:LIST=${CMAKE_INSTALL_RPATH}
-                     -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-)
-add_dependencies(pulsar_api fmanii)
+find_package(pulsar QUIET)
+if(${pulsar_FOUND})
+   message(STATUS "Pulsar Framework found enabling interface.")
+    ExternalProject_Add(pulsar_api
+        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Interfaces
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+                   -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+                   -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+        BUILD_ALWAYS 1
+        INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install DESTDIR=${STAGE_DIR}
+        CMAKE_CACHE_ARGS -DCMAKE_PREFIX_PATH:LIST=${FMANII_PREFIX_PATH}
+                         -DCMAKE_INSTALL_RPATH:LIST=${CMAKE_INSTALL_RPATH}
+                         -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+    )
+    add_dependencies(pulsar_api fmanii)
+else()
+    add_library(pulsar_api INTERFACE)
+endif()
 
 
 ExternalProject_Add(fmanii_test
