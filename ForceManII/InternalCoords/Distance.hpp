@@ -47,9 +47,7 @@ public:
 class Pair13: public Distance{
 public:
     Pair13():Distance(IntCoord_t::PAIR13){}
-    Vector deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const{
-        return Distance::deriv(deriv_i,sys,{coord_i[0],coord_i[2]});
-    }
+    Vector deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const;
 };
 
 class Pair14: public Distance{

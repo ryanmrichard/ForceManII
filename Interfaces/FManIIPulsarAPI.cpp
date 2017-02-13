@@ -30,8 +30,7 @@ DerivReturnType FFTermPulsar::deriv_(size_t Order,const Wavefunction& wfn)
     auto ff_name=options().get<string>("FORCE_FIELD");
     auto types=options().get<vector<size_t>>("ATOM_TYPES");
     auto model_name=options().get<string>("MODEL_NAME");
-    auto intcoord_name=options().get<string>("COORD_NAME");
-    Conn_t temp_conns=get_connectivity(*wfn.system);
+    auto intcoord_name=options().get<string>("COORD_NAME");    Conn_t temp_conns=get_connectivity(*wfn.system);
     vector<Atom> index2atom;
     unordered_map<Atom,size_t> atom2index;
     for(auto atomi:*wfn.system)
@@ -48,10 +47,16 @@ DerivReturnType FFTermPulsar::deriv_(size_t Order,const Wavefunction& wfn)
         for(auto atomj:temp_conns.at(index2atom[i]))
             conns[i].insert(atom2index.at(atomj));
     }
-    auto ffterm=make_pair(model_name,intcoord_name);
-    auto term=get_term(ffterm);
-    Molecule mol=get_coords(Carts,conns);
-    ParamSet params=assign_params(mol,get_ff(ff_name),types);
-    auto deriv=term.deriv(Order,params.at(ffterm),mol);
-    return {wfn,{deriv}};
+    auto deriv_comps=run_forcemanii(Order,Carts,conns,get_ff(ff_name),types);
+    if(model_name=="ALL" && intcoord_name=="ALL")
+    {
+       Vector deriv(std::pow(Carts.size(),Order));
+       for(const auto& dci:deriv_comps){
+           const auto& di=dci.second;
+           for(size_t i=0;i<di.size();++i)
+               deriv[i]+=di[i];
+       }
+       return {wfn,deriv};
+    }
+    return {wfn,deriv_comps.at(make_pair(model_name,intcoord_name))};
 }

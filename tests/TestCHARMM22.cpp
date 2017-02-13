@@ -20,6 +20,7 @@
 #include <ForceManII/FManII.hpp>
 #include "TestMacros.hpp"
 #include "testdata/crambin.hpp"
+#include "testdata/crambin_deriv.hpp"
 
 using namespace FManII;
 using namespace std;
@@ -27,7 +28,7 @@ using namespace std;
 int main(int argc, char** argv){
 
     test_header("Testing derivatives of pre-packaged CHARMM22 force-fields");
-    const auto deriv=run_forcemanii(0,crambin,crambin_conns,oplsaa,
+    auto deriv=run_forcemanii(0,crambin,crambin_conns,charmm22,
                                     crambin_FF_types);
     for(auto derivi : deriv)
     {
@@ -39,7 +40,14 @@ int main(int argc, char** argv){
            ffterm.second==IntCoord_t::IMPTORSION)tol=6e-4;
         test_value(derivi.second[0],crambin_egys.at(ffterm),tol,msg);
     }
-
+    deriv=run_forcemanii(1,crambin,crambin_conns,charmm22,
+                                    crambin_FF_types);
+    for(auto derivi : deriv)
+    {
+        const auto ffterm=derivi.first;
+        const string msg=string("CHARMM22")+" "+ffterm.first+" "+ffterm.second+" gradient";
+        compare_vectors(derivi.second,crambin_corr_grad.at(ffterm),1e-5,msg);
+    }
     test_footer();
     return 0;
 }

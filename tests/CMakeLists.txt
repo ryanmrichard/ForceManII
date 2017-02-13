@@ -13,6 +13,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #These are the correct answers for real (large) systems
 add_library(molecules SHARED
     testdata/crambin.cpp
+    testdata/crambin_deriv.cpp
     testdata/peptide.cpp
     testdata/peptide_deriv.cpp
     testdata/ubiquitin.cpp

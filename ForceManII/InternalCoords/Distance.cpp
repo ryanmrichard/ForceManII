@@ -58,5 +58,32 @@ Vector Distance::deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)c
     if(deriv_i==2) return d2_dist(q1,q2);
 }
 
+Vector Pair13::deriv(size_t deriv_i,const Vector& sys,const IVector& coord_i)const{
+    const Vector d=Distance::deriv(deriv_i,sys,{coord_i[0],coord_i[2]});
+    CHECK(deriv_i<3,"Derivatives higher than 2 are NYI");
+    if(deriv_i==0)return d;
+    else if(deriv_i==1)
+    {
+        Vector dp(9);
+        for(size_t i=0;i<6;++i)
+                dp[i<3?i:3+i]=d[i];
+        return dp;
+    }
+    else if(deriv_i==2)
+    {
+        Vector dp(81);
+        for(size_t i=0;i<6;++i)
+        {
+            const size_t i_=i<3?i:i+3;
+            for(size_t j=0;j<6;++j)
+            {
+                const size_t j_=j<3?j:j+3;
+                dp[i_*9+j_]=dp[i*6+j];
+            }
+        }
+        return dp;
+    }
+
+}
 } //End namespace FManII
 

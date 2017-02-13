@@ -15,5 +15,7 @@ minfo={"FFTerm":
         "ATOM_TYPES"  : (OptionType.ListInt,None,True,None,"The atom types"),
         "MODEL_NAME"  : (OptionType.String,None,True,None,"The model"),
         "COORD_NAME"  : (OptionType.String,None,True,None,"The coord type"),
+        "MAX_DERIV"   : (OptionType.Int,1,False,None,"The maximum analytic derivative"),
+        "FDIFF_STENCIL_SIZE" :(OptionType.Int,3,False,None,"")
     }
 }}

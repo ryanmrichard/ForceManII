@@ -20,6 +20,7 @@
 #include <ForceManII/FManII.hpp>
 #include "TestMacros.hpp"
 #include "testdata/ubiquitin.hpp"
+#include "testdata/ubiquitin_deriv.hpp"
 
 using namespace FManII;
 using namespace std;
@@ -45,7 +46,7 @@ int main(int argc, char** argv){
     {
         const auto ffterm=derivi.first;
         const string msg=string("AMBER99")+" "+ffterm.first+" "+ffterm.second+" gradient";
-        //compare_vectors(derivi.second,corr_grad.at(ffterm),1e-5,msg);
+        compare_vectors(derivi.second,ub_corr_grad.at(ffterm),1e-5,msg);
     }
     test_footer();
     return 0;
