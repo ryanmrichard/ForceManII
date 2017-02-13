@@ -1,5 +1,7 @@
 Harmonic Oscillator                                                        {#HO}
 ===================
+![](ho.svg)
+
 
 One of the cornerstones of physics' approximations is the harmonic oscillator.
 The energy of an \f$N\f$-dimensional harmonic oscillator is given by:

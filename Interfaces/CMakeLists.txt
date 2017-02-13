@@ -17,4 +17,6 @@ if(${pulsar_FOUND})
            DESTINATION ${PULSAR_MODULE_DIR}/fmanii
            FILES_MATCHING PATTERN "*.py"
    )
+else()
+    add_library(fmanii_pulsar INTERFACE)
 endif()
