@@ -82,11 +82,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Tinker Format </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Tinker has invented two of its own file formats: .prm and .xyz (the tinker .xyz is not quite the same as the more prevelant standard version seen in electronic structure theory). This page explains the two file formats and represents what we expect them to look like.</p>
-<ul>
-<li><a class="el" href="tinkerformat.html#file_tinker_param">Tinker Parameter File</a></li>
-<li><a class="el" href="tinkerformat.html#file_tinker_xyz">Tinker .xyz File</a></li>
+<div class="toc"><h3>Table of Contents</h3>
+<ul><li class="level1"><a href="#file_tinker_param">The Tinker Parameter File</a><ul><li class="level2"><a href="#file_tinker_xyz">The Tinker .xyz File</a></li>
 </ul>
+</li>
+</ul>
+</div>
+<div class="textblock"><p>Tinker has invented two of its own file formats: .prm and .xyz (the tinker .xyz is not quite the same as the more prevelant standard version seen in electronic structure theory). This page explains the two file formats and represents what we expect them to look like.</p>
+<h1><a class="anchor" id="file_tinker_param"></a>
+The Tinker Parameter File</h1>
 <p>Finding the actual criteria for the format of the Tiker parameter file is somewhat difficult. What is listed here is reverse engineered from the parameter files included with Tinker. The file itself is seperated into three parts. The first part is metadata about the force-field such as citations, combining rules, scale factors, etc. The second part lists all recognized atom types and class types. The third part lists the parameters arranged by atom or class type. A line starting with <code>#</code> character is considered a comment line. <code>!!</code> is also considered a comment character, but is typically used at the end of the line (Presently we do pattern matching on the first column. So as long as the first column is one of the recognized keywords described below and your extra information does not alter the column ordering the line will be parsed correcty regardless of the modifications you make).</p>
 <p>The ForceManII API provides the function <code>parse_file</code> which given an <code>std::istream</code> instance (the base class of either an input file or an input stringstream) will parse the Tinker formated stream and provide you a ForceField instance. The parser follows the rules listed in this document.</p>
 <dl class="section note"><dt>Note</dt><dd>As implemented in ForceManII, the Tinker Format is case-insensitive. Parsing is handled by matching the keyword in the first column and no additional criteria (<em>e.g.</em> number of columns, prescence of a comment character, etc.). Aside from the metadata, which must come first, the ordering of all sections in the input is arbitrary (<em>e.g.</em> the bond parameters can be before or after the angle parameters)</dd>
@@ -209,6 +213,8 @@ It appears that Tinker sometimes lists a set of types/classes, but no parameters
 <li><code>radius</code> : the radius (or diameter depending on the metadata provided) in Angstroms</li>
 <li><code>epsilon</code> : the well depth in kcal/mol</li>
 </ul>
+<h2><a class="anchor" id="file_tinker_xyz"></a>
+The Tinker .xyz File</h2>
 <p>The first line of the Tinker xyz file is the number of atoms followed by an optional comment. This differs from the traditional format which has the comment on the second line. The listing of the atoms then starts on the second line in a Tinker xyz file as opposed to the third line in the usual xyz file.</p>
 <p>For each atom line the columns respectively are:</p><ul>
 <li>the atom number (the line number minus 1 assuming they are ordered)</li>

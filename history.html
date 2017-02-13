@@ -110,6 +110,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <ul>
 <li>Support for several force fields<ul>
 <li>AMBER99</li>
+<li>CHARMM22</li>
+<li>OPLS-AA</li>
 </ul>
 </li>
 <li>C++11 API that allows a high-level of flexibility on the user's part<ul>
@@ -130,9 +132,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>Minimal input (only the Cartesian coordinates of the molecule, the atom types of each atom, and the connectivity are required)<ul>
 <li>Future releases aim to reduce this to just the Cartesian coordinates (and the atomic numbers)</li>
-<li>Avoids the need for things like topology files, which are unfamiliar to QM people and replaces it with quantities that are commonly found in most QM packages (plus atom types) </li>
+<li>Avoids the need for things like topology files, which are unfamiliar to QM people and replaces it with quantities that are commonly found in most QM packages (plus atom types)</li>
 </ul>
 </li>
+<li>Analytic gradients </li>
 </ul>
 </div></div><!-- contents -->
 <!-- start footer part -->
