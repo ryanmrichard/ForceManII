@@ -93,11 +93,10 @@ Molecule get_coords(const Vector& Carts,
     for(size_t AtomI=0;AtomI<NAtoms;++AtomI){
         for(size_t AtomJ=AtomI+1;AtomJ<NAtoms;++AtomJ){
             auto pair=std::make_pair(AtomI,AtomJ);
-            if(pair12.count(pair))continue;
-            const bool is13=pair13.count(pair),is14=pair14.count(pair);
+            if(pair12.count(pair)||pair13.count(pair))continue;
+            const bool is14=pair14.count(pair);
             std::string ctype=IntCoord_t::PAIR;
-            if(is13)ctype=IntCoord_t::PAIR13;
-            else if(is14)ctype=IntCoord_t::PAIR14;
+            if(is14)ctype=IntCoord_t::PAIR14;
             add_coord(FoundCoords,ctype,{AtomI,AtomJ});
         }
     }

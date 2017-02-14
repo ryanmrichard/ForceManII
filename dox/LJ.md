@@ -1,6 +1,6 @@
 Lennard-Jones (6-12) Potential                                             {#LJ}
 ==============================
-
+![](lj.svg)
 ## Theory
 
 The van Der Waals term of a force-field accounts for the exchange repulsion of
@@ -28,7 +28,7 @@ previous equation and setting it to 0:
 0=\frac{-24\epsilon}{r}\left[\left(\frac{\sigma}{r}\right)^{12}-
       \left(\frac{\sigma}{r}\right)^{6}\right]
 \f]
-fromw which we deduce that the minimum distance is:
+from which we deduce that the minimum distance is:
 \f[
 r=2^{1/6}\sigma
 \f]
