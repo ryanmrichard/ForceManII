@@ -31,5 +31,5 @@ script:
 after_failure:
   - cat Testing/Temporary/LastTest.log
 after_success:
-  - ../bin/publish-doxygen.sh
+  - bin/publish-doxygen.sh
 
