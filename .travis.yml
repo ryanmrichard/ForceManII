@@ -23,11 +23,11 @@ install:
 - cmake -version
 - sudo apt-get install --yes doxygen graphviz
 script:
-- cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR} -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
+- cmake -H. -Bbuild -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
   -DCMAKE_BUILD_TYPE=Release
 - cd build && make
 - ctest
-- cat Testing/Temporary/LastTest.log
+#- cat Testing/Temporary/LastTest.log
 after_success:
-- bin/publish-doxygen.sh
+- ../bin/publish-doxygen.sh
 
