@@ -18,7 +18,7 @@ before_install:
   - openssl aes-256-cbc -K $encrypted_4d3c47dc5509_key -iv $encrypted_4d3c47dc5509_iv
     -in travisci_rsa.enc -out travisci_rsa -d
   - chmod 0600 config/travisci_rsa
-  - cp config/travisci_rsa ~/.ssh/id_rsa
+  - cp travisci_rsa ~/.ssh/id_rsa
 install:
 - cmake -version
 - sudo apt-get install --yes doxygen graphviz
