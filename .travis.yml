@@ -27,6 +27,7 @@ script:
     -DCMAKE_BUILD_TYPE=Release
   - cd build && make
   - ctest
+  - cd -
 after_failure:
   - cat Testing/Temporary/LastTest.log
 after_success:
