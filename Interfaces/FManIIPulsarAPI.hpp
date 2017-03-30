@@ -20,13 +20,28 @@
 #pragma once
 
 #include<pulsar/modulebase/EnergyMethod.hpp>
+#include<pulsar/modulebase/PropertyCalculator.hpp>
 
 namespace FManII {
+
+
+class FFPulsar:public pulsar::EnergyMethod{
+public:
+    FFPulsar(ID_t id): EnergyMethod(id){}
+    pulsar::DerivReturnType deriv_(size_t Order,const pulsar::Wavefunction& wfn);
+};
 
 class FFTermPulsar:public pulsar::EnergyMethod{
 public:
     FFTermPulsar(ID_t id): EnergyMethod(id){}
     pulsar::DerivReturnType deriv_(size_t Order,const pulsar::Wavefunction& wfn);
+};
+
+class FFCharges:public pulsar::PropertyCalculator{
+public:
+    FFCharges(ID_t id): PropertyCalculator(id){}
+    std::vector<double> calculate_(unsigned int deriv,
+                                   const pulsar::Wavefunction & wfn);
 };
 
 }//End namespace FManII
