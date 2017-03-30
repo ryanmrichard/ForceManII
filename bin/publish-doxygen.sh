@@ -4,7 +4,6 @@
 REPO_PATH=git@github.com:ryanmrichard/ForceManII.git
 HTML_PATH=html
 COMMIT_USER="Documentation Builder"
-COMMIT_EMAIL="travis@gockelhut.com"
 CHANGESET=$(git rev-parse --verify HEAD)
 
 # Get a clean version of the HTML documentation repo.
@@ -24,7 +23,7 @@ doxygen
 cd ${HTML_PATH}
 git add .
 git config user.name "${COMMIT_USER}"
-git config user.email "${COMMIT_EMAIL}"
+git config user.email "<>"
 git commit -m "Automated documentation build for changeset ${CHANGESET}."
 git push origin gh-pages
 cd -
