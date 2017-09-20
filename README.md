@@ -1,5 +1,7 @@
 # ForceManII: An MM code for QM people
 
+[![Join the chat at https://gitter.im/ForceManII/Lobby](https://badges.gitter.im/ForceManII/Lobby.svg)](https://gitter.im/ForceManII/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/ryanmrichard/ForceManII.svg?branch=master)](https://travis-ci.org/ryanmrichard/ForceManII)
 
 User and Developer manual is available
